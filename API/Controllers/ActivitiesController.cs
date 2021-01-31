@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +20,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Activity>>> ActivitiesList()
-        {
-            return await _mediator.Send(new ActivitiesList.Query());
-        }
+        public async Task<ActionResult<List<Activity>>> ActivitiesList() => await _mediator.Send(new ActivitiesList.Query());
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Activity>> Details(Guid id) => await _mediator.Send(new ActivitiesDetailts.Query(id));
     }
 }

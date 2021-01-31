@@ -10,9 +10,11 @@ namespace Application.Activities
 {
     public class ActivitiesDetailts
     {
-        public class Query : IRequest<Activity> 
+        public class Query : IRequest<Activity>
         {
             public Guid Id { get; set; }
+
+            public Query(Guid id) => Id = id;
         }
 
         public class Handler : IRequestHandler<Query, Activity>
