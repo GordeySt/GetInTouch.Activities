@@ -8,7 +8,7 @@ export const NavBar: React.FC<IProps> = ({ openCreateForm }) => {
   return (
     <Menu fixed="top" inverted>
       <Container>
-        <Menu.Item hedaer>
+        <Menu.Item>
           <img
             src="/assets/logo.png"
             alt="logo"
