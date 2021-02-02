@@ -6,17 +6,13 @@ using Persistance;
 
 namespace Application.Activities
 {
-    public class EditActivity
+    public class DeleteActivity
     {
-        public class Command : IRequest 
+        public class Command : IRequest
         {
             public Guid Id { get; set; }
-            public string Title { get; set; }
-            public string Description { get; set; }
-            public string Category { get; set; }
-            public string City { get; set; }
-            public string Venue { get; set; }
-            public DateTime? Date { get; set; }
+
+            public Command(Guid id) => Id = id;
         }
 
         public class Handler : IRequestHandler<Command>
@@ -34,12 +30,7 @@ namespace Application.Activities
 
                 if (activity == null) throw new Exception("Could not find an activity");
 
-                activity.Title = request.Title ?? activity.Title;
-                activity.Description = request.Description ?? activity.Description;
-                activity.Category = request.Category ?? activity.Category;
-                activity.Date = request.Date ?? activity.Date;
-                activity.City = request.City ?? activity.City;
-                activity.Venue = request.Venue ?? request.Venue;
+                _context.Remove(activity);
 
                 var success = await _context.SaveChangesAsync() > 0;
 
