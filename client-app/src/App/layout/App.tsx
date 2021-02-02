@@ -22,7 +22,7 @@ const App = () => {
   const handleOpenCreateForm = () => {
     setSelectedActivity(null);
     setEditMode(true);
-  }
+  };
 
   useEffect(() => {
     fetch("http://localhost:5000/api/activities")
@@ -34,7 +34,7 @@ const App = () => {
 
   return (
     <React.Fragment>
-      <NavBar openCreateForm={handleOpenCreateForm}/>
+      <NavBar openCreateForm={handleOpenCreateForm} />
       <Container style={{ marginTop: "7em" }}>
         <ActivityDashboard
           activities={activities}
@@ -42,6 +42,7 @@ const App = () => {
           activity={selectedActivity}
           editMode={editMode}
           setEditMode={setEditMode}
+          setSelectedActivity={setSelectedActivity}
         />
       </Container>
     </React.Fragment>
