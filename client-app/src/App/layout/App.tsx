@@ -39,6 +39,14 @@ const App = () => {
     setEditMode(false);
   };
 
+  const handleDeleteActivity = (id: string) => {
+    if (selectedActivity && id === selectedActivity.id) {
+      setSelectedActivity(null);
+    }
+
+    setActivities([...activities.filter(a => a.id !== id)]);
+  }
+
   useEffect(() => {
     fetch("http://localhost:5000/api/activities")
       .then((response) => response.json())
@@ -46,7 +54,6 @@ const App = () => {
         let activities: IActivity[] = [];
 
         activitiesData.forEach((activity) => {
-          console.log(activity.date);
           activity.date = activity.date.split(".")[0];
           activities.push(activity);
         });
@@ -68,6 +75,7 @@ const App = () => {
           setSelectedActivity={setSelectedActivity}
           createActivity={handleCreateActivity}
           editActivity={handleEditActivity}
+          deleteActivity={handleDeleteActivity}
         />
       </Container>
     </React.Fragment>
