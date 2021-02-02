@@ -4,11 +4,10 @@ using MediatR;
 using Persistance;
 using System.Threading.Tasks;
 using System.Threading;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Activities
 {
-    public class ActivitiesDetailts
+    public class ActivitiesDetails
     {
         public class Query : IRequest<Activity>
         {
