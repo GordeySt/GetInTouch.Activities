@@ -5,15 +5,15 @@ import { Header, Icon, List } from 'semantic-ui-react'
 
 class App extends Component {
   state = {
-    values: []
+    activities: []
   }
 
   componentDidMount() {
-    fetch('http://localhost:5000/api/values')
+    fetch('http://localhost:5000/api/activities')
       .then(response => response.json())
-      .then(values => {
+      .then(activities => {
         this.setState({
-          values
+          activities
         });
       });
   }
@@ -26,8 +26,8 @@ class App extends Component {
           <Header.Content>Activities</Header.Content>
         </Header>
         <List>
-         {this.state.values.map((value: any) => (
-            <List.Item key={value.id}>{value.name}</List.Item>
+         {this.state.activities.map((activity: any) => (
+            <List.Item key={activity.id}>{activity.name}</List.Item>
           ))}
         </List>
       </div>
