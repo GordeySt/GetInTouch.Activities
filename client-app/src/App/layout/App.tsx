@@ -13,10 +13,16 @@ const App = () => {
   const [editMode, setEditMode] = useState(false);
 
   const handleSelectActivity = (id: string) => {
+    setEditMode(false);
     setSelectedActivity(
       activities.filter((activity: IActivity) => activity.id === id)[0]
     );
   };
+
+  const handleOpenCreateForm = () => {
+    setSelectedActivity(null);
+    setEditMode(true);
+  }
 
   useEffect(() => {
     fetch("http://localhost:5000/api/activities")
@@ -28,7 +34,7 @@ const App = () => {
 
   return (
     <React.Fragment>
-      <NavBar />
+      <NavBar openCreateForm={handleOpenCreateForm}/>
       <Container style={{ marginTop: "7em" }}>
         <ActivityDashboard
           activities={activities}
