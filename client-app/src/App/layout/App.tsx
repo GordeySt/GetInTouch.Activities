@@ -28,19 +28,30 @@ const App = () => {
     setActivities([...activities, activity]);
     setSelectedActivity(activity);
     setEditMode(false);
-  }
+  };
 
   const handleEditActivity = (activity: IActivity) => {
-    setActivities([...activities.filter(a => a.id !== activity.id), activity]);
+    setActivities([
+      ...activities.filter((a) => a.id !== activity.id),
+      activity,
+    ]);
     setSelectedActivity(activity);
     setEditMode(false);
-  }
+  };
 
   useEffect(() => {
     fetch("http://localhost:5000/api/activities")
       .then((response) => response.json())
-      .then((activities: IActivity[]) => {
-        setActivities(activities);
+      .then((activitiesData: IActivity[]) => {
+        let activities: IActivity[] = [];
+
+        activitiesData.forEach((activity) => {
+          console.log(activity.date);
+          activity.date = activity.date.split(".")[0];
+          activities.push(activity);
+        });
+
+        setActivities(activitiesData);
       });
   }, []);
 
