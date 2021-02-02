@@ -10,6 +10,7 @@ const App = () => {
   const [selectedActivity, setSelectedActivity] = useState<IActivity | null>(
     null
   );
+  const [editMode, setEditMode] = useState(false);
 
   const handleSelectActivity = (id: string) => {
     setSelectedActivity(
@@ -33,6 +34,8 @@ const App = () => {
           activities={activities}
           selectActivity={handleSelectActivity}
           activity={selectedActivity}
+          editMode={editMode}
+          setEditMode={setEditMode}
         />
       </Container>
     </React.Fragment>
