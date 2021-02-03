@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, SyntheticEvent } from "react";
 import "semantic-ui-css/semantic.min.css";
 import { Container } from "semantic-ui-react";
 import { IActivity } from "../models/activity";
@@ -14,6 +14,8 @@ const App = () => {
   );
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [target, setTarget] = useState("");
 
   const handleSelectActivity = (id: string) => {
     setEditMode(false);
@@ -28,32 +30,45 @@ const App = () => {
   };
 
   const handleCreateActivity = (activity: IActivity) => {
-    Activities.create(activity).then(() => {
-      setActivities([...activities, activity]);
-      setSelectedActivity(activity);
-      setEditMode(false);
-    });
+    setSubmitting(true);
+    Activities.create(activity)
+      .then(() => {
+        setActivities([...activities, activity]);
+        setSelectedActivity(activity);
+        setEditMode(false);
+      })
+      .then(() => setSubmitting(false));
   };
 
   const handleEditActivity = (activity: IActivity) => {
-    Activities.update(activity).then(() => {
-      setActivities([
-        ...activities.filter((a) => a.id !== activity.id),
-        activity,
-      ]);
-      setSelectedActivity(activity);
-      setEditMode(false);
-    });
+    setSubmitting(true);
+    Activities.update(activity)
+      .then(() => {
+        setActivities([
+          ...activities.filter((a) => a.id !== activity.id),
+          activity,
+        ]);
+        setSelectedActivity(activity);
+        setEditMode(false);
+      })
+      .then(() => setSubmitting(false));
   };
 
-  const handleDeleteActivity = (id: string) => {
-    Activities.delete(id).then(() => {
-      if (selectedActivity && id === selectedActivity.id) {
-        setSelectedActivity(null);
-      }
+  const handleDeleteActivity = (
+    event: SyntheticEvent<HTMLButtonElement>,
+    id: string
+  ) => {
+    setSubmitting(true);
+    setTarget(event.currentTarget.name);
+    Activities.delete(id)
+      .then(() => {
+        if (selectedActivity && id === selectedActivity.id) {
+          setSelectedActivity(null);
+        }
 
-      setActivities([...activities.filter((a) => a.id !== id)]);
-    });
+        setActivities([...activities.filter((a) => a.id !== id)]);
+      })
+      .then(() => setSubmitting(false));
   };
 
   useEffect(() => {
@@ -87,6 +102,8 @@ const App = () => {
           createActivity={handleCreateActivity}
           editActivity={handleEditActivity}
           deleteActivity={handleDeleteActivity}
+          submitting={submitting}
+          target={target}
         />
       </Container>
     </React.Fragment>
