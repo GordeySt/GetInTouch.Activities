@@ -1,6 +1,10 @@
 import React from "react";
-import { Loader } from "semantic-ui-react";
+import { Loader, Dimmer } from "semantic-ui-react";
 
 export const LoadingComponent = () => {
-  return <Loader active inline="centered" />;
+  return (
+    <Dimmer active inverted={true}>
+      <Loader />
+    </Dimmer>
+  );
 };

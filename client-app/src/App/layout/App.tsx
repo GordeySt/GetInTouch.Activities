@@ -5,6 +5,7 @@ import { IActivity } from "../models/activity";
 import { NavBar } from "../../Features/nav/NavBar";
 import { ActivityDashboard } from "../../Features/activities/dashboard/ActivityDashboard";
 import { Activities } from "../api/agent";
+import { LoadingComponent } from "./LoadingComponent";
 
 const App = () => {
   const [activities, setActivities] = useState<IActivity[]>([]);
@@ -12,6 +13,7 @@ const App = () => {
     null
   );
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleSelectActivity = (id: string) => {
     setEditMode(false);
@@ -55,17 +57,21 @@ const App = () => {
   };
 
   useEffect(() => {
-    Activities.list().then((response) => {
-      let activities: IActivity[] = [];
+    Activities.list()
+      .then((response) => {
+        let activities: IActivity[] = [];
 
-      response.forEach((activity) => {
-        activity.date = activity.date.split(".")[0];
-        activities.push(activity);
-      });
+        response.forEach((activity) => {
+          activity.date = activity.date.split(".")[0];
+          activities.push(activity);
+        });
 
-      setActivities(activities);
-    });
+        setActivities(activities);
+      })
+      .then(() => setLoading(false));
   }, []);
+
+  if (loading) return <LoadingComponent />;
 
   return (
     <React.Fragment>
