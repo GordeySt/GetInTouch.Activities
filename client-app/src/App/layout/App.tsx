@@ -62,13 +62,22 @@ const App = () => {
     setTarget(event.currentTarget.name);
     Activities.delete(id)
       .then(() => {
-        if (selectedActivity && id === selectedActivity.id) {
-          setSelectedActivity(null);
-        }
-
+        undisplayActivityDetails(id);
         setActivities([...activities.filter((a) => a.id !== id)]);
       })
       .then(() => setSubmitting(false));
+  };
+
+  const undisplayActivityDetails = (id: string) => {
+    if (isDeletedActivityDisplayed(id)) {
+      setSelectedActivity(null);
+    }
+  };
+
+  const isDeletedActivityDisplayed = (id: string): boolean => {
+    if (selectedActivity) return id === selectedActivity.id;
+
+    return false;
   };
 
   useEffect(() => {
