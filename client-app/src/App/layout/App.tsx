@@ -4,6 +4,7 @@ import { Container } from "semantic-ui-react";
 import { IActivity } from "../models/activity";
 import { NavBar } from "../../Features/nav/NavBar";
 import { ActivityDashboard } from "../../Features/activities/dashboard/ActivityDashboard";
+import axios  from "axios";
 
 const App = () => {
   const [activities, setActivities] = useState<IActivity[]>([]);
@@ -48,17 +49,17 @@ const App = () => {
   }
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/activities")
-      .then((response) => response.json())
-      .then((activitiesData: IActivity[]) => {
+    axios
+      .get<IActivity[]>("http://localhost:5000/api/activities")
+      .then((response) => {
         let activities: IActivity[] = [];
 
-        activitiesData.forEach((activity) => {
+        response.data.forEach((activity) => {
           activity.date = activity.date.split(".")[0];
           activities.push(activity);
         });
 
-        setActivities(activitiesData);
+        setActivities(activities);
       });
   }, []);
 
