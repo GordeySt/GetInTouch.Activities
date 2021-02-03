@@ -4,7 +4,7 @@ import { Container } from "semantic-ui-react";
 import { IActivity } from "../models/activity";
 import { NavBar } from "../../Features/nav/NavBar";
 import { ActivityDashboard } from "../../Features/activities/dashboard/ActivityDashboard";
-import axios  from "axios";
+import { Activities } from "../api/agent";
 
 const App = () => {
   const [activities, setActivities] = useState<IActivity[]>([]);
@@ -45,22 +45,20 @@ const App = () => {
       setSelectedActivity(null);
     }
 
-    setActivities([...activities.filter(a => a.id !== id)]);
-  }
+    setActivities([...activities.filter((a) => a.id !== id)]);
+  };
 
   useEffect(() => {
-    axios
-      .get<IActivity[]>("http://localhost:5000/api/activities")
-      .then((response) => {
-        let activities: IActivity[] = [];
+    Activities.list().then((response) => {
+      let activities: IActivity[] = [];
 
-        response.data.forEach((activity) => {
-          activity.date = activity.date.split(".")[0];
-          activities.push(activity);
-        });
-
-        setActivities(activities);
+      response.forEach((activity) => {
+        activity.date = activity.date.split(".")[0];
+        activities.push(activity);
       });
+
+      setActivities(activities);
+    });
   }, []);
 
   return (

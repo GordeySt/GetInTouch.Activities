@@ -12,14 +12,10 @@ const requests = {
     del: (url: string) => axios.delete(url).then(responseBody)
 }
 
-const Activities = {
-    list: () => requests.get('/activities'),
-    details: (id: string) => requests.get(`/activities/${id}`),
+export const Activities = {
+    list: (): Promise<IActivity[]> => requests.get('/activities'),
+    details: (id: string): Promise<IActivity> => requests.get(`/activities/${id}`),
     create: (activity: IActivity) => requests.post('/activities', activity),
     update: (activity: IActivity) => requests.put(`/activities/${activity.id}`, activity),
     delete: (id: string) => requests.del(`/activities/${id}`),
-}
-
-export default {
-    Activities
 }
