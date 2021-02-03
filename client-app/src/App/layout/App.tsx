@@ -45,11 +45,13 @@ const App = () => {
   };
 
   const handleDeleteActivity = (id: string) => {
-    if (selectedActivity && id === selectedActivity.id) {
-      setSelectedActivity(null);
-    }
+    Activities.delete(id).then(() => {
+      if (selectedActivity && id === selectedActivity.id) {
+        setSelectedActivity(null);
+      }
 
-    setActivities([...activities.filter((a) => a.id !== id)]);
+      setActivities([...activities.filter((a) => a.id !== id)]);
+    });
   };
 
   useEffect(() => {
