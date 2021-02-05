@@ -1,4 +1,4 @@
-import { observable, action, makeAutoObservable } from "mobx"
+import { observable, action, makeAutoObservable, computed } from "mobx"
 import { Activities } from "../api/agent";
 import { IActivity } from "../models/activity";
 
@@ -8,6 +8,10 @@ class ActivityStore {
     @observable selectedActivity: IActivity | undefined;
     @observable editMode = false;
     @observable submitting = false;
+
+    @computed get activitiesByDate() {
+        return this.activities.slice().sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+    }
 
     constructor() {
         makeAutoObservable(this);

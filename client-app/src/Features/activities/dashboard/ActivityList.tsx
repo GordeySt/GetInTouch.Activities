@@ -15,11 +15,11 @@ interface IProps {
 
 export const ActivityList: React.FC<IProps> = observer(
   ({ deleteActivity, submitting, target }) => {
-    const { activities, selectActivity } = ActivityStore;
+    const { activitiesByDate, selectActivity } = ActivityStore;
     return (
       <Segment clearing>
         <Item.Group divided>
-          {activities.map((activity: IActivity) => (
+          {activitiesByDate.map((activity: IActivity) => (
             <Item key={activity.id}>
               <Item.Content>
                 <Item.Header as="a">{activity.title}</Item.Header>
