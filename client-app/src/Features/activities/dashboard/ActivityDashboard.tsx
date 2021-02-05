@@ -5,64 +5,60 @@ import { ActivityList } from "./ActivityList";
 import { ActivityDetails } from "../details/ActivityDetails";
 import { ActivityForm } from "../form/ActivityForm";
 import { observer } from "mobx-react-lite";
+import ActivityStore from "../../../App/stores/ActivityStore";
 
 interface IProps {
-  activities: IActivity[];
-  selectActivity: (id: string) => void;
-  selectedActivity: IActivity | null;
-  editMode: boolean;
   setEditMode: (editMode: boolean) => void;
   setSelectedActivity: (activity: IActivity | null) => void;
   createActivity: (activity: IActivity) => void;
   editActivity: (activity: IActivity) => void;
-  deleteActivity: (event: SyntheticEvent<HTMLButtonElement>, id: string) => void;
+  deleteActivity: (
+    event: SyntheticEvent<HTMLButtonElement>,
+    id: string
+  ) => void;
   submitting: boolean;
   target: string;
 }
 
-export const ActivityDashboard: React.FC<IProps> = observer(({
-  activities,
-  selectActivity,
-  selectedActivity,
-  editMode,
-  setEditMode,
-  setSelectedActivity,
-  createActivity,
-  editActivity,
-  deleteActivity,
-  submitting,
-  target
-}) => {
-  return (
-    <Grid>
-      <Grid.Column width={10}>
-        <ActivityList
-          activities={activities}
-          selectActivity={selectActivity}
-          deleteActivity={deleteActivity}
-          submitting={submitting}
-          target={target}
-        />
-      </Grid.Column>
-      <Grid.Column width={6}>
-        {selectedActivity && !editMode && (
-          <ActivityDetails
-            setSelectedActivity={setSelectedActivity}
-            activity={selectedActivity}
-            setEditMode={setEditMode}
-          />
-        )}
-        {editMode && (
-          <ActivityForm
-            key={selectedActivity && selectedActivity.id}
-            setEditMode={setEditMode}
-            activity={selectedActivity}
-            createActivity={createActivity}
-            editActivity={editActivity}
+export const ActivityDashboard: React.FC<IProps> = observer(
+  ({
+    setEditMode,
+    setSelectedActivity,
+    createActivity,
+    editActivity,
+    deleteActivity,
+    submitting,
+    target,
+  }) => {
+    const { selectedActivity, editMode } = ActivityStore;
+    return (
+      <Grid>
+        <Grid.Column width={10}>
+          <ActivityList
+            deleteActivity={deleteActivity}
             submitting={submitting}
+            target={target}
           />
-        )}
-      </Grid.Column>
-    </Grid>
-  );
-});
+        </Grid.Column>
+        <Grid.Column width={6}>
+          {selectedActivity && !editMode && (
+            <ActivityDetails
+              setSelectedActivity={setSelectedActivity}
+              setEditMode={setEditMode}
+            />
+          )}
+          {editMode && (
+            <ActivityForm
+              key={selectedActivity && selectedActivity.id}
+              setEditMode={setEditMode}
+              activity={selectedActivity}
+              createActivity={createActivity}
+              editActivity={editActivity}
+              submitting={submitting}
+            />
+          )}
+        </Grid.Column>
+      </Grid>
+    );
+  }
+);

@@ -1,11 +1,12 @@
 import { observable, action, makeAutoObservable } from "mobx"
-import { createContext } from "react"
 import { Activities } from "../api/agent";
 import { IActivity } from "../models/activity";
 
 class ActivityStore {
     @observable activities: IActivity[] = [];
     @observable loadingInitial = false;
+    @observable selectedActivity: IActivity | undefined;
+    @observable editMode = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -21,6 +22,11 @@ class ActivityStore {
                 this.activities.push(activity);
             });
         }).finally(() => this.loadingInitial = false);
+    }
+
+    @action selectActivity = (id: string) => {
+        this.selectedActivity = this.activities.find(a => a.id === id);
+        this.editMode = false;
     }
 }
 

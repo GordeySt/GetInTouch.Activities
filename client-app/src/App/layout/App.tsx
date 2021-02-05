@@ -18,13 +18,6 @@ const App = observer(() => {
   const [submitting, setSubmitting] = useState(false);
   const [target, setTarget] = useState("");
 
-  const handleSelectActivity = (id: string) => {
-    setEditMode(false);
-    setSelectedActivity(
-      activities.filter((activity: IActivity) => activity.id === id)[0]
-    );
-  };
-
   const handleOpenCreateForm = () => {
     setSelectedActivity(null);
     setEditMode(true);
@@ -92,10 +85,6 @@ const App = observer(() => {
       <NavBar openCreateForm={handleOpenCreateForm} />
       <Container style={{ marginTop: "7em" }}>
         <ActivityDashboard
-          activities={ActivityStore.activities}
-          selectActivity={handleSelectActivity}
-          selectedActivity={selectedActivity}
-          editMode={editMode}
           setEditMode={setEditMode}
           setSelectedActivity={setSelectedActivity}
           createActivity={handleCreateActivity}
