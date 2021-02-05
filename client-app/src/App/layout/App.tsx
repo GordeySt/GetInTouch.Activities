@@ -1,4 +1,4 @@
-import React, { useState, useEffect, SyntheticEvent } from "react";
+import React, { useState, useEffect, SyntheticEvent, useContext } from "react";
 import "semantic-ui-css/semantic.min.css";
 import { Container } from "semantic-ui-react";
 import { IActivity } from "../models/activity";
@@ -6,14 +6,15 @@ import { NavBar } from "../../Features/nav/NavBar";
 import { ActivityDashboard } from "../../Features/activities/dashboard/ActivityDashboard";
 import { Activities } from "../api/agent";
 import { LoadingComponent } from "./LoadingComponent";
+import ActivityStore from "../stores/ActivityStore";
+import { observer } from "mobx-react-lite";
 
-const App = () => {
+const App = observer(() => {
   const [activities, setActivities] = useState<IActivity[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<IActivity | null>(
     null
   );
   const [editMode, setEditMode] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [target, setTarget] = useState("");
 
@@ -81,28 +82,17 @@ const App = () => {
   };
 
   useEffect(() => {
-    Activities.list()
-      .then((response) => {
-        let activities: IActivity[] = [];
+    ActivityStore.loadActivities();
+  }, [ActivityStore]);
 
-        response.forEach((activity) => {
-          activity.date = activity.date.split(".")[0];
-          activities.push(activity);
-        });
-
-        setActivities(activities);
-      })
-      .then(() => setLoading(false));
-  }, []);
-
-  if (loading) return <LoadingComponent />;
+  if (ActivityStore.loadingInitial) return <LoadingComponent />;
 
   return (
     <React.Fragment>
       <NavBar openCreateForm={handleOpenCreateForm} />
       <Container style={{ marginTop: "7em" }}>
         <ActivityDashboard
-          activities={activities}
+          activities={ActivityStore.activities}
           selectActivity={handleSelectActivity}
           selectedActivity={selectedActivity}
           editMode={editMode}
@@ -117,6 +107,6 @@ const App = () => {
       </Container>
     </React.Fragment>
   );
-};
+});
 
 export default App;
