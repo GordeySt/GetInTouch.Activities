@@ -3,6 +3,7 @@ import { Activities } from "../api/agent";
 import { IActivity } from "../models/activity";
 
 class ActivityStore {
+    @observable activitiesRegistry = new Map();
     @observable activities: IActivity[] = [];
     @observable loadingInitial = false;
     @observable selectedActivity: IActivity | undefined;
@@ -10,7 +11,7 @@ class ActivityStore {
     @observable submitting = false;
 
     @computed get activitiesByDate() {
-        return this.activities.slice().sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+        return Array.from(this.activitiesRegistry.values()).slice().sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
     }
 
     constructor() {
@@ -23,7 +24,7 @@ class ActivityStore {
             const activities = await Activities.list();
             activities.forEach((activity) => {
                 activity.date = activity.date.split(".")[0];
-                this.activities.push(activity);
+                this.activitiesRegistry.set(activity.id, activity);
             });
             this.loadingInitial = false;
         } 
@@ -34,7 +35,7 @@ class ActivityStore {
     }
 
     @action selectActivity = (id: string) => {
-        this.selectedActivity = this.activities.find(a => a.id === id);
+        this.selectedActivity = this.activitiesRegistry.get(id);
         this.editMode = false;
     }
 
@@ -43,7 +44,7 @@ class ActivityStore {
 
         try {
             await Activities.create(activity);
-            this.activities.push(activity);
+            this.activitiesRegistry.set(activity.id, activity);
             this.editMode = false;
             this.submitting = false;
         }
