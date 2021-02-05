@@ -6,17 +6,11 @@ import ActivityStore from "../../../App/stores/ActivityStore";
 import { observer } from "mobx-react-lite";
 
 interface IProps {
-  setEditMode: (editMode: boolean) => void;
   activity: IActivity | undefined;
-  editActivity: (activity: IActivity) => void;
-  submitting: boolean;
 }
 
 export const ActivityForm: React.FC<IProps> = observer(({
-  setEditMode,
   activity: initialFormState,
-  editActivity,
-  submitting
 }) => {
   const initializeForm = () => {
     if (initialFormState) {
@@ -44,7 +38,7 @@ export const ActivityForm: React.FC<IProps> = observer(({
       };
       ActivityStore.createActivity(newActivity);
     } else {
-      editActivity(activity);
+      ActivityStore.editActivity(activity);
     }
   };
 
@@ -98,7 +92,7 @@ export const ActivityForm: React.FC<IProps> = observer(({
         />
         <Button loading={ActivityStore.submitting} floated="right" inverted secondary content="Submit" />
         <Button
-          onClick={() => setEditMode(false)}
+          onClick={ActivityStore.closeEditForm}
           floated="right"
           inverted
           color="red"
