@@ -18,22 +18,6 @@ const App = observer(() => {
   const [submitting, setSubmitting] = useState(false);
   const [target, setTarget] = useState("");
 
-  const handleOpenCreateForm = () => {
-    setSelectedActivity(null);
-    setEditMode(true);
-  };
-
-  const handleCreateActivity = (activity: IActivity) => {
-    setSubmitting(true);
-    Activities.create(activity)
-      .then(() => {
-        setActivities([...activities, activity]);
-        setSelectedActivity(activity);
-        setEditMode(false);
-      })
-      .then(() => setSubmitting(false));
-  };
-
   const handleEditActivity = (activity: IActivity) => {
     setSubmitting(true);
     Activities.update(activity)
@@ -82,12 +66,11 @@ const App = observer(() => {
 
   return (
     <React.Fragment>
-      <NavBar openCreateForm={handleOpenCreateForm} />
+      <NavBar />
       <Container style={{ marginTop: "7em" }}>
         <ActivityDashboard
           setEditMode={setEditMode}
           setSelectedActivity={setSelectedActivity}
-          createActivity={handleCreateActivity}
           editActivity={handleEditActivity}
           deleteActivity={handleDeleteActivity}
           submitting={submitting}

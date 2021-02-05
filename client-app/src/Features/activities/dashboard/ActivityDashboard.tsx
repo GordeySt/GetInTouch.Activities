@@ -10,7 +10,6 @@ import ActivityStore from "../../../App/stores/ActivityStore";
 interface IProps {
   setEditMode: (editMode: boolean) => void;
   setSelectedActivity: (activity: IActivity | null) => void;
-  createActivity: (activity: IActivity) => void;
   editActivity: (activity: IActivity) => void;
   deleteActivity: (
     event: SyntheticEvent<HTMLButtonElement>,
@@ -24,7 +23,6 @@ export const ActivityDashboard: React.FC<IProps> = observer(
   ({
     setEditMode,
     setSelectedActivity,
-    createActivity,
     editActivity,
     deleteActivity,
     submitting,
@@ -52,7 +50,6 @@ export const ActivityDashboard: React.FC<IProps> = observer(
               key={selectedActivity && selectedActivity.id}
               setEditMode={setEditMode}
               activity={selectedActivity}
-              createActivity={createActivity}
               editActivity={editActivity}
               submitting={submitting}
             />

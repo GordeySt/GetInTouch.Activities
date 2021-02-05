@@ -1,4 +1,3 @@
-import { EROFS } from "constants";
 import { observable, action, makeAutoObservable } from "mobx"
 import { Activities } from "../api/agent";
 import { IActivity } from "../models/activity";
@@ -8,6 +7,7 @@ class ActivityStore {
     @observable loadingInitial = false;
     @observable selectedActivity: IActivity | undefined;
     @observable editMode = false;
+    @observable submitting = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -32,6 +32,26 @@ class ActivityStore {
     @action selectActivity = (id: string) => {
         this.selectedActivity = this.activities.find(a => a.id === id);
         this.editMode = false;
+    }
+
+    @action createActivity = async (activity: IActivity) => {
+        this.submitting = true;
+
+        try {
+            await Activities.create(activity);
+            this.activities.push(activity);
+            this.editMode = false;
+            this.submitting = false;
+        }
+        catch (error) {
+            this.submitting = false;
+            console.log(error);
+        }
+    }
+
+    @action openCreateForm = () => {
+        this.editMode = true;
+        this.selectedActivity = undefined;
     }
 }
 

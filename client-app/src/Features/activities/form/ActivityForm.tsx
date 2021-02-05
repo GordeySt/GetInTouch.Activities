@@ -2,19 +2,19 @@ import React, { FormEvent, useState } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
 import { v4 as uuid } from "uuid";
+import ActivityStore from "../../../App/stores/ActivityStore";
+import { observer } from "mobx-react-lite";
 
 interface IProps {
   setEditMode: (editMode: boolean) => void;
   activity: IActivity | undefined;
-  createActivity: (activity: IActivity) => void;
   editActivity: (activity: IActivity) => void;
   submitting: boolean;
 }
 
-export const ActivityForm: React.FC<IProps> = ({
+export const ActivityForm: React.FC<IProps> = observer(({
   setEditMode,
   activity: initialFormState,
-  createActivity,
   editActivity,
   submitting
 }) => {
@@ -42,7 +42,7 @@ export const ActivityForm: React.FC<IProps> = ({
         ...activity,
         id: uuid(),
       };
-      createActivity(newActivity);
+      ActivityStore.createActivity(newActivity);
     } else {
       editActivity(activity);
     }
@@ -96,7 +96,7 @@ export const ActivityForm: React.FC<IProps> = ({
           placeholder="Venue"
           value={activity.venue}
         />
-        <Button loading={submitting} floated="right" inverted secondary content="Submit" />
+        <Button loading={ActivityStore.submitting} floated="right" inverted secondary content="Submit" />
         <Button
           onClick={() => setEditMode(false)}
           floated="right"
@@ -107,4 +107,4 @@ export const ActivityForm: React.FC<IProps> = ({
       </Form>
     </Segment>
   );
-};
+});
