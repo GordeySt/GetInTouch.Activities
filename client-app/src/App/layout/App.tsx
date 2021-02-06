@@ -6,11 +6,14 @@ import { ActivityDashboard } from "../../Features/activities/dashboard/ActivityD
 import { LoadingComponent } from "./LoadingComponent";
 import ActivityStore from "../stores/ActivityStore";
 import { observer } from "mobx-react-lite";
+import { Route } from "react-router-dom";
+import { HomePage } from "../../Features/home/HomePage";
+import { ActivityForm } from "../../Features/activities/form/ActivityForm";
 
 const App = observer(() => {
   useEffect(() => {
     ActivityStore.loadActivities();
-  }, [ActivityStore]);
+  }, []);
 
   if (ActivityStore.loadingInitial) return <LoadingComponent />;
 
@@ -18,7 +21,9 @@ const App = observer(() => {
     <React.Fragment>
       <NavBar />
       <Container style={{ marginTop: "7em" }}>
-        <ActivityDashboard />
+        <Route exact path="/" component={HomePage} />
+        <Route path="/activities" component={ActivityDashboard} />
+        <Route path="/createActivity" component={ActivityForm} />
       </Container>
     </React.Fragment>
   );
