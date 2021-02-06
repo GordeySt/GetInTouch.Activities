@@ -1,7 +1,9 @@
-import { observable, action, makeAutoObservable, computed } from "mobx"
+import { observable, action, makeAutoObservable, computed, configure, runInAction } from "mobx"
 import { SyntheticEvent } from "react";
 import { Activities } from "../api/agent";
 import { IActivity } from "../models/activity";
+
+configure({ enforceActions: "always" });
 
 class ActivityStore {
     @observable activitiesRegistry = new Map();
@@ -24,12 +26,16 @@ class ActivityStore {
         this.loadingInitial = true;
         try {
             const activities = await Activities.list();
-            this.mapAllActivitiesFromResponse(activities);
-            this.loadingInitial = false;
+            runInAction(() => {
+                this.mapAllActivitiesFromResponse(activities);
+                this.loadingInitial = false;
+            });
         } 
         catch (error) {
+            runInAction(() => {
+                this.loadingInitial = false;
+            });
             console.log(error);
-            this.loadingInitial = false;
         }
     }
 
@@ -56,12 +62,16 @@ class ActivityStore {
 
         try {
             await Activities.create(activity);
-            this.addActivitiesFromResponseToClientArray(activity);
-            this.editMode = false;
-            this.submitting = false;
+            runInAction(() => {
+                this.addActivitiesFromResponseToClientArray(activity);
+                this.editMode = false;
+                this.submitting = false;
+            })
         }
         catch (error) {
-            this.submitting = false;
+            runInAction(() => {
+                this.submitting = false;
+            })
             console.log(error);
         }
     }
@@ -71,13 +81,17 @@ class ActivityStore {
 
         try {
             await Activities.update(activity);
-            this.addActivitiesFromResponseToClientArray(activity);
-            this.selectedActivity = activity;
-            this.editMode = false;
-            this.submitting = false;
+            runInAction(() => {
+                this.addActivitiesFromResponseToClientArray(activity);
+                this.selectedActivity = activity;
+                this.editMode = false;
+                this.submitting = false;
+            });
         }
         catch (error) {
-            this.submitting = false;
+            runInAction(() => {
+                this.submitting = false;
+            });
             console.log(error);
         }
     }
@@ -93,14 +107,18 @@ class ActivityStore {
 
             try {
                 await Activities.delete(id);
-                this.activitiesRegistry.delete(id);
-                this.submitting = false;
-                this.target = '';
-                this.checkIfDeletedActivityDisplayedInDetails(id);
+                runInAction(() => {
+                    this.activitiesRegistry.delete(id);
+                    this.submitting = false;
+                    this.target = '';
+                    this.checkIfDeletedActivityDisplayedInDetails(id);
+                })
             }
             catch (error) {
-                this.submitting = false;
-                this.target = '';
+                runInAction(() => {
+                    this.submitting = false;
+                    this.target = '';
+                })
                 console.log(error);
             }
     }
