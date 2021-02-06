@@ -9,7 +9,7 @@ class ActivityStore {
     @observable activitiesRegistry = new Map();
     @observable activities: IActivity[] = [];
     @observable loadingInitial = false;
-    @observable selectedActivity: IActivity | undefined;
+    @observable activity: IActivity | undefined;
     @observable editMode = false;
     @observable submitting = false;
     @observable target = '';
@@ -52,8 +52,37 @@ class ActivityStore {
         return activity;
     }
 
+    @action loadActivity = async (id: string) => {
+        let activity = this.getActivity(id);
+
+        if (activity) {
+            this.activity = activity;
+        }
+        else {
+            this.loadingInitial = true;
+
+            try {
+                activity = await Activities.details(id);
+                runInAction(() => {
+                    this.activity = activity;
+                    this.loadingInitial = false;
+                })
+            }
+            catch (error) {
+                runInAction(() => {
+                    this.loadingInitial = false;
+                })
+                console.log(error);
+            }
+        }
+    }
+
+    getActivity = (id: string) => {
+        return this.activitiesRegistry.get(id);
+    }
+
     @action selectActivity = (id: string) => {
-        this.selectedActivity = this.activitiesRegistry.get(id);
+        this.activity = this.getActivity(id);
         this.editMode = false;
     }
 
@@ -83,7 +112,7 @@ class ActivityStore {
             await Activities.update(activity);
             runInAction(() => {
                 this.addActivitiesFromResponseToClientArray(activity);
-                this.selectedActivity = activity;
+                this.activity = activity;
                 this.editMode = false;
                 this.submitting = false;
             });
@@ -124,16 +153,16 @@ class ActivityStore {
     }
 
     checkIfDeletedActivityDisplayedInDetails = (id: string) => {
-        if (this.selectedActivity && this.selectedActivity.id === id) this.closeActivityDetailsComponent();
+        if (this.activity && this.activity.id === id) this.closeActivityDetailsComponent();
     }
 
     @action openCreateForm = () => {
         this.editMode = true;
-        this.selectedActivity = undefined;
+        this.activity = undefined;
     }
 
     @action openEditForm = (id: string) => {
-        this.selectedActivity = this.activitiesRegistry.get(id);
+        this.activity = this.getActivity(id);
         this.editMode = true;
     }
 
@@ -142,7 +171,7 @@ class ActivityStore {
     }
 
     @action closeActivityDetailsComponent = () => {
-        this.selectedActivity = undefined;
+        this.activity = undefined;
     }
 }
 

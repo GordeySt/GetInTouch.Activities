@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite";
+import { NavLink, Link } from "react-router-dom";
 import { Menu, Container, Button } from "semantic-ui-react";
 import ActivityStore from "../../App/stores/ActivityStore";
 
@@ -7,7 +8,7 @@ export const NavBar: React.FC = observer(() => {
   return (
     <Menu fixed="top" inverted>
       <Container>
-        <Menu.Item>
+        <Menu.Item as={Link} to="/">
           <img
             src="/assets/logo.png"
             alt="logo"
@@ -15,9 +16,11 @@ export const NavBar: React.FC = observer(() => {
           />
           InTouch
         </Menu.Item>
-        <Menu.Item name="Activities" />
+        <Menu.Item name="Activities" as={NavLink} to="/activities" />
         <Menu.Item>
           <Button
+            as={NavLink}
+            to="/createActivity"
             onClick={openCreateForm}
             basic
             inverted

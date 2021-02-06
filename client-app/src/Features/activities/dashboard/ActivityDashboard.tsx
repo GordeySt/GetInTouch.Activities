@@ -7,20 +7,14 @@ import { observer } from "mobx-react-lite";
 import ActivityStore from "../../../App/stores/ActivityStore";
 
 export const ActivityDashboard: React.FC = observer(() => {
-  const { selectedActivity, editMode } = ActivityStore;
+  const { activity, editMode } = ActivityStore;
   return (
     <Grid>
       <Grid.Column width={10}>
         <ActivityList />
       </Grid.Column>
       <Grid.Column width={6}>
-        {selectedActivity && !editMode && <ActivityDetails />}
-        {editMode && (
-          <ActivityForm
-            key={selectedActivity && selectedActivity.id}
-            activity={selectedActivity}
-          />
-        )}
+        <h2>Activity filters</h2>
       </Grid.Column>
     </Grid>
   );

@@ -1,11 +1,18 @@
 import { observer } from "mobx-react-lite";
 import React, { SyntheticEvent } from "react";
+import { Link } from "react-router-dom";
 import { Segment, Button, Label, Item, Icon } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
 import ActivityStore from "../../../App/stores/ActivityStore";
 
 export const ActivityList: React.FC = observer(() => {
-  const { activitiesByDate, selectActivity, target, submitting, deleteActivity } = ActivityStore;
+  const {
+    activitiesByDate,
+    selectActivity,
+    target,
+    submitting,
+    deleteActivity,
+  } = ActivityStore;
   return (
     <Segment clearing>
       <Item.Group divided>
@@ -22,7 +29,8 @@ export const ActivityList: React.FC = observer(() => {
               </Item.Description>
               <Item.Extra>
                 <Button
-                  onClick={() => selectActivity(activity.id)}
+                  as={Link}
+                  to={`/activities/${activity.id}`}
                   floated="right"
                   content="View"
                   secondary
