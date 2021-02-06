@@ -1,4 +1,5 @@
 import { observable, action, makeAutoObservable, computed } from "mobx"
+import { SyntheticEvent } from "react";
 import { Activities } from "../api/agent";
 import { IActivity } from "../models/activity";
 
@@ -9,6 +10,7 @@ class ActivityStore {
     @observable selectedActivity: IActivity | undefined;
     @observable editMode = false;
     @observable submitting = false;
+    @observable target = '';
 
     @computed get activitiesByDate() {
         return Array.from(this.activitiesRegistry.values()).slice().sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
@@ -22,16 +24,26 @@ class ActivityStore {
         this.loadingInitial = true;
         try {
             const activities = await Activities.list();
-            activities.forEach((activity) => {
-                activity.date = activity.date.split(".")[0];
-                this.activitiesRegistry.set(activity.id, activity);
-            });
+            this.mapAllActivitiesFromResponse(activities);
             this.loadingInitial = false;
         } 
         catch (error) {
             console.log(error);
             this.loadingInitial = false;
         }
+    }
+
+    mapAllActivitiesFromResponse = (activities: IActivity[]) => {
+        activities.forEach((activity) => {
+            activity = this.modifyActivityDate(activity);
+            this.addActivitiesFromResponseToClientArray(activity);
+        });
+    }
+
+    modifyActivityDate = (activity: IActivity): IActivity => {
+        activity.date = activity.date.split(".")[0];
+        
+        return activity;
     }
 
     @action selectActivity = (id: string) => {
@@ -44,7 +56,7 @@ class ActivityStore {
 
         try {
             await Activities.create(activity);
-            this.activitiesRegistry.set(activity.id, activity);
+            this.addActivitiesFromResponseToClientArray(activity);
             this.editMode = false;
             this.submitting = false;
         }
@@ -59,7 +71,7 @@ class ActivityStore {
 
         try {
             await Activities.update(activity);
-            this.activitiesRegistry.set(activity.id, activity);
+            this.addActivitiesFromResponseToClientArray(activity);
             this.selectedActivity = activity;
             this.editMode = false;
             this.submitting = false;
@@ -68,6 +80,33 @@ class ActivityStore {
             this.submitting = false;
             console.log(error);
         }
+    }
+
+    addActivitiesFromResponseToClientArray = (activity: IActivity) => {
+        this.activitiesRegistry.set(activity.id, activity);
+    }
+
+    @action deleteActivity = async (event: SyntheticEvent<HTMLButtonElement>,
+        id: string) => {
+            this.submitting = true;
+            this.target = event.currentTarget.name;
+
+            try {
+                await Activities.delete(id);
+                this.activitiesRegistry.delete(id);
+                this.submitting = false;
+                this.target = '';
+                this.checkIfDeletedActivityDisplayedInDetails(id);
+            }
+            catch (error) {
+                this.submitting = false;
+                this.target = '';
+                console.log(error);
+            }
+    }
+
+    checkIfDeletedActivityDisplayedInDetails = (id: string) => {
+        if (this.selectedActivity && this.selectedActivity.id === id) this.closeActivityDetailsComponent();
     }
 
     @action openCreateForm = () => {
