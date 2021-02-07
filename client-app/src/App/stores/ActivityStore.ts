@@ -144,7 +144,6 @@ class ActivityStore {
                     this.activitiesRegistry.delete(id);
                     this.submitting = false;
                     this.target = '';
-                    this.checkIfDeletedActivityDisplayedInDetails(id);
                 })
             }
             catch (error) {
@@ -154,28 +153,6 @@ class ActivityStore {
                 })
                 console.log(error);
             }
-    }
-
-    checkIfDeletedActivityDisplayedInDetails = (id: string) => {
-        if (this.activity && this.activity.id === id) this.closeActivityDetailsComponent();
-    }
-
-    @action openCreateForm = () => {
-        this.editMode = true;
-        this.activity = null;
-    }
-
-    @action openEditForm = (id: string) => {
-        this.activity = this.getActivity(id);
-        this.editMode = true;
-    }
-
-    @action closeEditForm = () => {
-        this.editMode = false;
-    }
-
-    @action closeActivityDetailsComponent = () => {
-        this.activity = null;
     }
 }
 

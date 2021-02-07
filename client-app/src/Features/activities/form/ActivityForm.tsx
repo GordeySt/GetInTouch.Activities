@@ -51,7 +51,9 @@ export const ActivityForm: React.FC<
         history.push(`/activities/${newActivity.id}`)
       );
     } else {
-      ActivityStore.editActivity(activity).then(() => history.push(`/activities/${activity.id}`));
+      ActivityStore.editActivity(activity).then(() =>
+        history.push(`/activities/${activity.id}`)
+      );
     }
   };
 
@@ -110,13 +112,7 @@ export const ActivityForm: React.FC<
           secondary
           content="Submit"
         />
-        <Button
-          onClick={ActivityStore.closeEditForm}
-          floated="right"
-          inverted
-          color="red"
-          content="Cancel"
-        />
+        <Button floated="right" inverted color="red" content="Cancel" />
       </Form>
     </Segment>
   );

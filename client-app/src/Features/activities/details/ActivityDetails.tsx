@@ -14,8 +14,6 @@ export const ActivityDetails: React.FC<
 > = observer(({ match, history }) => {
   const {
     activity,
-    openEditForm,
-    closeActivityDetailsComponent,
     loadActivity,
     loadingInitial,
   } = ActivityStore;

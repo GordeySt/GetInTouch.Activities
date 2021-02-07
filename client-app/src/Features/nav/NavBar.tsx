@@ -1,10 +1,7 @@
-import { observer } from "mobx-react-lite";
 import { NavLink, Link } from "react-router-dom";
 import { Menu, Container, Button } from "semantic-ui-react";
-import ActivityStore from "../../App/stores/ActivityStore";
 
-export const NavBar: React.FC = observer(() => {
-  const { openCreateForm } = ActivityStore;
+export const NavBar: React.FC = () => {
   return (
     <Menu fixed="top" inverted>
       <Container>
@@ -21,7 +18,6 @@ export const NavBar: React.FC = observer(() => {
           <Button
             as={NavLink}
             to="/createActivity"
-            onClick={openCreateForm}
             basic
             inverted
             colour="gray"
@@ -31,4 +27,4 @@ export const NavBar: React.FC = observer(() => {
       </Container>
     </Menu>
   );
-});
+};
