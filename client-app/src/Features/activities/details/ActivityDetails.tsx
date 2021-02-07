@@ -11,20 +11,20 @@ interface DetailParams {
 
 export const ActivityDetails: React.FC<
   RouteComponentProps<DetailParams>
-> = observer(({ match }) => {
+> = observer(({ match, history }) => {
   const {
     activity,
     openEditForm,
     closeActivityDetailsComponent,
     loadActivity,
-    loadingInitial
+    loadingInitial,
   } = ActivityStore;
 
   useEffect(() => {
     loadActivity(match.params.id);
-  }, []);
+  }, [loadActivity, match.params.id]);
 
-  if (loadingInitial || !activity) return <LoadingComponent />
+  if (loadingInitial || !activity) return <LoadingComponent />;
 
   return (
     <Card fluid>
@@ -49,7 +49,7 @@ export const ActivityDetails: React.FC<
             content="Edit"
           />
           <Button
-            onClick={closeActivityDetailsComponent}
+            onClick={() => history.push("/activities")}
             inverted
             color="red"
             content="Cancel"
