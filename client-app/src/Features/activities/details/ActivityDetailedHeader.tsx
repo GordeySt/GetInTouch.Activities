@@ -57,6 +57,7 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
             onMouseOut={() => setIsMouseOver(false)}
             onClick={() => setIsJoined()}
             icon
+            circular
             color="black"
           >
             <Icon name={!isJoined ? "times" : "check"} />
@@ -73,8 +74,8 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
               <strong>Cancel Attendee</strong>
             )}
           </span>
-          <Button icon floated="right">
-            <Icon name="edit outline" />
+          <Button circular icon floated="right">
+            <Icon name="settings" />
           </Button>
         </Segment>
       </Segment.Group>
