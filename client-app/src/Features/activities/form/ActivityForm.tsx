@@ -12,8 +12,12 @@ interface DetailsParams {
 
 export const ActivityForm: React.FC<
   RouteComponentProps<DetailsParams>
-> = observer(({ match }) => {
-  const { activity: initialFormState, loadActivity, clearActivity } = ActivityStore;
+> = observer(({ match, history }) => {
+  const {
+    activity: initialFormState,
+    loadActivity,
+    clearActivity,
+  } = ActivityStore;
 
   useEffect(() => {
     if (match.params.id) {
@@ -43,9 +47,11 @@ export const ActivityForm: React.FC<
         ...activity,
         id: uuid(),
       };
-      ActivityStore.createActivity(newActivity);
+      ActivityStore.createActivity(newActivity).then(() =>
+        history.push(`/activities/${newActivity.id}`)
+      );
     } else {
-      ActivityStore.editActivity(activity);
+      ActivityStore.editActivity(activity).then(() => history.push(`/activities/${activity.id}`));
     }
   };
 
