@@ -12,7 +12,7 @@ interface DetailsParams {
 
 export const ActivityForm: React.FC<
   RouteComponentProps<DetailsParams>
-> = observer(({ match, history }) => {
+> = observer(({ match, history, location }) => {
   const {
     activity: initialFormState,
     loadActivity,
@@ -70,6 +70,10 @@ export const ActivityForm: React.FC<
     setActivity({ ...activity, [name]: value });
   };
 
+  const redirectToActivitiesIfCreateForm = () => {
+    location.pathname == "/createActivity" && history.push("/activities");
+  };
+
   return (
     <Segment clearing>
       <Form onSubmit={handleSubmit}>
@@ -118,7 +122,13 @@ export const ActivityForm: React.FC<
           secondary
           content="Submit"
         />
-        <Button floated="right" inverted color="red" content="Cancel" />
+        <Button
+          onClick={redirectToActivitiesIfCreateForm}
+          floated="right"
+          inverted
+          color="red"
+          content="Cancel"
+        />
       </Form>
     </Segment>
   );
