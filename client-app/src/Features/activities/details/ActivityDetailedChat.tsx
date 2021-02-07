@@ -11,6 +11,15 @@ import {
 export const ActivityDetailedChat = () => {
   return (
     <Fragment>
+      <Segment
+        textAlign="center"
+        attached="top"
+        inverted
+        color="black"
+        style={{ border: "none" }}
+      >
+        <Icon name="wechat" size="big" />
+      </Segment>
       <Segment attached>
         <Comment.Group>
           <Comment>
