@@ -11,6 +11,8 @@ class ActivityStore {
     @observable activity: IActivity | null = null;
     @observable submitting = false;
     @observable target = '';
+    @observable isMouseOver = false;
+    @observable isJoined = true;
 
     @computed get activitiesByDate() {
         return this.groupActivitiesByDate(Array.from(this.activitiesRegistry.values()))
@@ -158,6 +160,14 @@ class ActivityStore {
                 })
                 console.log(error);
             }
+    }
+
+    @action setIsJoined = () => {
+        this.isJoined = !this.isJoined;
+    }
+
+    @action setIsMouseOver = (mouseState: boolean) => {
+        this.isMouseOver = mouseState;
     }
 }
 

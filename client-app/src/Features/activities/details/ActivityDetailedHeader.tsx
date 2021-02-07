@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { Button, Header, Icon, Image, Item, Segment } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
+import ActivityStore from "../../../App/stores/ActivityStore";
 
 const activityImageStyle = {
   filter: "brightness(30%)",
@@ -22,7 +23,7 @@ interface IProps {
 
 export const ActivityDetailedHeader: React.FC<IProps> = observer(
   ({ activity }) => {
-    const [isJoined, setIsJoined] = useState(true);
+    const { isJoined, setIsJoined } = ActivityStore;
     const [isMouseOver, setIsMouseOver] = useState(false);
 
     return (
@@ -54,7 +55,7 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
           <Button
             onMouseOver={() => setIsMouseOver(true)}
             onMouseOut={() => setIsMouseOver(false)}
-            onClick={() => setIsJoined(!isJoined)}
+            onClick={() => setIsJoined()}
             icon
             color="black"
           >

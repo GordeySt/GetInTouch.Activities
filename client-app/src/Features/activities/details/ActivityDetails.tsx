@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
-import { RouteComponentProps } from "react-router-dom";
-import { Grid } from "semantic-ui-react";
+import { Link, RouteComponentProps } from "react-router-dom";
+import { Grid, Icon } from "semantic-ui-react";
 import { LoadingComponent } from "../../../App/layout/LoadingComponent";
 import ActivityStore from "../../../App/stores/ActivityStore";
 import { ActivityDetailedChat } from "./ActivityDetailedChat";
@@ -15,7 +15,7 @@ interface DetailParams {
 
 export const ActivityDetails: React.FC<
   RouteComponentProps<DetailParams>
-> = observer(({ match }) => {
+> = observer(({ match, history }) => {
   const { activity, loadActivity, loadingInitial } = ActivityStore;
 
   useEffect(() => {
@@ -25,15 +25,23 @@ export const ActivityDetails: React.FC<
   if (loadingInitial || !activity) return <LoadingComponent />;
 
   return (
-    <Grid>
-      <Grid.Column width={10}>
-        <ActivityDetailedHeader activity={activity} />
-        <ActivityDetailedInfo activity={activity}/>
-        <ActivityDetailedChat />
-      </Grid.Column>
-      <Grid.Column width={6}>
-        <ActivityDetailedSidebar />
-      </Grid.Column>
-    </Grid>
+    <React.Fragment>
+      <Icon
+        onClick={() => history.push("/activities")}
+        name="arrow alternate circle left outline"
+        size="big"
+        style={{ marginBottom: "10px", cursor: "pointer" }}
+      />
+      <Grid>
+        <Grid.Column width={10}>
+          <ActivityDetailedHeader activity={activity} />
+          <ActivityDetailedInfo activity={activity} />
+          <ActivityDetailedChat />
+        </Grid.Column>
+        <Grid.Column width={6}>
+          <ActivityDetailedSidebar />
+        </Grid.Column>
+      </Grid>
+    </React.Fragment>
   );
 });
