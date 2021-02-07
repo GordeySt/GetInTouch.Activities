@@ -6,12 +6,12 @@ import { ActivityDashboard } from "../../Features/activities/dashboard/ActivityD
 import { LoadingComponent } from "./LoadingComponent";
 import ActivityStore from "../stores/ActivityStore";
 import { observer } from "mobx-react-lite";
-import { Route } from "react-router-dom";
+import { Route, RouteComponentProps, withRouter } from "react-router-dom";
 import { HomePage } from "../../Features/home/HomePage";
 import { ActivityForm } from "../../Features/activities/form/ActivityForm";
 import { ActivityDetails } from "../../Features/activities/details/ActivityDetails";
 
-const App = observer(() => {
+const App: React.FC<RouteComponentProps> = observer(({ location }) => {
   useEffect(() => {
     ActivityStore.loadActivities();
   }, []);
@@ -25,10 +25,14 @@ const App = observer(() => {
         <Route exact path="/" component={HomePage} />
         <Route exact path="/activities" component={ActivityDashboard} />
         <Route path="/activities/:id" component={ActivityDetails} />
-        <Route path={["/createActivity", "/manage/:id"]} component={ActivityForm} />
+        <Route
+          key={location.key}
+          path={["/createActivity", "/manage/:id"]}
+          component={ActivityForm}
+        />
       </Container>
     </React.Fragment>
   );
 });
 
-export default App;
+export default withRouter(App);
