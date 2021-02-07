@@ -28,7 +28,7 @@ export const ActivityDetails: React.FC<
     <Grid>
       <Grid.Column width={10}>
         <ActivityDetailedHeader activity={activity} />
-        <ActivityDetailedInfo />
+        <ActivityDetailedInfo activity={activity}/>
         <ActivityDetailedChat />
       </Grid.Column>
       <Grid.Column width={6}>
