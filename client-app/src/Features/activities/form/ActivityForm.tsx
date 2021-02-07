@@ -71,7 +71,7 @@ export const ActivityForm: React.FC<
   };
 
   const redirectToActivitiesIfCreateForm = () => {
-    location.pathname == "/createActivity" && history.push("/activities");
+    location.pathname === "/createActivity" && history.push("/activities");
   };
 
   return (
