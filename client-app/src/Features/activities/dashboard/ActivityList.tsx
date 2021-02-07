@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { Segment, Item, Label } from "semantic-ui-react";
+import { Item, Label } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
 import ActivityStore from "../../../App/stores/ActivityStore";
 import { ActivityListItem } from "./ActivityListItem";

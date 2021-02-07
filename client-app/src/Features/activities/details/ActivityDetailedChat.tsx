@@ -3,7 +3,6 @@ import {
   Button,
   Comment,
   Form,
-  Header,
   Icon,
   Segment,
 } from "semantic-ui-react";
