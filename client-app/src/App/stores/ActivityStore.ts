@@ -7,10 +7,8 @@ configure({ enforceActions: "always" });
 
 class ActivityStore {
     @observable activitiesRegistry = new Map();
-    @observable activities: IActivity[] = [];
     @observable loadingInitial = false;
     @observable activity: IActivity | null = null;
-    @observable editMode = false;
     @observable submitting = false;
     @observable target = '';
 
@@ -85,11 +83,6 @@ class ActivityStore {
         return this.activitiesRegistry.get(id);
     }
 
-    @action selectActivity = (id: string) => {
-        this.activity = this.getActivity(id);
-        this.editMode = false;
-    }
-
     @action createActivity = async (activity: IActivity) => {
         this.submitting = true;
 
@@ -97,7 +90,6 @@ class ActivityStore {
             await Activities.create(activity);
             runInAction(() => {
                 this.addActivitiesFromResponseToClientArray(activity);
-                this.editMode = false;
                 this.submitting = false;
             })
         }
@@ -117,7 +109,6 @@ class ActivityStore {
             runInAction(() => {
                 this.addActivitiesFromResponseToClientArray(activity);
                 this.activity = activity;
-                this.editMode = false;
                 this.submitting = false;
             });
         }
