@@ -9,7 +9,7 @@ class ActivityStore {
     @observable activitiesRegistry = new Map();
     @observable activities: IActivity[] = [];
     @observable loadingInitial = false;
-    @observable activity: IActivity | undefined;
+    @observable activity: IActivity | null = null;
     @observable editMode = false;
     @observable submitting = false;
     @observable target = '';
@@ -50,6 +50,10 @@ class ActivityStore {
         activity.date = activity.date.split(".")[0];
         
         return activity;
+    }
+
+    @action clearActivity = () => {
+        this.activity = null;
     }
 
     @action loadActivity = async (id: string) => {
@@ -158,7 +162,7 @@ class ActivityStore {
 
     @action openCreateForm = () => {
         this.editMode = true;
-        this.activity = undefined;
+        this.activity = null;
     }
 
     @action openEditForm = (id: string) => {
@@ -171,7 +175,7 @@ class ActivityStore {
     }
 
     @action closeActivityDetailsComponent = () => {
-        this.activity = undefined;
+        this.activity = null;
     }
 }
 

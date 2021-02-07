@@ -1,37 +1,44 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
 import { v4 as uuid } from "uuid";
 import ActivityStore from "../../../App/stores/ActivityStore";
 import { observer } from "mobx-react-lite";
+import { RouteComponentProps } from "react-router-dom";
 
-interface IProps {
-  activity: IActivity | undefined;
+interface DetailsParams {
+  id: string;
 }
 
-export const ActivityForm: React.FC<IProps> = observer(({
-  activity: initialFormState,
-}) => {
-  const initializeForm = () => {
-    if (initialFormState) {
-      return initialFormState;
-    } else {
-      return {
-        id: "",
-        title: "",
-        category: "",
-        description: "",
-        date: "",
-        city: "",
-        venue: "",
-      };
-    }
-  };
+export const ActivityForm: React.FC<
+  RouteComponentProps<DetailsParams>
+> = observer(({ match }) => {
+  const { activity: initialFormState, loadActivity, clearActivity } = ActivityStore;
 
-  const [activity, setActivity] = useState<IActivity>(initializeForm);
+  useEffect(() => {
+    if (match.params.id) {
+      loadActivity(match.params.id).then(
+        () => initialFormState && setActivity(initialFormState)
+      );
+    }
+
+    return () => {
+      clearActivity();
+    };
+  }, [loadActivity, clearActivity, match.params.id, initialFormState]);
+
+  const [activity, setActivity] = useState<IActivity>({
+    id: "",
+    title: "",
+    category: "",
+    description: "",
+    date: "",
+    city: "",
+    venue: "",
+  });
 
   const handleSubmit = () => {
-    if (activity.id.length === 0) {
+    if (activity!.id.length === 0) {
       let newActivity = {
         ...activity,
         id: uuid(),
@@ -90,7 +97,13 @@ export const ActivityForm: React.FC<IProps> = observer(({
           placeholder="Venue"
           value={activity.venue}
         />
-        <Button loading={ActivityStore.submitting} floated="right" inverted secondary content="Submit" />
+        <Button
+          loading={ActivityStore.submitting}
+          floated="right"
+          inverted
+          secondary
+          content="Submit"
+        />
         <Button
           onClick={ActivityStore.closeEditForm}
           floated="right"

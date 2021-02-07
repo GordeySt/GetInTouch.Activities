@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { Card, Button, Image } from "semantic-ui-react";
 import { LoadingComponent } from "../../../App/layout/LoadingComponent";
 import ActivityStore from "../../../App/stores/ActivityStore";
@@ -43,7 +43,8 @@ export const ActivityDetails: React.FC<
       <Card.Content extra>
         <Button.Group widths={2}>
           <Button
-            onClick={() => openEditForm(activity!.id)}
+            as={Link}
+            to={`/manage/${activity.id}`}
             inverted
             secondary
             content="Edit"
