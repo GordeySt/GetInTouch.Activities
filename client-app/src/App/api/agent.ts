@@ -6,7 +6,12 @@ import { IActivity } from '../models/activity';
 axios.defaults.baseURL = "http://localhost:5000/api";
 
 axios.interceptors.response.use(undefined, er => {
+    if (er.message === "Network Error" && !er.response) {
+        toast.error('Network error - make sure API is running');
+    }
+
     const { status, data, config } = er.response;
+    
     if (status === 404) {
         history.push('/notfound');
     } 
