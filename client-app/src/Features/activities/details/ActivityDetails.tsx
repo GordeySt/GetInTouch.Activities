@@ -20,9 +20,7 @@ export const ActivityDetails: React.FC<
   const { activity, loadActivity, loadingInitial } = ActivityStore;
 
   useEffect(() => {
-    loadActivity(match.params.id).catch(() => {
-      history.push("/notfound");
-    });
+    loadActivity(match.params.id);
   }, [loadActivity, match.params.id, history]);
 
   if (loadingInitial) return <LoadingComponent />;
