@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Item, Icon, Segment } from "semantic-ui-react";
@@ -8,7 +9,7 @@ interface IProps {
   activity: IActivity;
 }
 
-export const ActivityListItem: React.FC<IProps> = ({ activity }) => {
+export const ActivityListItem: React.FC<IProps> = observer(({ activity }) => {
   const { target, submitting, deleteActivity } = ActivityStore;
   return (
     <Segment.Group>
@@ -50,4 +51,4 @@ export const ActivityListItem: React.FC<IProps> = ({ activity }) => {
       </Segment>
     </Segment.Group>
   );
-};
+});

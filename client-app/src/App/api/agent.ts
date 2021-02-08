@@ -5,9 +5,16 @@ import { IActivity } from '../models/activity';
 axios.defaults.baseURL = "http://localhost:5000/api";
 
 axios.interceptors.response.use(undefined, er => {
-    if (er.response.status === 404) {
+    const { status, data, config } = er.response;
+    if (status === 404) {
         history.push('/notfound');
     } 
+
+    if (status === 400 && config.method === 'get' && data.errors.hasOwnProperty('id')) {
+        history.push('/notfound')
+    }
+    
+    console.log(er.response === 400);
 })
 
 const sleep = (ms: number) => (response: AxiosResponse) => 
