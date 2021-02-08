@@ -1,28 +1,15 @@
 import axios, { AxiosResponse } from "axios";
-import { toast } from "react-toastify";
-import { history } from "../..";
 import { IActivity } from '../models/activity';
+import { ErrorsHandler } from "./errors"
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
 axios.interceptors.response.use(undefined, er => {
-    if (er.message === "Network Error" && !er.response) {
-        toast.error('Network error - make sure API is running');
-    }
+    ErrorsHandler.handleNetworkError(er);
 
-    const { status, data, config } = er.response;
-
-    if (status === 404) {
-        history.push('/notfound');
-    } 
-
-    if (status === 400 && config.method === 'get' && data.errors.hasOwnProperty('id')) {
-        history.push('/notfound')
-    }
-
-    if (status === 500) {
-        toast.error("Server error - check the terminal for more info!")
-    }
+    ErrorsHandler.handle404Error(er.response);
+    ErrorsHandler.handle400Error(er.response);
+    ErrorsHandler.handle500Error(er.response);
 })
 
 const sleep = (ms: number) => (response: AxiosResponse) => 
