@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using System.Threading;
 using Persistance;
 using FluentValidation;
+using Application.Errors;
+using System.Net;
 
 namespace Application.Activities
 {
     public class EditActivity
     {
-        public class Command : IRequest 
+        public class Command : IRequest
         {
             public Guid Id { get; set; }
             public string Title { get; set; }
@@ -32,7 +34,7 @@ namespace Application.Activities
                 RuleFor(x => x.Venue).NotEmpty();
             }
         }
-        
+
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
@@ -46,7 +48,10 @@ namespace Application.Activities
             {
                 var activity = await _context.Activities.FindAsync(request.Id);
 
-                if (activity == null) throw new Exception("Could not find an activity");
+                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new
+                {
+                    activity = "Not Found"
+                });
 
                 activity.Title = request.Title ?? activity.Title;
                 activity.Description = request.Description ?? activity.Description;
