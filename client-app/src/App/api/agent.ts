@@ -3,6 +3,10 @@ import { IActivity } from '../models/activity';
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
+axios.interceptors.response.use(undefined, er => {
+    console.log(er.response);
+})
+
 const sleep = (ms: number) => (response: AxiosResponse) => 
     new Promise<AxiosResponse>(resolve => setTimeout(() => resolve(response), ms));
 
