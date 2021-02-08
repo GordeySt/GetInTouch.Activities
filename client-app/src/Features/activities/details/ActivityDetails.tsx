@@ -8,6 +8,7 @@ import { ActivityDetailedChat } from "./ActivityDetailedChat";
 import { ActivityDetailedInfo } from "./ActivityDetailedInfo";
 import { ActivityDetailedHeader } from "./ActivityDetailedHeader";
 import { ActivityDetailedSidebar } from "./ActivityDetailedSidebar";
+import { NotFound } from "../../../App/layout/NotFound";
 
 interface DetailParams {
   id: string;
@@ -19,10 +20,14 @@ export const ActivityDetails: React.FC<
   const { activity, loadActivity, loadingInitial } = ActivityStore;
 
   useEffect(() => {
-    loadActivity(match.params.id);
-  }, [loadActivity, match.params.id]);
+    loadActivity(match.params.id).catch(() => {
+      history.push("/notfound");
+    });
+  }, [loadActivity, match.params.id, history]);
 
-  if (loadingInitial || !activity) return <LoadingComponent />;
+  if (loadingInitial) return <LoadingComponent />;
+
+  if (!activity) return <NotFound />;
 
   return (
     <React.Fragment>

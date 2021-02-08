@@ -4,7 +4,9 @@ import { IActivity } from '../models/activity';
 axios.defaults.baseURL = "http://localhost:5000/api";
 
 axios.interceptors.response.use(undefined, er => {
-    console.log(er.response);
+    if (er.response.status === 404) {
+        throw er.response;
+    } 
 })
 
 const sleep = (ms: number) => (response: AxiosResponse) => 
