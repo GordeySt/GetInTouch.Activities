@@ -48,7 +48,7 @@ export const ActivityForm: React.FC<
   ]);
 
   const handleSubmit = () => {
-    if (activity!.id.length === 0) {
+    if (checkIfActivityIsNew()) {
       let newActivity = {
         ...activity,
         id: uuid(),
@@ -70,8 +70,14 @@ export const ActivityForm: React.FC<
     setActivity({ ...activity, [name]: value });
   };
 
-  const redirectToActivitiesIfCreateForm = () => {
-    location.pathname === "/createActivity" && history.push("/activities");
+  const redirectFromForm = () => {
+    checkIfActivityIsNew()
+      ? history.push("/activities")
+      : history.push(`/activities/${activity.id}`);
+  };
+
+  const checkIfActivityIsNew = () => {
+    return activity!.id.length === 0;
   };
 
   return (
@@ -79,7 +85,7 @@ export const ActivityForm: React.FC<
       <Grid.Column width={10}>
         <React.Fragment>
           <Icon
-            onClick={redirectToActivitiesIfCreateForm}
+            onClick={redirectFromForm}
             name="arrow alternate circle left outline"
             size="big"
             style={{ marginBottom: "10px", cursor: "pointer" }}

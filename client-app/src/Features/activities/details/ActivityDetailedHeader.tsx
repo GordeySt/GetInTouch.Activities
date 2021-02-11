@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button, Header, Icon, Image, Item, Segment } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
 import ActivityStore from "../../../App/stores/ActivityStore";
@@ -74,7 +75,13 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
               <strong>Cancel Attendee</strong>
             )}
           </span>
-          <Button circular icon floated="right">
+          <Button
+            as={Link}
+            to={`/manage/${activity.id}`}
+            circular
+            icon
+            floated="right"
+          >
             <Icon name="settings" />
           </Button>
         </Segment>
