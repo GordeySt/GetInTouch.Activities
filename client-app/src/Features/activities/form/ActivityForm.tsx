@@ -5,6 +5,9 @@ import { v4 as uuid } from "uuid";
 import ActivityStore from "../../../App/stores/ActivityStore";
 import { observer } from "mobx-react-lite";
 import { RouteComponentProps } from "react-router-dom";
+import { Form as FinalForm, Field } from "react-final-form";
+import { TextInput } from "../../../App/common/form/TextInput";
+import { TextAreaInput } from "../../../App/common/form/TextAreaInput";
 
 interface DetailsParams {
   id: string;
@@ -12,7 +15,7 @@ interface DetailsParams {
 
 export const ActivityForm: React.FC<
   RouteComponentProps<DetailsParams>
-> = observer(({ match, history, location }) => {
+> = observer(({ match, history }) => {
   const {
     activity: initialFormState,
     loadActivity,
@@ -47,28 +50,25 @@ export const ActivityForm: React.FC<
     activity.id.length,
   ]);
 
-  const handleSubmit = () => {
-    if (checkIfActivityIsNew()) {
-      let newActivity = {
-        ...activity,
-        id: uuid(),
-      };
-      ActivityStore.createActivity(newActivity).then(() =>
-        history.push(`/activities/${newActivity.id}`)
-      );
-    } else {
-      ActivityStore.editActivity(activity).then(() =>
-        history.push(`/activities/${activity.id}`)
-      );
-    }
+  const handleFinalFormSubmit = (values: any) => {
+    console.log(values);
   };
 
-  const handleInputChange = (
-    event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = event.currentTarget;
-    setActivity({ ...activity, [name]: value });
-  };
+  // const handleSubmit = () => {
+  //   if (checkIfActivityIsNew()) {
+  //     let newActivity = {
+  //       ...activity,
+  //       id: uuid(),
+  //     };
+  //     ActivityStore.createActivity(newActivity).then(() =>
+  //       history.push(`/activities/${newActivity.id}`)
+  //     );
+  //   } else {
+  //     ActivityStore.editActivity(activity).then(() =>
+  //       history.push(`/activities/${activity.id}`)
+  //     );
+  //   }
+  // };
 
   const redirectFromForm = () => {
     checkIfActivityIsNew()
@@ -91,53 +91,57 @@ export const ActivityForm: React.FC<
             style={{ marginBottom: "10px", cursor: "pointer" }}
           />
           <Segment clearing>
-            <Form onSubmit={handleSubmit}>
-              <Form.Input
-                onChange={handleInputChange}
-                name="title"
-                placeholder="Title"
-                value={activity.title}
-              />
-              <Form.TextArea
-                onChange={handleInputChange}
-                name="description"
-                rows={2}
-                placeholder="Description"
-                value={activity.description}
-              />
-              <Form.Input
-                onChange={handleInputChange}
-                name="category"
-                placeholder="Category"
-                value={activity.category}
-              />
-              <Form.Input
-                onChange={handleInputChange}
-                name="date"
-                type="datetime-local"
-                placeholder="Date"
-                value={activity.date}
-              />
-              <Form.Input
-                onChange={handleInputChange}
-                name="city"
-                placeholder="City"
-                value={activity.city}
-              />
-              <Form.Input
-                onChange={handleInputChange}
-                name="venue"
-                placeholder="Venue"
-                value={activity.venue}
-              />
-              <Button
-                loading={ActivityStore.submitting}
-                floated="right"
-                inverted
-                secondary
-                content="Submit"
-              />
-            </Form>
+            <FinalForm
+              onSubmit={handleFinalFormSubmit}
+              render={({ handleSubmit }) => (
+                <Form onSubmit={handleSubmit}>
+                  <Field
+                    name="title"
+                    placeholder="Title"
+                    value={activity.title}
+                    component={TextInput}
+                  />
+                  <Field
+                    name="description"
+                    rows={3}
+                    placeholder="Description"
+                    value={activity.description}
+                    component={TextAreaInput}
+                  />
+                  <Field
+                    name="category"
+                    placeholder="Category"
+                    value={activity.category}
+                    component={TextInput}
+                  />
+                  <Field
+                    name="date"
+                    placeholder="Date"
+                    value={activity.date}
+                    component={TextInput}
+                  />
+                  <Field
+                    name="city"
+                    placeholder="City"
+                    value={activity.city}
+                    component={TextInput}
+                  />
+                  <Field
+                    name="venue"
+                    placeholder="Venue"
+                    value={activity.venue}
+                    component={TextInput}
+                  />
+                  <Button
+                    loading={ActivityStore.submitting}
+                    floated="right"
+                    inverted
+                    secondary
+                    content="Submit"
+                  />
+                </Form>
+              )}
+            ></FinalForm>
           </Segment>
         </React.Fragment>
       </Grid.Column>
