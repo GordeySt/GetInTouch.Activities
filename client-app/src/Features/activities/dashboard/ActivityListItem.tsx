@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { Button, Item, Icon, Segment } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
 import ActivityStore from "../../../App/stores/ActivityStore";
-import { format } from "date-fns";
 
 interface IProps {
   activity: IActivity;
@@ -28,7 +27,7 @@ export const ActivityListItem: React.FC<IProps> = observer(({ activity }) => {
       <Segment>
         <Icon name="clock" />
         <span style={{ marginRight: "10px" }}>
-          {format(activity.date!, "h:mm a")}
+          {activity.date!.getHours()}:{activity.date!.getMinutes()}
         </span>
         <Icon name="marker" /> {activity.venue}, {activity.city}
       </Segment>
