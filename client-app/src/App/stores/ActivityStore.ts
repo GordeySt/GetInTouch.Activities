@@ -20,11 +20,11 @@ class ActivityStore {
 
     groupActivitiesByDate(activities: IActivity[]) {
         const sortedActivities = activities.slice().sort(
-            (a, b) => Date.parse(a.date) - Date.parse(b.date)
+            (a, b) => a.date!.getTime() - b.date!.getTime()
         )
 
         return Object.entries(sortedActivities.reduce((activities, activity) => {
-            const date = activity.date.split('T')[0];
+            const date = activity.date!.toISOString().split('T')[0];
 
             activities[date] = activities[date] ? [...activities[date], activity] : [activity];
 
@@ -61,7 +61,7 @@ class ActivityStore {
     }
 
     modifyActivityDate = (activity: IActivity): IActivity => {
-        activity.date = activity.date.split(".")[0];
+        activity.date = new Date(activity.date!);
         
         return activity;
     }
@@ -82,6 +82,7 @@ class ActivityStore {
             try {
                 activity = await Activities.details(id);
                 runInAction(() => {
+                    activity.date = new Date(activity.date!)
                     this.activity = activity;
                     this.loadingInitial = false;
                 })

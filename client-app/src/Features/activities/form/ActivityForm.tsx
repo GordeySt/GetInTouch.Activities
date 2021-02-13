@@ -30,7 +30,7 @@ export const ActivityForm: React.FC<
     title: "",
     category: "",
     description: "",
-    date: "",
+    date: undefined,
     city: "",
     venue: "",
   });

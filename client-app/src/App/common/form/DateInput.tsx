@@ -6,7 +6,7 @@ import moment from "moment";
 import "react-datetime/css/react-datetime.css";
 
 interface IProps
-  extends FieldRenderProps<string, HTMLElement>,
+  extends FieldRenderProps<Date, HTMLElement>,
     FormFieldProps {}
 
 export const DateInput: React.FC<IProps> = ({
@@ -17,7 +17,7 @@ export const DateInput: React.FC<IProps> = ({
   return (
     <FormField error={touched && !!error} width={width}>
       <DatePicker
-        value={input.value}
+        value={input.value || undefined}
         onChange={(data) => input.onChange(data)}
         dateFormat="DD-MM-YYYY"
         timeFormat="hh:mm A"
