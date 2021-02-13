@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Segment, Form, Button, Icon, Grid } from "semantic-ui-react";
-import { ActivityFormValues } from "../../../App/models/activity";
+import { ActivityFormValues, IActivity } from "../../../App/models/activity";
 import { v4 as uuid } from "uuid";
 import ActivityStore from "../../../App/stores/ActivityStore";
 import { observer } from "mobx-react-lite";
@@ -11,6 +11,26 @@ import { TextAreaInput } from "../../../App/common/form/TextAreaInput";
 import { SelectInput } from "../../../App/common/form/SelectInput";
 import { category } from "../../../App/common/options/categoryOptions";
 import { DateInput } from "../../../App/common/form/DateInput";
+import {
+  combineValidators,
+  composeValidators,
+  hasLengthGreaterThan,
+  isRequired,
+} from "revalidate";
+
+const validate = combineValidators({
+  title: isRequired({ message: "The title is required" }),
+  category: isRequired("Category"),
+  description: composeValidators(
+    isRequired("Description"),
+    hasLengthGreaterThan(4)({
+      message: "Description needs to be at least 5 characters",
+    })
+  )(),
+  city: isRequired("City"),
+  venue: isRequired("Venue"),
+  date: isRequired("Date"),
+});
 
 interface DetailsParams {
   id: string;
@@ -31,22 +51,15 @@ export const ActivityForm: React.FC<
     }
   }, [loadActivity, match.params.id]);
 
-  const handleFinalFormSubmit = (values: any) => {
-    console.log(new Date(values.date._d));
+  const handleFinalFormSubmit = (values: IActivity) => {
     if (!activity.id) {
       let newActivity = {
         ...values,
-        date: new Date(values.date._d),
         id: uuid(),
       };
       ActivityStore.createActivity(newActivity);
     } else {
-      console.log(values.date._d);
-      let modifiedActivity = {
-        ...values,
-        date: new Date(values.date._d),
-      };
-      ActivityStore.editActivity(modifiedActivity);
+      ActivityStore.editActivity(values);
     }
   };
 
@@ -68,9 +81,10 @@ export const ActivityForm: React.FC<
           />
           <Segment clearing>
             <FinalForm
+              validate={validate}
               initialValues={activity}
               onSubmit={handleFinalFormSubmit}
-              render={({ handleSubmit }) => (
+              render={({ handleSubmit, invalid, pristine }) => (
                 <Form onSubmit={handleSubmit} loading={loadingInitial}>
                   <Field
                     name="title"
@@ -111,7 +125,7 @@ export const ActivityForm: React.FC<
                     component={TextInput}
                   />
                   <Button
-                    disabled={loadingInitial}
+                    disabled={loadingInitial || invalid || pristine}
                     loading={ActivityStore.submitting}
                     floated="right"
                     inverted
