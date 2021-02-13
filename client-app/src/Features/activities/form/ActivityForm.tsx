@@ -1,6 +1,6 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { Segment, Form, Button, Icon, Grid } from "semantic-ui-react";
-import { IActivity } from "../../../App/models/activity";
+import { ActivityFormValues, IActivity } from "../../../App/models/activity";
 import { v4 as uuid } from "uuid";
 import ActivityStore from "../../../App/stores/ActivityStore";
 import { observer } from "mobx-react-lite";
@@ -19,39 +19,19 @@ interface DetailsParams {
 export const ActivityForm: React.FC<
   RouteComponentProps<DetailsParams>
 > = observer(({ match, history }) => {
-  const {
-    activity: initialFormState,
-    loadActivity,
-    clearActivity,
-  } = ActivityStore;
+  const { loadActivity } = ActivityStore;
 
-  const [activity, setActivity] = useState<IActivity>({
-    id: "",
-    title: "",
-    category: "",
-    description: "",
-    date: undefined,
-    city: "",
-    venue: "",
-  });
+  const [activity, setActivity] = useState(new ActivityFormValues());
+
+  console.log(activity.title);
 
   useEffect(() => {
-    if (match.params.id && activity.id.length === 0) {
-      loadActivity(match.params.id).then(
-        () => initialFormState && setActivity(initialFormState)
+    if (match.params.id) {
+      loadActivity(match.params.id).then((activity) =>
+        setActivity(new ActivityFormValues(activity))
       );
     }
-
-    return () => {
-      clearActivity();
-    };
-  }, [
-    loadActivity,
-    clearActivity,
-    match.params.id,
-    initialFormState,
-    activity.id.length,
-  ]);
+  }, [loadActivity, match.params.id]);
 
   const handleFinalFormSubmit = (values: any) => {
     console.log(values);
@@ -80,7 +60,7 @@ export const ActivityForm: React.FC<
   };
 
   const checkIfActivityIsNew = () => {
-    return activity!.id.length === 0;
+    return activity;
   };
 
   return (
@@ -95,6 +75,7 @@ export const ActivityForm: React.FC<
           />
           <Segment clearing>
             <FinalForm
+              initialValues={activity}
               onSubmit={handleFinalFormSubmit}
               render={({ handleSubmit }) => (
                 <Form onSubmit={handleSubmit}>

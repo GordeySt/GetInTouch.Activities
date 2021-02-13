@@ -1,9 +1,23 @@
 export interface IActivity {
-    id: string;
+    id?: string;
     title: string;
     description: string;
     category: string;
-    date: Date | undefined;
+    date?: Date;
     city: string;
     venue: string;
+}
+
+export class ActivityFormValues implements IActivity {
+    id?: string = undefined;
+    title: string = "";
+    description: string = "";
+    category: string = "";
+    date?: Date = undefined;
+    city: string = "";
+    venue: string = "";
+
+    constructor(init?: IActivity) {
+        Object.assign(this, init);
+    }
 }

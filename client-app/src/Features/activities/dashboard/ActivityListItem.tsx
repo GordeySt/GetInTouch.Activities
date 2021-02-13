@@ -44,7 +44,7 @@ export const ActivityListItem: React.FC<IProps> = observer(({ activity }) => {
         <Button
           name={activity.id}
           loading={target === activity.id && submitting}
-          onClick={(e) => deleteActivity(e, activity.id)}
+          onClick={(e) => deleteActivity(e, activity.id!)}
           floated="right"
           icon
         >
