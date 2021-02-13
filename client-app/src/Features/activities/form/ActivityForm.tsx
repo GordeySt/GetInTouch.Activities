@@ -10,6 +10,7 @@ import { TextInput } from "../../../App/common/form/TextInput";
 import { TextAreaInput } from "../../../App/common/form/TextAreaInput";
 import { SelectInput } from "../../../App/common/form/SelectInput";
 import { category } from "../../../App/common/options/categoryOptions";
+import { DateInput } from "../../../App/common/form/DateInput";
 
 interface DetailsParams {
   id: string;
@@ -121,7 +122,7 @@ export const ActivityForm: React.FC<
                     name="date"
                     placeholder="Date"
                     value={activity.date}
-                    component={TextInput}
+                    component={DateInput}
                   />
                   <Field
                     name="city"
