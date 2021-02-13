@@ -1,5 +1,6 @@
 import { observable, action, makeAutoObservable, computed, configure, runInAction } from "mobx"
 import { SyntheticEvent } from "react";
+import { history } from "../..";
 import { Activities } from "../api/agent";
 import { IActivity } from "../models/activity";
 
@@ -84,7 +85,7 @@ class ActivityStore {
             try {
                 activity = await Activities.details(id);
                 runInAction(() => {
-                    activity.date = new Date(activity.date!)
+                    activity.date = new Date(activity.date!);
                     this.activity = activity;
                     this.loadingInitial = false;
                 })
@@ -112,6 +113,7 @@ class ActivityStore {
                 this.addActivitiesFromResponseToClientArray(activity);
                 this.submitting = false;
             })
+            history.push(`/activities/${activity.id}`)
         }
         catch (error) {
             runInAction(() => {
@@ -131,6 +133,7 @@ class ActivityStore {
                 this.activity = activity;
                 this.submitting = false;
             });
+            history.push(`/activities/${activity.id}`)
         }
         catch (error) {
             runInAction(() => {

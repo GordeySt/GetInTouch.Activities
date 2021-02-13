@@ -1,6 +1,6 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Segment, Form, Button, Icon, Grid } from "semantic-ui-react";
-import { ActivityFormValues, IActivity } from "../../../App/models/activity";
+import { ActivityFormValues } from "../../../App/models/activity";
 import { v4 as uuid } from "uuid";
 import ActivityStore from "../../../App/stores/ActivityStore";
 import { observer } from "mobx-react-lite";
@@ -19,11 +19,9 @@ interface DetailsParams {
 export const ActivityForm: React.FC<
   RouteComponentProps<DetailsParams>
 > = observer(({ match, history }) => {
-  const { loadActivity } = ActivityStore;
+  const { loadActivity, loadingInitial } = ActivityStore;
 
   const [activity, setActivity] = useState(new ActivityFormValues());
-
-  console.log(activity.title);
 
   useEffect(() => {
     if (match.params.id) {
@@ -34,33 +32,28 @@ export const ActivityForm: React.FC<
   }, [loadActivity, match.params.id]);
 
   const handleFinalFormSubmit = (values: any) => {
-    console.log(values);
+    console.log(new Date(values.date._d));
+    if (!activity.id) {
+      let newActivity = {
+        ...values,
+        date: new Date(values.date._d),
+        id: uuid(),
+      };
+      ActivityStore.createActivity(newActivity);
+    } else {
+      console.log(values.date._d);
+      let modifiedActivity = {
+        ...values,
+        date: new Date(values.date._d),
+      };
+      ActivityStore.editActivity(modifiedActivity);
+    }
   };
-
-  // const handleSubmit = () => {
-  //   if (checkIfActivityIsNew()) {
-  //     let newActivity = {
-  //       ...activity,
-  //       id: uuid(),
-  //     };
-  //     ActivityStore.createActivity(newActivity).then(() =>
-  //       history.push(`/activities/${newActivity.id}`)
-  //     );
-  //   } else {
-  //     ActivityStore.editActivity(activity).then(() =>
-  //       history.push(`/activities/${activity.id}`)
-  //     );
-  //   }
-  // };
 
   const redirectFromForm = () => {
-    checkIfActivityIsNew()
+    !activity.id
       ? history.push("/activities")
       : history.push(`/activities/${activity.id}`);
-  };
-
-  const checkIfActivityIsNew = () => {
-    return activity;
   };
 
   return (
@@ -78,7 +71,7 @@ export const ActivityForm: React.FC<
               initialValues={activity}
               onSubmit={handleFinalFormSubmit}
               render={({ handleSubmit }) => (
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit} loading={loadingInitial}>
                   <Field
                     name="title"
                     placeholder="Title"
@@ -118,6 +111,7 @@ export const ActivityForm: React.FC<
                     component={TextInput}
                   />
                   <Button
+                    disabled={loadingInitial}
                     loading={ActivityStore.submitting}
                     floated="right"
                     inverted

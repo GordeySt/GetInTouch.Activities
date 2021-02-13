@@ -11,13 +11,13 @@ export const ActivityDetailedInfo: React.FC<IProps> = observer(
   ({ activity }) => {
     const modifyDayOfTheWeekToString = () => {
       const days = [
+        "Sunday",
         "Monday",
         "Tuesday",
         "Wednesday",
         "Thursday",
         "Friday",
         "Saturday",
-        "Sunday",
       ];
 
       return days[activity.date!.getDay()];
