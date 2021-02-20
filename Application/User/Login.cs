@@ -29,10 +29,10 @@ namespace Application.User
 
         public class Handler : IRequestHandler<Query, User>
         {
-            private readonly UserManager<User> _userManager;
-            private readonly SignInManager<User> _signInManager;
+            private readonly UserManager<AppUser> _userManager;
+            private readonly SignInManager<AppUser> _signInManager;
 
-            public Handler(UserManager<User> userManager, SignInManager<User> signInManager)
+            public Handler(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
             {
                 _signInManager = signInManager;
                 _userManager = userManager;
