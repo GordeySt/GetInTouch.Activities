@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Domain;
 using MediatR;
 using Application.Activities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -14,6 +15,7 @@ namespace API.Controllers
         public async Task<ActionResult<List<Activity>>> ActivitiesList() => await Mediator.Send(new ActivitiesList.Query());
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Activity>> Details(Guid id) => await Mediator.Send(new ActivitiesDetails.Query(id));
 
         [HttpPost]
