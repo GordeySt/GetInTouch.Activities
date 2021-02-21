@@ -16,6 +16,8 @@ using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace API
 {
@@ -46,7 +48,11 @@ namespace API
 
             services.AddMediatR(typeof(ActivitiesList.Handler).Assembly);
 
-            services.AddControllers().AddFluentValidation(config =>
+            services.AddControllers(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            }).AddFluentValidation(config =>
             {
                 config.RegisterValidatorsFromAssemblyContaining<CreateActivity>();
             });
