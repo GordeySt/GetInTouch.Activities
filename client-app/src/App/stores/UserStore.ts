@@ -1,6 +1,7 @@
 import { observable, action, makeAutoObservable, computed, configure, runInAction } from "mobx"
 import { IUser, IUserFromValues } from "../models/user";
 import { User } from "../api/agent"
+import { history } from "../..";
 
 configure({ enforceActions: "always" });
 
@@ -20,6 +21,7 @@ class UserStore {
                 this.user = user;
             })
             console.log(user);
+            history.push("/activities");
         }
         catch (error) {
             throw error;
