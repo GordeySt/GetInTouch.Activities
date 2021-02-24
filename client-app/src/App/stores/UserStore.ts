@@ -2,6 +2,8 @@ import { observable, action, makeAutoObservable, computed, configure, runInActio
 import { IUser, IUserFromValues } from "../models/user";
 import { User } from "../api/agent"
 
+configure({ enforceActions: "always" });
+
 class UserStore {
     @observable user: IUser | null = null;
 
@@ -15,6 +17,7 @@ class UserStore {
         try {
             const user = await User.login(values);
             this.user = user;
+            console.log(user);
         }
         catch (error) {
             console.log(error);
