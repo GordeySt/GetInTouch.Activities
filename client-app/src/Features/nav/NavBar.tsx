@@ -3,7 +3,7 @@ import { Menu, Container, Button, Image, Dropdown } from "semantic-ui-react";
 import UserStore from "../../App/stores/UserStore";
 
 export const NavBar: React.FC = () => {
-  const { isLoggedIn, user } = UserStore;
+  const { logout, user } = UserStore;
   return (
     <Menu fixed="top" inverted>
       <Container>
@@ -37,7 +37,7 @@ export const NavBar: React.FC = () => {
                   text="My profile"
                   icon="user"
                 />
-                <Dropdown.Item text="Logout" icon="power" />
+                <Dropdown.Item onClick={logout} text="Logout" icon="power" />
               </Dropdown.Menu>
             </Dropdown>
           </Menu.Item>
