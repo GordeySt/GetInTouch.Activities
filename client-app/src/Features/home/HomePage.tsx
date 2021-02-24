@@ -16,8 +16,8 @@ export const HomePage = () => {
           Activities
         </Header>
         <Header as="h2" inverted content="Bring people together" />
-        <Button as={Link} to="/activities" size="huge" inverted>
-          Let's get it started
+        <Button as={Link} to="/login" size="huge" inverted>
+          Login
         </Button>
       </Container>
     </Segment>
