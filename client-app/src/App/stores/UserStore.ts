@@ -16,7 +16,9 @@ class UserStore {
     @action login = async (values: IUserFromValues) => {
         try {
             const user = await User.login(values);
-            this.user = user;
+            runInAction(() => {
+                this.user = user;
+            })
             console.log(user);
         }
         catch (error) {
