@@ -8,6 +8,6 @@ export interface IUser {
 export interface IUserFromValues {
     email: string;
     password: string;
-    displayName?: string;
+    displayedName?: string;
     username?: string;
 }

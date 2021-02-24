@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { IActivity } from '../models/activity';
 import { ErrorsHandler } from "./errors"
+import { IUser, IUserFromValues } from "../models/user"
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -32,4 +33,10 @@ export const Activities = {
     create: (activity: IActivity) => requests.post('/activities', activity),
     update: (activity: IActivity) => requests.put(`/activities/${activity.id}`, activity),
     delete: (id: string) => requests.del(`/activities/${id}`),
+}
+
+const User = {
+    current: (): Promise<IUser> => requests.get("/user"),
+    login: (user: IUserFromValues): Promise<IUser> => requests.post('/user/login', user),
+    register: (user: IUserFromValues): Promise<IUser> => requests.post("/user/register", user)
 }
