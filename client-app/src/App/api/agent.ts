@@ -12,7 +12,7 @@ axios.interceptors.response.use(undefined, er => {
     ErrorsHandler.handle400Error(er.response);
     ErrorsHandler.handle500Error(er.response);
 
-    throw er;
+    throw er.response;
 })
 
 const sleep = (ms: number) => (response: AxiosResponse) => 
