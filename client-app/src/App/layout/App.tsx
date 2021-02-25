@@ -14,7 +14,7 @@ import { ActivityForm } from "../../Features/activities/form/ActivityForm";
 import { ActivityDetails } from "../../Features/activities/details/ActivityDetails";
 import { NotFound } from "./NotFound";
 import { ToastContainer } from "react-toastify";
-import { LoginForm } from "../../Features/user/LoginForm";
+import { RegisterForm } from "../../Features/user/RegisterForm";
 import CommonStore from "../stores/CommonStore";
 import UserStore from "../stores/UserStore";
 import { LoadingComponent } from "./LoadingComponent";
@@ -51,7 +51,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                   path={["/createActivity", "/manage/:id"]}
                   component={ActivityForm}
                 />
-                <Route path="/login" component={LoginForm} />
+                <Route path="/register" component={RegisterForm} />
                 <Route component={NotFound} />
               </Switch>
             </Container>

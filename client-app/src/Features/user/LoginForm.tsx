@@ -4,10 +4,9 @@ import { Form as FinalForm, Field } from "react-final-form";
 import { combineValidators, isRequired } from "revalidate";
 import { Form, Button, Segment, Header, Icon } from "semantic-ui-react";
 import { TextInput } from "../../App/common/form/TextInput";
-import { IUserFromValues } from "../../App/models/user";
+import { IUserFormValues } from "../../App/models/user";
 import UserStore from "../../App/stores/UserStore";
 import { ErrorMessage } from "../../App/common/form/ErrorMessage";
-import { toast } from "react-toastify";
 
 const validate = combineValidators({
   email: isRequired("email"),
@@ -23,7 +22,7 @@ export const LoginForm = () => {
         Login To Activities
       </Header>
       <FinalForm
-        onSubmit={(values: IUserFromValues) =>
+        onSubmit={(values: IUserFormValues) =>
           login(values).catch((error) => ({
             [FORM_ERROR]: error,
           }))

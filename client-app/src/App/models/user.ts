@@ -5,7 +5,7 @@ export interface IUser {
     image?: string;
 }
 
-export interface IUserFromValues {
+export interface IUserFormValues {
     email: string;
     password: string;
     displayedName?: string;

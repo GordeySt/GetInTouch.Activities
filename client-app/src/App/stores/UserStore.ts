@@ -1,5 +1,5 @@
 import { observable, action, makeAutoObservable, computed, configure, runInAction } from "mobx"
-import { IUser, IUserFromValues } from "../models/user";
+import { IUser, IUserFormValues } from "../models/user";
 import { User } from "../api/agent"
 import { history } from "../..";
 import CommonStore from "./CommonStore"
@@ -15,7 +15,7 @@ class UserStore {
         makeAutoObservable(this);
     }
 
-    @action login = async (values: IUserFromValues) => {
+    @action login = async (values: IUserFormValues) => {
         try {
             const user = await User.login(values);
             runInAction(() => {
@@ -25,6 +25,16 @@ class UserStore {
             history.push("/activities");
         }
         catch (error) {
+            throw error;
+        }
+    }
+
+    @action register = async (values: IUserFormValues) => {
+        try {
+            const user = await User.register(values);
+            CommonStore.setToken(user.token);
+            history.push("/activities")
+        } catch (error) {
             throw error;
         }
     }
