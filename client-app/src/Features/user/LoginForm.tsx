@@ -2,7 +2,7 @@ import { FORM_ERROR } from "final-form";
 import React from "react";
 import { Form as FinalForm, Field } from "react-final-form";
 import { combineValidators, isRequired } from "revalidate";
-import { Form, Button, Label, Segment } from "semantic-ui-react";
+import { Form, Button, Label, Segment, Header, Icon } from "semantic-ui-react";
 import { TextInput } from "../../App/common/form/TextInput";
 import { IUserFromValues } from "../../App/models/user";
 import UserStore from "../../App/stores/UserStore";
@@ -16,6 +16,10 @@ export const LoginForm = () => {
   const { login } = UserStore;
   return (
     <Segment clearing>
+      <Header as="h4" color="black">
+        <Icon size="mini" name="users" />
+        Login To Activities
+      </Header>
       <FinalForm
         onSubmit={(values: IUserFromValues) =>
           login(values).catch((error) => ({
@@ -26,7 +30,6 @@ export const LoginForm = () => {
         render={({
           handleSubmit,
           submitting,
-          form,
           submitError,
           invalid,
           pristine,
@@ -48,6 +51,7 @@ export const LoginForm = () => {
               loading={submitting}
               color="black"
               content="Login"
+              fluid
             />
           </Form>
         )}
