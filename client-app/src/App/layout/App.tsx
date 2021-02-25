@@ -38,7 +38,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
       <ToastContainer position="bottom-right" />
       <Route exact path="/" component={HomePage} />
       <Route
-        path={"/(.+)"}
+        path={"/register/(.+)"}
         render={() => (
           <React.Fragment>
             <NavBar />

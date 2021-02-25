@@ -28,9 +28,9 @@ namespace Application.User
         {
             public CommandValidator()
             {
-                RuleFor(x => x.DisplayedName).NotEmpty();
-                RuleFor(x => x.UserName).NotEmpty();
-                RuleFor(x => x.Email).NotEmpty().EmailAddress();
+                RuleFor(x => x.DisplayedName).NotEmpty().WithMessage("DisplayedName must not be empty");
+                RuleFor(x => x.UserName).NotEmpty().WithMessage("Username must not be empty");
+                RuleFor(x => x.Email).NotEmpty().WithMessage("Email must not be empty").EmailAddress().WithMessage("Invalid email address");
                 RuleFor(x => x.Password).Password();
             }
         }
@@ -61,7 +61,7 @@ namespace Application.User
                     throw new RestException(HttpStatusCode.BadRequest, new { UserName = "UserName already exists" });
                 }
 
-                var user = new AppUser 
+                var user = new AppUser
                 {
                     DisplayedName = request.DisplayedName,
                     Email = request.Email,
@@ -70,7 +70,7 @@ namespace Application.User
 
                 var result = await _userManager.CreateAsync(user, request.Password);
 
-                if (result.Succeeded) 
+                if (result.Succeeded)
                 {
                     return new User
                     {

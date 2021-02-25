@@ -37,7 +37,7 @@ export const RegisterForm: React.FC<RouteComponentProps> = ({ history }) => {
               [FORM_ERROR]: error,
             }))
           }
-          // validate={validate}
+          validate={validate}
           render={({
             handleSubmit,
             submitting,
