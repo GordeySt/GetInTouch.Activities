@@ -5,7 +5,6 @@ import UserStore from "../../App/stores/UserStore";
 
 export const NavBar: React.FC = observer(() => {
   const { logout, user } = UserStore;
-  console.log(user);
   return (
     <Menu fixed="top" inverted>
       <Container>
