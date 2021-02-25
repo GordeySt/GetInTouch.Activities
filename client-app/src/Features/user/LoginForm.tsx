@@ -2,10 +2,12 @@ import { FORM_ERROR } from "final-form";
 import React from "react";
 import { Form as FinalForm, Field } from "react-final-form";
 import { combineValidators, isRequired } from "revalidate";
-import { Form, Button, Label, Segment, Header, Icon } from "semantic-ui-react";
+import { Form, Button, Segment, Header, Icon } from "semantic-ui-react";
 import { TextInput } from "../../App/common/form/TextInput";
 import { IUserFromValues } from "../../App/models/user";
 import UserStore from "../../App/stores/UserStore";
+import { ErrorMessage } from "../../App/common/form/ErrorMessage";
+import { toast } from "react-toastify";
 
 const validate = combineValidators({
   email: isRequired("email"),
@@ -35,7 +37,7 @@ export const LoginForm = () => {
           pristine,
           dirtySinceLastSubmit,
         }) => (
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} error>
             <Field name="email" component={TextInput} placeholder="Email" />
             <Field
               name="password"
@@ -44,7 +46,10 @@ export const LoginForm = () => {
               type="password"
             />
             {submitError && !dirtySinceLastSubmit && (
-              <Label color="red" basic content={submitError.statusText} />
+              <ErrorMessage
+                error={submitError}
+                text="Invalid email or password"
+              />
             )}
             <Button
               disabled={(invalid && !dirtySinceLastSubmit) || pristine}
