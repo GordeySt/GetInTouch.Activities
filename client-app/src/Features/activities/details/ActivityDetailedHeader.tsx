@@ -24,7 +24,13 @@ interface IProps {
 
 export const ActivityDetailedHeader: React.FC<IProps> = observer(
   ({ activity }) => {
-    const { isJoined, setIsJoined } = ActivityStore;
+    const {
+      isJoined,
+      setIsJoined,
+      target,
+      submitting,
+      deleteActivity,
+    } = ActivityStore;
     const [isMouseOver, setIsMouseOver] = useState(false);
 
     return (
@@ -83,6 +89,16 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
             floated="right"
           >
             <Icon name="settings" />
+          </Button>
+          <Button
+            name={activity.id}
+            loading={target === activity.id && submitting}
+            onClick={(e) => deleteActivity(e, activity.id!)}
+            floated="right"
+            icon
+            circular
+          >
+            <Icon name="trash" />
           </Button>
         </Segment>
       </Segment.Group>

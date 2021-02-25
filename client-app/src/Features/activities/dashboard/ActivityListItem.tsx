@@ -11,8 +11,6 @@ interface IProps {
 }
 
 export const ActivityListItem: React.FC<IProps> = observer(({ activity }) => {
-  const { target, submitting, deleteActivity } = ActivityStore;
-
   return (
     <Segment.Group>
       <Segment>
@@ -43,15 +41,6 @@ export const ActivityListItem: React.FC<IProps> = observer(({ activity }) => {
           content="View"
           secondary
         />
-        <Button
-          name={activity.id}
-          loading={target === activity.id && submitting}
-          onClick={(e) => deleteActivity(e, activity.id!)}
-          floated="right"
-          icon
-        >
-          <Icon name="trash" />
-        </Button>
       </Segment>
     </Segment.Group>
   );
