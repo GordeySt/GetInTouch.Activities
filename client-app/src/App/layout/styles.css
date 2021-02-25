@@ -5,7 +5,7 @@ body {
 .masthead {
   display: flex;
   align-items: center;
-  background-color: black !important;
+  background-color: rgb(245, 245, 245) !important;
   height: 100vh;
 }
 
