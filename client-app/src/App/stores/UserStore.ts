@@ -29,6 +29,19 @@ class UserStore {
         }
     }
 
+    @action getUser = async () => {
+        try {
+            const user = await User.current();
+            runInAction(() => {
+                this.user = user;
+            })
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+    }
+
     @action logout = () => {
         CommonStore.setToken(null);
         this.user = null;

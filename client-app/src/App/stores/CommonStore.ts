@@ -1,18 +1,27 @@
-import { observable, action, makeAutoObservable, computed, configure, runInAction } from "mobx"
-import UserStore from "./UserStore"
+import { observable, action, makeAutoObservable, configure, reaction } from "mobx"
 
 configure({ enforceActions: "always" });
 
-class CommonStore {
-    constructor() {
-        makeAutoObservable(this);
-    }
-
-    @observable token: string | null = null;
+class CommonStore {    
+    @observable token: string | null = window.localStorage.getItem('jwt');
     @observable appLoaded = false;
 
+    constructor() {
+        makeAutoObservable(this);
+
+        reaction(
+            () => this.token,
+            token => {
+                if (token) {
+                    window.localStorage.setItem('jwt', token);
+                } else {
+                    window.localStorage.removeItem('jwt');
+                }
+            }
+        )
+    }
+
     @action setToken = (token: string | null) => {
-        window.localStorage.setItem('jwt', token!);
         this.token = token;
     }
 

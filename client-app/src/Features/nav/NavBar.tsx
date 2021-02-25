@@ -1,9 +1,11 @@
+import { observer } from "mobx-react-lite";
 import { NavLink, Link } from "react-router-dom";
 import { Menu, Container, Button, Image, Dropdown } from "semantic-ui-react";
 import UserStore from "../../App/stores/UserStore";
 
-export const NavBar: React.FC = () => {
+export const NavBar: React.FC = observer(() => {
   const { logout, user } = UserStore;
+  console.log(user);
   return (
     <Menu fixed="top" inverted>
       <Container>
@@ -45,4 +47,4 @@ export const NavBar: React.FC = () => {
       </Container>
     </Menu>
   );
-};
+});
