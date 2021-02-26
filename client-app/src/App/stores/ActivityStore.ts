@@ -160,6 +160,7 @@ class ActivityStore {
                     this.activitiesRegistry.delete(id);
                     this.submitting = false;
                     this.target = '';
+                    history.push('/activities');
                 })
             }
             catch (error) {
