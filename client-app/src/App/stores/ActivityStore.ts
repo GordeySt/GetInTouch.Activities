@@ -149,6 +149,39 @@ class ActivityStore {
         this.activitiesRegistry.set(activity.id, activity);
     }
 
+    modifyDayOfTheWeekToString = (activity: IActivity) => {
+        const days = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+  
+        return days[activity.date!.getDay()];
+      };
+  
+      modifyMonthToString = (activity: IActivity) => {
+        const months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+  
+        return months[activity.date!.getMonth()];
+      };
+
     @action deleteActivity = async (event: SyntheticEvent<HTMLButtonElement>,
         id: string) => {
             this.submitting = true;

@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { Grid, Icon, Segment } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
+import ActivityStore  from "../../../App/stores/ActivityStore"
 
 interface IProps {
   activity: IActivity;
@@ -9,39 +10,7 @@ interface IProps {
 
 export const ActivityDetailedInfo: React.FC<IProps> = observer(
   ({ activity }) => {
-    const modifyDayOfTheWeekToString = () => {
-      const days = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
-
-      return days[activity.date!.getDay()];
-    };
-
-    const modifyMonthToString = () => {
-      const months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ];
-
-      return months[activity.date!.getMonth()];
-    };
-
+    const { modifyDayOfTheWeekToString, modifyMonthToString } = ActivityStore;
     return (
       <Segment.Group>
         <Segment attached="top">
@@ -61,8 +30,8 @@ export const ActivityDetailedInfo: React.FC<IProps> = observer(
             </Grid.Column>
             <Grid.Column width={15}>
               <span>
-                {modifyMonthToString()} {activity.date!.getDate()},{" "}
-                {modifyDayOfTheWeekToString()}
+                {modifyMonthToString(activity)} {activity.date!.getDate()},{" "}
+                {modifyDayOfTheWeekToString(activity)}
               </span>
             </Grid.Column>
           </Grid>

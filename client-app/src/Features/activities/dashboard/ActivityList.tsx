@@ -6,13 +6,18 @@ import ActivityStore from "../../../App/stores/ActivityStore";
 import { ActivityListItem } from "./ActivityListItem";
 
 export const ActivityList: React.FC = observer(() => {
-  const { activitiesByDate } = ActivityStore;
+  const {
+    activitiesByDate,
+    modifyDayOfTheWeekToString,
+    modifyMonthToString,
+  } = ActivityStore;
   return (
     <React.Fragment>
       {activitiesByDate.map(([group, activities]) => (
         <React.Fragment key={group}>
           <Label circular color="black" size="large">
-            {group}
+            {modifyMonthToString(activities[0])} {activities[0].date!.getDate()}
+            , {modifyDayOfTheWeekToString(activities[0])}
           </Label>
           <Item.Group divided>
             {activities.map((activity: IActivity) => (
