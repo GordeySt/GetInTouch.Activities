@@ -17,11 +17,10 @@ import { ToastContainer } from "react-toastify";
 import { RegisterForm } from "../../Features/user/RegisterForm";
 import CommonStore from "../stores/CommonStore";
 import UserStore from "../stores/UserStore";
-import { LoadingComponent } from "./LoadingComponent";
 import { ModalContainer } from "../common/modals/ModalContainer";
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
-  const { appLoaded, setAppLoaded, token } = CommonStore;
+  const { setAppLoaded, token } = CommonStore;
   const { getUser } = UserStore;
 
   useEffect(() => {
@@ -31,8 +30,6 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
       setAppLoaded();
     }
   }, [getUser, setAppLoaded, token]);
-
-  if (!appLoaded) <LoadingComponent />;
 
   return (
     <React.Fragment>
