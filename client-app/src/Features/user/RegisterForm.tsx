@@ -7,7 +7,6 @@ import { TextInput } from "../../App/common/form/TextInput";
 import { IUserFormValues } from "../../App/models/user";
 import UserStore from "../../App/stores/UserStore";
 import { ErrorMessage } from "../../App/common/form/ErrorMessage";
-import { RouteComponentProps } from "react-router-dom";
 
 const validate = combineValidators({
   username: isRequired("email"),
@@ -16,16 +15,10 @@ const validate = combineValidators({
   password: isRequired("password"),
 });
 
-export const RegisterForm: React.FC<RouteComponentProps> = ({ history }) => {
+export const RegisterForm: React.FC = () => {
   const { register } = UserStore;
   return (
     <Fragment>
-      <Icon
-        onClick={() => history.push("/")}
-        name="arrow alternate circle left outline"
-        size="big"
-        style={{ marginBottom: "10px", cursor: "pointer" }}
-      />
       <Segment clearing>
         <Header textAlign="center" as="h4" color="black">
           <Icon size="mini" name="users" />
