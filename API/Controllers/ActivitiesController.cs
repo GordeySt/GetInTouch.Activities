@@ -16,7 +16,7 @@ namespace API.Controllers
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<Activity>> Details(Guid id) => await Mediator.Send(new ActivitiesDetails.Query(id));
+        public async Task<ActionResult<ActivityDto>> Details(Guid id) => await Mediator.Send(new ActivitiesDetails.Query(id));
 
         [HttpPost]
         public async Task<ActionResult<Unit>> Create(CreateActivity.Command command) => await Mediator.Send(command);

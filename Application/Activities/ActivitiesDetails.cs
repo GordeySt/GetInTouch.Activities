@@ -7,6 +7,7 @@ using System.Threading;
 using Application.Errors;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace Application.Activities
 {
@@ -22,9 +23,11 @@ namespace Application.Activities
         public class Handler : IRequestHandler<Query, ActivityDto>
         {
             private readonly DataContext _context;
+            private readonly IMapper _mapper;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IMapper mapper)
             {
+                _mapper = mapper;
                 _context = context;
             }
 
@@ -35,11 +38,14 @@ namespace Application.Activities
                     .ThenInclude(x => x.AppUser)
                     .SingleOrDefaultAsync(x => x.Id == request.Id);
 
-                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new {
+                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new
+                {
                     activity = "Not Found"
                 });
 
-                return activity;
+                var activityToReturn = _mapper.Map<Activity, ActivityDto>(activity);
+
+                return activityToReturn;
             }
         }
     }
