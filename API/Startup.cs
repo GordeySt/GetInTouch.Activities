@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using AutoMapper;
 
 namespace API
 {
@@ -47,7 +48,8 @@ namespace API
             });
 
             services.AddMediatR(typeof(ActivitiesList.Handler).Assembly);
-
+            services.AddAutoMapper(typeof(ActivitiesList.Handler));
+            
             services.AddControllers(options =>
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();

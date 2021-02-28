@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Application.Activities
 {
-    public class ActivityDTO
+    public class ActivityDto
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -12,6 +12,6 @@ namespace Application.Activities
         public string City { get; set; }
         public string Venue { get; set; }
         public DateTime Date { get; set; }
-        public ICollection<AttendeeDTO> Attendees { get; set; }
+        public ICollection<AttendeeDto> Attendees { get; set; }
     }
 }

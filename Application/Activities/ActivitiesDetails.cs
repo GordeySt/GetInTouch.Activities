@@ -12,14 +12,14 @@ namespace Application.Activities
 {
     public class ActivitiesDetails
     {
-        public class Query : IRequest<Activity>
+        public class Query : IRequest<ActivityDto>
         {
             public Guid Id { get; set; }
 
             public Query(Guid id) => Id = id;
         }
 
-        public class Handler : IRequestHandler<Query, Activity>
+        public class Handler : IRequestHandler<Query, ActivityDto>
         {
             private readonly DataContext _context;
 
@@ -28,7 +28,7 @@ namespace Application.Activities
                 _context = context;
             }
 
-            public async Task<Activity> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<ActivityDto> Handle(Query request, CancellationToken cancellationToken)
             {
                 var activity = await _context.Activities
                     .Include(x => x.UserActivities)
