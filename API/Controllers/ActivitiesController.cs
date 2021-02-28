@@ -6,6 +6,7 @@ using Domain;
 using MediatR;
 using Application.Activities;
 using Microsoft.AspNetCore.Authorization;
+using Application.Activities.Commands;
 
 namespace API.Controllers
 {
@@ -30,5 +31,11 @@ namespace API.Controllers
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(Guid id) => await Mediator.Send(new DeleteActivity.Command(id));
+
+        [HttpPost("{id}/attend")]
+        public async Task<ActionResult<Unit>> Attend(Guid id)
+        {
+            return await Mediator.Send(new AttendActivity.Command{Id = id});
+        }
     }
 }
