@@ -30,9 +30,7 @@ namespace Application.Activities
             {
                 var activity = await _context.Activities.FindAsync(request.Id);
 
-                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new {
-                    activity = "Not Found"
-                });
+                if (activity == null) ThrowRestExceptionForNotFoundActivity();
 
                 _context.Remove(activity);
 
@@ -41,6 +39,14 @@ namespace Application.Activities
                 if (success) return Unit.Value;
 
                 throw new Exception("Problem saving changes");
+            }
+
+            private void ThrowRestExceptionForNotFoundActivity()
+            {
+                throw new RestException(HttpStatusCode.NotFound, new
+                {
+                    activity = "Not Found"
+                });
             }
         }
     }

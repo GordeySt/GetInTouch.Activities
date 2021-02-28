@@ -6,6 +6,7 @@ using Persistance;
 using FluentValidation;
 using Application.Errors;
 using System.Net;
+using Domain;
 
 namespace Application.Activities
 {
@@ -48,23 +49,33 @@ namespace Application.Activities
             {
                 var activity = await _context.Activities.FindAsync(request.Id);
 
-                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new
-                {
-                    activity = "Not Found"
-                });
+                if (activity == null) ThrowRestExceptionForNotFoundActivity();
 
-                activity.Title = request.Title ?? activity.Title;
-                activity.Description = request.Description ?? activity.Description;
-                activity.Category = request.Category ?? activity.Category;
-                activity.Date = request.Date ?? activity.Date;
-                activity.City = request.City ?? activity.City;
-                activity.Venue = request.Venue ?? request.Venue;
+                ChangeActivityData(activity, request);
 
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success) return Unit.Value;
 
                 throw new Exception("Problem saving changes");
+            }
+
+            private void ThrowRestExceptionForNotFoundActivity()
+            {
+                throw new RestException(HttpStatusCode.NotFound, new
+                {
+                    activity = "Not Found"
+                });
+            }
+
+            private void ChangeActivityData(Activity activity, Command request)
+            {
+                activity.Title = request.Title ?? activity.Title;
+                activity.Description = request.Description ?? activity.Description;
+                activity.Category = request.Category ?? activity.Category;
+                activity.Date = request.Date ?? activity.Date;
+                activity.City = request.City ?? activity.City;
+                activity.Venue = request.Venue ?? request.Venue;
             }
         }
     }
