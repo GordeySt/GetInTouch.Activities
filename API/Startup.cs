@@ -50,7 +50,7 @@ namespace API
 
             services.AddMediatR(typeof(ActivitiesList.Handler).Assembly);
             services.AddAutoMapper(typeof(ActivitiesList.Handler));
-            
+
             services.AddControllers(options =>
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
@@ -76,6 +76,15 @@ namespace API
                     ValidateIssuer = false
                 };
             });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsActivityHost", policy =>
+                {
+                    policy.Requirements.Add(new IsHostRequirement());
+                });
+            });
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IUserAccessor, UserAccessor>();
