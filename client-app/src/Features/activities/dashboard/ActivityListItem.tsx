@@ -3,8 +3,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Item, Icon, Segment } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
-import ActivityStore from "../../../App/stores/ActivityStore";
 import moment from "moment";
+import { ActivityListItemAttendees } from "./ActivityListItemAttendees";
 
 interface IProps {
   activity: IActivity;
@@ -31,7 +31,9 @@ export const ActivityListItem: React.FC<IProps> = observer(({ activity }) => {
         </span>
         <Icon name="marker" /> {activity.venue}, {activity.city}
       </Segment>
-      <Segment secondary>Attendees will go here</Segment>
+      <Segment secondary>
+        <ActivityListItemAttendees attendees={activity.attendees} />
+      </Segment>
       <Segment clearing>
         <span>{activity.description}</span>
         <Button
