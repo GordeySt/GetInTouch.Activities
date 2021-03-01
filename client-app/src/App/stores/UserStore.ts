@@ -42,6 +42,8 @@ class UserStore {
     @action getUser = async () => {
         try {
             const user = await User.current();
+            console.log(CommonStore.token);
+            console.log(user);
             runInAction(() => {
                 this.user = user;
             })

@@ -11,15 +11,24 @@ interface IProps {
 }
 
 export const ActivityListItem: React.FC<IProps> = observer(({ activity }) => {
+  const host = activity.attendees.filter((x) => x.isHost)[0];
   return (
     <Segment.Group>
       <Segment>
         <Item.Group>
           <Item key={activity.id}>
-            <Item.Image size="tiny" circular src="/assets/user.jpg" />
+            <Item.Image
+              size="tiny"
+              circular
+              src={host.image || "/assets/user.jpg"}
+            />
             <Item.Content>
-              <Item.Header>{activity.title}</Item.Header>
-              <Item.Description>Hosted by Gordey</Item.Description>
+              <Item.Header as={Link} to={`/activities/${activity.id}`}>
+                {activity.title}
+              </Item.Header>
+              <Item.Description>
+                Hosted by {host.displayedName}
+              </Item.Description>
               {activity.isHost && (
                 <Item.Description>
                   <Label

@@ -42,10 +42,10 @@ class ActivityStore {
 
     @action loadActivities = async () => {
         this.loadingInitial = true;
-        const user = UserStore.user;
         try {
             const activities = await Activities.list();
             runInAction(() => {
+                const user = UserStore.user;
                 this.mapAllActivitiesFromResponse(activities, user);
                 this.loadingInitial = false;
             });
