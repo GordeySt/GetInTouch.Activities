@@ -35,7 +35,13 @@ namespace API.Controllers
         [HttpPost("{id}/attend")]
         public async Task<ActionResult<Unit>> Attend(Guid id)
         {
-            return await Mediator.Send(new AttendActivity.Command{Id = id});
+            return await Mediator.Send(new AttendActivity.Command { Id = id });
+        }
+
+        [HttpDelete("{id}/attend")]
+        public async Task<ActionResult<Unit>> Unattend(Guid id)
+        {
+            return await Mediator.Send(new UnattendActivity.Command { Id = id });
         }
     }
 }
