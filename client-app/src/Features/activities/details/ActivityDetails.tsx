@@ -17,7 +17,11 @@ interface DetailParams {
 export const ActivityDetails: React.FC<
   RouteComponentProps<DetailParams>
 > = observer(({ match, history }) => {
-  const { activity, loadActivity, loadingInitial } = ActivityStore;
+  const {
+    activity,
+    loadActivity,
+    loadingInitial,
+  } = ActivityStore;
 
   useEffect(() => {
     loadActivity(match.params.id);

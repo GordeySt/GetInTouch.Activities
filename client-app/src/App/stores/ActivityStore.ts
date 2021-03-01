@@ -6,6 +6,7 @@ import { Activities } from "../api/agent";
 import { IActivity } from "../models/activity";
 import { IUser } from "../models/user";
 import UserStore from "./UserStore";
+import { setActivityProps } from "../common/utils/utils"
 
 configure({ enforceActions: "always" });
 
@@ -62,12 +63,7 @@ class ActivityStore {
         activities.forEach((activity) => {
             activity = this.modifyActivityDate(activity);
 
-            activity.isGoing = activity.attendees.some(
-                a => a.userName === user?.userName
-            );
-            activity.isHost = activity.attendees.some(
-                a => a.userName === user?.userName && a.isHost
-            );
+            setActivityProps(activity, user);
 
             this.addActivitiesFromResponseToClientArray(activity);
         });
@@ -96,8 +92,10 @@ class ActivityStore {
 
             try {
                 activity = await Activities.details(id);
+                const user = UserStore.user;
                 runInAction(() => {
                     activity.date = new Date(activity.date!);
+                    setActivityProps(activity, user);
                     this.activity = activity;
                     this.loadingInitial = false;
                 })
