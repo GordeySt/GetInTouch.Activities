@@ -24,7 +24,7 @@ export const ActivityDetailedSidebar: React.FC<IProps> = ({ attendees }) => {
       <Segment attached>
         <List relaxed divided>
           {attendees.map((attendee) => (
-            <Item key={attendee.username} style={{ position: "relative" }}>
+            <Item key={attendee.userName} style={{ position: "relative" }}>
               {isHost && (
                 <Label
                   style={{ position: "absolute" }}
@@ -41,7 +41,7 @@ export const ActivityDetailedSidebar: React.FC<IProps> = ({ attendees }) => {
               />
               <Item.Content verticalAlign="middle">
                 <Item.Header as="h3">
-                  <Link to={`/profile/${attendee.username}`}>
+                  <Link to={`/profile/${attendee.userName}`}>
                     {attendee.displayedName}
                   </Link>
                 </Item.Header>

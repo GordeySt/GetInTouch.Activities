@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { history } from "../..";
 import { Activities } from "../api/agent";
 import { IActivity } from "../models/activity";
+import { IUser } from "../models/user";
+import UserStore from "./UserStore";
 
 configure({ enforceActions: "always" });
 
@@ -40,10 +42,11 @@ class ActivityStore {
 
     @action loadActivities = async () => {
         this.loadingInitial = true;
+        const user = UserStore.user;
         try {
             const activities = await Activities.list();
             runInAction(() => {
-                this.mapAllActivitiesFromResponse(activities);
+                this.mapAllActivitiesFromResponse(activities, user);
                 this.loadingInitial = false;
             });
         } 
@@ -55,9 +58,17 @@ class ActivityStore {
         }
     }
 
-    mapAllActivitiesFromResponse = (activities: IActivity[]) => {
+    mapAllActivitiesFromResponse = (activities: IActivity[], user: IUser | null) => {
         activities.forEach((activity) => {
             activity = this.modifyActivityDate(activity);
+
+            activity.isGoing = activity.attendees.some(
+                a => a.userName === user?.userName
+            );
+            activity.isHost = activity.attendees.some(
+                a => a.userName === user?.userName && a.isHost
+            );
+
             this.addActivitiesFromResponseToClientArray(activity);
         });
     }
