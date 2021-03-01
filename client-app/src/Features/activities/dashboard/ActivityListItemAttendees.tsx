@@ -3,7 +3,7 @@ import { List, Image, Popup } from "semantic-ui-react";
 import { IAttendee } from "../../../App/models/activity";
 
 interface IProps {
-  attendees: IAttendee[] | null;
+  attendees: IAttendee[];
 }
 
 export const ActivityListItemAttendees: React.FC<IProps> = ({ attendees }) => {

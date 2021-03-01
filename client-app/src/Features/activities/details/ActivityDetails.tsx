@@ -42,7 +42,7 @@ export const ActivityDetails: React.FC<
           <ActivityDetailedChat />
         </Grid.Column>
         <Grid.Column width={6}>
-          <ActivityDetailedSidebar />
+          <ActivityDetailedSidebar attendees={activity.attendees} />
         </Grid.Column>
       </Grid>
     </React.Fragment>

@@ -6,7 +6,7 @@ export interface IActivity {
     date?: Date;
     city: string;
     venue: string;
-    attendees: IAttendee[] | null;
+    attendees: IAttendee[];
 }
 
 export class ActivityFormValues implements IActivity {
@@ -17,7 +17,7 @@ export class ActivityFormValues implements IActivity {
     date?: Date = undefined;
     city: string = "";
     venue: string = "";
-    attendees: IAttendee[] | null = null;
+    attendees: IAttendee[] = [];
 
     constructor(init?: IActivity) {
         Object.assign(this, init);
