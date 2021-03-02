@@ -24,10 +24,15 @@ interface IProps {
 
 export const ActivityDetailedHeader: React.FC<IProps> = observer(
   ({ activity }) => {
-    const { setIsJoined, target, submitting, deleteActivity } = ActivityStore;
+    const { loading, target, submitting, deleteActivity } = ActivityStore;
     const [isMouseOver, setIsMouseOver] = useState(false);
     const host = activity.attendees.filter((x) => x.isHost)[0];
     const { attendActivity, cancelAttendance } = ActivityStore;
+
+    const determoneFunctionToCall = () => {
+      activity.isGoing ? cancelAttendance() : attendActivity();
+    };
+
     return (
       <Segment.Group>
         <Segment basic attached="top" style={{ padding: "0" }}>
@@ -46,10 +51,7 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
                     style={{ color: "white" }}
                   />
                   <p>
-                    Hosted by{" "}
-                    <strong>
-                      {host.displayedName}
-                    </strong>
+                    Hosted by <strong>{host.displayedName}</strong>
                   </p>
                 </Item.Content>
               </Item>
@@ -59,9 +61,10 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
         <Segment clearing attached="bottom">
           {!activity.isHost && (
             <Button
+              loading={loading}
               onMouseOver={() => setIsMouseOver(true)}
               onMouseOut={() => setIsMouseOver(false)}
-              onClick={activity.isGoing ? () => cancelAttendance() : () => attendActivity()}
+              onClick={determoneFunctionToCall}
               icon
               circular
               color="black"

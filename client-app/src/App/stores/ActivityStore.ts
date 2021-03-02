@@ -7,6 +7,7 @@ import { IActivity } from "../models/activity";
 import { IUser } from "../models/user";
 import UserStore from "./UserStore";
 import { createAttendee, setActivityProps } from "../common/utils/utils"
+import { Agent } from "http";
 
 configure({ enforceActions: "always" });
 
@@ -18,6 +19,7 @@ class ActivityStore {
     @observable target = '';
     @observable isMouseOver = false;
     @observable isJoined = true;
+    @observable loading = false;
 
     @computed get activitiesByDate() {
         return this.groupActivitiesByDate(Array.from(this.activitiesRegistry.values()))
@@ -222,24 +224,49 @@ class ActivityStore {
         this.isMouseOver = mouseState;
     }
 
-    @action attendActivity = () => {
+    @action attendActivity = async () => {
         const attendee = createAttendee(UserStore.user!);
+        this.loading = true;
 
-        if (this.activity) {
-            this.activity.attendees.push(attendee);
-            this.activity.isGoing = true;
-            this.activitiesRegistry.set(this.activity.id, this.activity);
+        try {
+            await Activities.attend(this.activity!.id!);
+            runInAction(() => {
+                if (this.activity) {
+                    this.activity.attendees.push(attendee);
+                    this.activity.isGoing = true;
+                    this.activitiesRegistry.set(this.activity.id, this.activity);
+                    this.loading = false;
+                }
+            })
+        } catch (error) {
+            runInAction(() => {
+                this.loading = false;
+            })
+            toast.error("Problem signing up to activity");
         }
     }
 
-    @action cancelAttendance = () => {
-        if (this.activity) {
-            this.activity.attendees = this.activity.attendees.filter(
-                a => a.userName !== UserStore.user?.userName
-            );
-            
-            this.activity.isGoing = false;
-            this.activitiesRegistry.set(this.activity.id, this.activity);
+    @action cancelAttendance = async () => {
+        this.loading = true;
+
+        try {
+            await Activities.unattend(this.activity!.id!)
+            runInAction(() => {
+                if (this.activity) {
+                    this.activity.attendees = this.activity.attendees.filter(
+                        a => a.userName !== UserStore.user?.userName
+                    );
+        
+                    this.activity.isGoing = false;
+                    this.activitiesRegistry.set(this.activity.id, this.activity);
+                    this.loading = false;
+                }
+            })
+        } catch (error) {
+            runInAction(() => {
+                this.loading = false;
+            })
+            toast.error("Problem cancelling attendance")
         }
     }
 }
