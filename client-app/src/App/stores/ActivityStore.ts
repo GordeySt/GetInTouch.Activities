@@ -8,6 +8,7 @@ import { IUser } from "../models/user";
 import UserStore from "./UserStore";
 import { createAttendee, setActivityProps } from "../common/utils/utils"
 import { Agent } from "http";
+import { create } from "domain";
 
 configure({ enforceActions: "always" });
 
@@ -25,7 +26,7 @@ class ActivityStore {
         return this.groupActivitiesByDate(Array.from(this.activitiesRegistry.values()))
     }
 
-    groupActivitiesByDate(activities: IActivity[]) {
+    private groupActivitiesByDate(activities: IActivity[]) {
         const sortedActivities = activities.slice().sort(
             (a, b) => a.date!.getTime() - b.date!.getTime()
         )
@@ -61,7 +62,7 @@ class ActivityStore {
         }
     }
 
-    mapAllActivitiesFromResponse = (activities: IActivity[], user: IUser | null) => {
+    private mapAllActivitiesFromResponse = (activities: IActivity[], user: IUser | null) => {
         activities.forEach((activity) => {
             activity = this.modifyActivityDate(activity);
 
@@ -71,7 +72,7 @@ class ActivityStore {
         });
     }
 
-    modifyActivityDate = (activity: IActivity): IActivity => {
+    private modifyActivityDate = (activity: IActivity): IActivity => {
         activity.date = new Date(activity.date!);
         
         return activity;
@@ -112,7 +113,7 @@ class ActivityStore {
         }
     }
 
-    getActivity = (id: string) => {
+    private getActivity = (id: string) => {
         return this.activitiesRegistry.get(id);
     }
 
@@ -121,6 +122,12 @@ class ActivityStore {
 
         try {
             await Activities.create(activity);
+            const attendee = createAttendee(UserStore.user!);
+            attendee.isHost = true;
+            let attendees = [];
+            attendees.push(attendee);
+            activity.attendees = attendees;
+            activity.isHost = true;
             runInAction(() => {
                 this.addActivitiesFromResponseToClientArray(activity);
                 this.submitting = false;
@@ -156,7 +163,7 @@ class ActivityStore {
         }
     }
 
-    addActivitiesFromResponseToClientArray = (activity: IActivity) => {
+    private addActivitiesFromResponseToClientArray = (activity: IActivity) => {
         this.activitiesRegistry.set(activity.id, activity);
     }
 
