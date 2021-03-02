@@ -1,4 +1,4 @@
-import { IActivity } from "../../models/activity"
+import { IActivity, IAttendee } from "../../models/activity"
 import { IUser } from "../../models/user"
 
 export const setActivityProps = (activity: IActivity, user: IUser | null) => {
@@ -8,4 +8,13 @@ export const setActivityProps = (activity: IActivity, user: IUser | null) => {
     activity.isHost = activity.attendees.some(
         a => a.userName === user?.userName && a.isHost
     );
+}
+
+export const createAttendee = (user: IUser): IAttendee => {
+    return {
+        displayedName: user.displayedName,
+        isHost: false,
+        userName: user.userName,
+        image: user.image!
+    }
 }

@@ -27,7 +27,7 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
     const { setIsJoined, target, submitting, deleteActivity } = ActivityStore;
     const [isMouseOver, setIsMouseOver] = useState(false);
     const host = activity.attendees.filter((x) => x.isHost)[0];
-    
+    const { attendActivity, cancelAttendance } = ActivityStore;
     return (
       <Segment.Group>
         <Segment basic attached="top" style={{ padding: "0" }}>
@@ -61,7 +61,7 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
             <Button
               onMouseOver={() => setIsMouseOver(true)}
               onMouseOut={() => setIsMouseOver(false)}
-              onClick={() => setIsJoined()}
+              onClick={activity.isGoing ? () => cancelAttendance() : () => attendActivity()}
               icon
               circular
               color="black"

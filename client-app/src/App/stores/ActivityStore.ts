@@ -6,7 +6,7 @@ import { Activities } from "../api/agent";
 import { IActivity } from "../models/activity";
 import { IUser } from "../models/user";
 import UserStore from "./UserStore";
-import { setActivityProps } from "../common/utils/utils"
+import { createAttendee, setActivityProps } from "../common/utils/utils"
 
 configure({ enforceActions: "always" });
 
@@ -220,6 +220,27 @@ class ActivityStore {
 
     @action setIsMouseOver = (mouseState: boolean) => {
         this.isMouseOver = mouseState;
+    }
+
+    @action attendActivity = () => {
+        const attendee = createAttendee(UserStore.user!);
+
+        if (this.activity) {
+            this.activity.attendees.push(attendee);
+            this.activity.isGoing = true;
+            this.activitiesRegistry.set(this.activity.id, this.activity);
+        }
+    }
+
+    @action cancelAttendance = () => {
+        if (this.activity) {
+            this.activity.attendees = this.activity.attendees.filter(
+                a => a.userName !== UserStore.user?.userName
+            );
+            
+            this.activity.isGoing = false;
+            this.activitiesRegistry.set(this.activity.id, this.activity);
+        }
     }
 }
 
