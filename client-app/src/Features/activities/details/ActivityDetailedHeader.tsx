@@ -26,6 +26,8 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
   ({ activity }) => {
     const { setIsJoined, target, submitting, deleteActivity } = ActivityStore;
     const [isMouseOver, setIsMouseOver] = useState(false);
+    const host = activity.attendees.filter((x) => x.isHost)[0];
+    
     return (
       <Segment.Group>
         <Segment basic attached="top" style={{ padding: "0" }}>
@@ -44,7 +46,10 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
                     style={{ color: "white" }}
                   />
                   <p>
-                    Hosted by <strong>Gordey</strong>
+                    Hosted by{" "}
+                    <strong>
+                      {host.displayedName}
+                    </strong>
                   </p>
                 </Item.Content>
               </Item>
