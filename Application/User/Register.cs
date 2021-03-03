@@ -11,6 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
+using System.Linq;
 
 namespace Application.User
 {
@@ -29,14 +30,9 @@ namespace Application.User
         {
             public CommandValidator()
             {
-                RuleFor(x => x.DisplayedName)
-                    .NotEmpty().WithMessage("DisplayedName must not be empty");
-                RuleFor(x => x.UserName)
-                    .NotEmpty().WithMessage("Username must not be empty")
-                    .MinimumLength(6).WithMessage("Username should be at least 6 characters");
-                RuleFor(x => x.Email)
-                    .NotEmpty().WithMessage("Email must not be empty")
-                    .EmailAddress().WithMessage("Invalid email address");
+                RuleFor(x => x.DisplayedName).DisplayedName();
+                RuleFor(x => x.UserName).UserName();
+                RuleFor(x => x.Email).Email();
                 RuleFor(x => x.Password).Password();
             }
         }
