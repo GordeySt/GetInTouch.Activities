@@ -6,9 +6,7 @@ import { Activities } from "../api/agent";
 import { IActivity } from "../models/activity";
 import { IUser } from "../models/user";
 import UserStore from "./UserStore";
-import { createAttendee, setActivityProps } from "../common/utils/utils"
-import { Agent } from "http";
-import { create } from "domain";
+import { createAttendee, setActivityProps } from "../common/utils/utils";
 
 configure({ enforceActions: "always" });
 
@@ -46,6 +44,7 @@ class ActivityStore {
 
     @action loadActivities = async () => {
         this.loadingInitial = true;
+
         try {
             const activities = await Activities.list();
             runInAction(() => {
