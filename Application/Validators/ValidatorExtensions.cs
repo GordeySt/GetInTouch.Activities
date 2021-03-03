@@ -24,7 +24,7 @@ namespace Application.Validators
         {
             var options = ruleBuilder
                 .NotEmpty().WithMessage("{PropertyName} must not be empty")
-                .Must(x => x.All(Char.IsLetter)).WithMessage("{PropertyName} should conatin only symbols")
+                .Must(BeAValidDisplayedName).WithMessage("{PropertyName} should conatin only symbols")
                 .Length(2, 50).WithMessage("{PropertyName} length should be 2-50 characters");
 
             return options;
@@ -47,6 +47,16 @@ namespace Application.Validators
                 .EmailAddress().WithMessage("Invalid {PropertyName} address");
 
             return options;
+        }
+
+        private static bool BeAValidDisplayedName(string value)
+        {
+            if (value.All(c => Char.IsLetter(c) || c == ' '))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private static bool BeAValidUsernameOrPassword(string value)
