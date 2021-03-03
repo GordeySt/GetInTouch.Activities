@@ -3,6 +3,7 @@ import { IUser, IUserFormValues } from "../models/user";
 import { User } from "../api/agent"
 import { history } from "../..";
 import CommonStore from "./CommonStore"
+import ModalStore from "./ModalStore";
 
 configure({ enforceActions: "always" });
 
@@ -33,7 +34,9 @@ class UserStore {
         try {
             const user = await User.register(values);
             CommonStore.setToken(user.token);
-            history.push("/activities")
+            runInAction(() => this.user = user);
+            history.push("/activities");
+            ModalStore.closeModal();
         } catch (error) {
             throw error;
         }
