@@ -19,6 +19,7 @@ namespace Application.User
         public class Command : IRequest<User>
         {
             public string DisplayedName { get; set; }
+
             public string UserName { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
@@ -28,9 +29,14 @@ namespace Application.User
         {
             public CommandValidator()
             {
-                RuleFor(x => x.DisplayedName).NotEmpty().WithMessage("DisplayedName must not be empty");
-                RuleFor(x => x.UserName).NotEmpty().WithMessage("Username must not be empty");
-                RuleFor(x => x.Email).NotEmpty().WithMessage("Email must not be empty").EmailAddress().WithMessage("Invalid email address");
+                RuleFor(x => x.DisplayedName)
+                    .NotEmpty().WithMessage("DisplayedName must not be empty");
+                RuleFor(x => x.UserName)
+                    .NotEmpty().WithMessage("Username must not be empty")
+                    .MinimumLength(6).WithMessage("Username should be at least 6 characters");
+                RuleFor(x => x.Email)
+                    .NotEmpty().WithMessage("Email must not be empty")
+                    .EmailAddress().WithMessage("Invalid email address");
                 RuleFor(x => x.Password).Password();
             }
         }
