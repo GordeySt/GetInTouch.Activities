@@ -29,7 +29,7 @@ export const NavBar: React.FC = observer(() => {
         </Menu.Item>
         {user && (
           <Menu.Item position="right">
-            <Image avatar spaced="right" src={"/assets/user.jpg"} />
+            <Image avatar spaced="right" src={user?.image || "/assets/user.jpg"} />
             <Dropdown pointing="top left" text={user.displayedName}>
               <Dropdown.Menu>
                 <Dropdown.Item
