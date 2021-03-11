@@ -37,6 +37,7 @@ export const ActivityDetailedSidebar: React.FC<IProps> = observer(
                   </Label>
                 )}
                 <Image
+                  circular
                   size="mini"
                   src={attendee.image || "/assets/user.jpg"}
                   style={{ marginRight: "10px" }}

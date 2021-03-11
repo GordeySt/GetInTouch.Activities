@@ -21,6 +21,7 @@ export const ActivityListItem: React.FC<IProps> = observer(({ activity }) => {
               size="tiny"
               circular
               src={host.image || "/assets/user.jpg"}
+              style={{ marginBottom: 3 }}
             />
             <Item.Content>
               <Item.Header as={Link} to={`/activities/${activity.id}`}>
