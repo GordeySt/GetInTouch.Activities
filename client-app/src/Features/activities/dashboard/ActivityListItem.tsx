@@ -28,7 +28,11 @@ export const ActivityListItem: React.FC<IProps> = observer(({ activity }) => {
                 {activity.title}
               </Item.Header>
               <Item.Description>
-                Hosted by {host.displayedName}
+                Hosted by{" "}
+                <Link to={`/profile/${host.userName}`}>
+                  {" "}
+                  {host.displayedName}
+                </Link>
               </Item.Description>
               {activity.isHost && (
                 <Item.Description>
