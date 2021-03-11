@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, Header, Icon, Image, Item, Segment } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
 import ActivityStore from "../../../App/stores/ActivityStore";
+import UserStore from "../../../App/stores/UserStore";
 
 const activityImageStyle = {
   filter: "brightness(30%)",
@@ -51,7 +52,10 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
                     style={{ color: "white" }}
                   />
                   <p>
-                    Hosted by <strong>{host.displayedName}</strong>
+                    Hosted by{" "}
+                    <Link to={`/profile/${host.userName}`}>
+                      <strong>{host.displayedName}</strong>
+                    </Link>
                   </p>
                 </Item.Content>
               </Item>

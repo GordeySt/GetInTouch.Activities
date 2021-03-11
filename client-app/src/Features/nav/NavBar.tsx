@@ -34,7 +34,7 @@ export const NavBar: React.FC = observer(() => {
               <Dropdown.Menu>
                 <Dropdown.Item
                   as={Link}
-                  to={`/profile/username`}
+                  to={`/profile/${user.userName}`}
                   text="My profile"
                   icon="user"
                 />
