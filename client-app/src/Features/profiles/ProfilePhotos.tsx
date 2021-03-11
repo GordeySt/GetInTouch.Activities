@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { Card, Header, Tab, Image, Button, Grid } from "semantic-ui-react";
 import ModalStore from "../../App/stores/ModalStore";
 import ProfileStore from "../../App/stores/ProfileStore";
-import { UploadPhotoWidget } from "./UploadPhotoWidget";
+import { UploadPhotoWidget } from "../photoUpload/UploadPhotoWidget";
 
 export const ProfilePhotos = () => {
   const { profile, isCurrentUser } = ProfileStore;
