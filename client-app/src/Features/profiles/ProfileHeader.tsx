@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Segment,
   Item,
@@ -9,10 +8,13 @@ import {
   Divider,
   Reveal,
 } from "semantic-ui-react";
-import UserStore from "../../App/stores/UserStore";
+import { IProfile } from "../../App/models/profile";
 
-export const ProfileHeader = () => {
-  const { user } = UserStore;
+interface IProps {
+  profile: IProfile | null;
+}
+
+export const ProfileHeader: React.FC<IProps> = ({ profile }) => {
   return (
     <Segment>
       <Grid>
@@ -22,11 +24,11 @@ export const ProfileHeader = () => {
               <Item.Image
                 avatar
                 size="small"
-                src={user?.image || "/assets/user.jpg"}
+                src={profile?.mainImage || "/assets/user.jpg"}
                 circular
               />
               <Item.Content verticalAlign="middle">
-                <Header as="h1">{user?.displayedName}</Header>
+                <Header as="h1">{profile?.displayedName}</Header>
               </Item.Content>
             </Item>
           </Item.Group>
