@@ -9,7 +9,7 @@ export const ModalContainer = observer(() => {
     closeModal,
   } = ModalStore;
   return (
-    <Modal open={open} onClose={closeModal} size="mini">
+    <Modal open={open} onClose={closeModal}>
       <Modal.Content>{body}</Modal.Content>
     </Modal>
   );
