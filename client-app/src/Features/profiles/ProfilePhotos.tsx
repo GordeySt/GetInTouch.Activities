@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Card, Header, Tab, Image, Button, Grid } from "semantic-ui-react";
+import ModalStore from "../../App/stores/ModalStore";
 import ProfileStore from "../../App/stores/ProfileStore";
+import { UploadPhotoWidget } from "./UploadPhotoWidget";
 
 export const ProfilePhotos = () => {
   const { profile, isCurrentUser } = ProfileStore;
-  const [addPhotoMode, setAddPhotoMode] = useState(false);
+  const { openModal } = ModalStore;
+
   return (
     <Tab.Pane>
       <Grid>
@@ -13,31 +16,27 @@ export const ProfilePhotos = () => {
           {isCurrentUser && (
             <Button
               floated="right"
-              icon={addPhotoMode ? "cancel" : "photo"}
+              icon="photo"
               basic
-              onClick={() => setAddPhotoMode(!addPhotoMode)}
+              onClick={() => openModal(<UploadPhotoWidget />)}
             />
           )}
         </Grid.Column>
         <Grid.Column width={16}>
-          {addPhotoMode ? (
-            <p>Photo Widget</p>
-          ) : (
-            <Card.Group itemsPerRow={5}>
-              {profile &&
-                profile.photos.map((photo) => (
-                  <Card key={photo.id}>
-                    <Image src={photo.url} />
-                    {isCurrentUser && (
-                      <Button.Group fluid width={2}>
-                        <Button colour="gray" content="Main" />
-                        <Button color="black" icon="trash" />
-                      </Button.Group>
-                    )}
-                  </Card>
-                ))}
-            </Card.Group>
-          )}
+          <Card.Group itemsPerRow={5}>
+            {profile &&
+              profile.photos.map((photo) => (
+                <Card key={photo.id}>
+                  <Image src={photo.url} />
+                  {isCurrentUser && (
+                    <Button.Group fluid width={2}>
+                      <Button colour="gray" content="Main" />
+                      <Button color="black" icon="trash" />
+                    </Button.Group>
+                  )}
+                </Card>
+              ))}
+          </Card.Group>
         </Grid.Column>
       </Grid>
     </Tab.Pane>
