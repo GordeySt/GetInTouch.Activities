@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { Grid, Icon } from "semantic-ui-react";
+import { Grid } from "semantic-ui-react";
 import { LoadingComponent } from "../../../App/layout/LoadingComponent";
 import ActivityStore from "../../../App/stores/ActivityStore";
 import { ActivityDetailedChat } from "./ActivityDetailedChat";
@@ -9,6 +9,7 @@ import { ActivityDetailedInfo } from "./ActivityDetailedInfo";
 import { ActivityDetailedHeader } from "./ActivityDetailedHeader";
 import { ActivityDetailedSidebar } from "./ActivityDetailedSidebar";
 import { NotFound } from "../../../App/layout/NotFound";
+import { GoToPreviousPageButton } from "../../buttons/GoToPreviousPageButton";
 
 interface DetailParams {
   id: string;
@@ -17,11 +18,7 @@ interface DetailParams {
 export const ActivityDetails: React.FC<
   RouteComponentProps<DetailParams>
 > = observer(({ match, history }) => {
-  const {
-    activity,
-    loadActivity,
-    loadingInitial,
-  } = ActivityStore;
+  const { activity, loadActivity, loadingInitial } = ActivityStore;
 
   useEffect(() => {
     loadActivity(match.params.id);
@@ -33,12 +30,7 @@ export const ActivityDetails: React.FC<
 
   return (
     <React.Fragment>
-      <Icon
-        onClick={() => history.push("/activities")}
-        name="arrow alternate circle left outline"
-        size="big"
-        style={{ marginBottom: "10px", cursor: "pointer" }}
-      />
+      <GoToPreviousPageButton />
       <Grid>
         <Grid.Column width={10}>
           <ActivityDetailedHeader activity={activity} />

@@ -2,10 +2,11 @@ import { Grid } from "semantic-ui-react";
 import { ProfileHeader } from "./ProfileHeader";
 import { ProfileContent } from "./ProfileContent";
 import ProfileStore from "../../App/stores/ProfileStore";
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import { RouteComponentProps } from "react-router";
 import { LoadingComponent } from "../../App/layout/LoadingComponent";
 import { observer } from "mobx-react-lite";
+import { GoToPreviousPageButton } from "../buttons/GoToPreviousPageButton";
 
 interface RouteParams {
   username: string;
@@ -23,11 +24,14 @@ export const ProfilePage: React.FC<IProps> = observer(({ match }) => {
   if (loadingProfile) return <LoadingComponent />;
 
   return (
-    <Grid>
-      <Grid.Column width={16}>
-        <ProfileHeader profile={profile} />
-        <ProfileContent />
-      </Grid.Column>
-    </Grid>
+    <Fragment>
+      <GoToPreviousPageButton />
+      <Grid>
+        <Grid.Column width={16}>
+          <ProfileHeader profile={profile} />
+          <ProfileContent />
+        </Grid.Column>
+      </Grid>
+    </Fragment>
   );
 });
