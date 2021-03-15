@@ -1,22 +1,27 @@
 import React from "react";
-import Cropper from "react-cropper";
+import { Cropper } from "react-cropper";
+import 'cropperjs/dist/cropper.css'
 
 interface IProps {
-  setImage: (file: Blob) => void;
+  setCropper: (Cropper: Cropper) => void;
   imagePreview: string;
 }
 
 export const UploadPhotoCropper: React.FC<IProps> = ({
-  setImage,
+  setCropper,
   imagePreview,
 }) => {
   return (
     <Cropper
       src={imagePreview}
-      style={{ height: 400, width: "100%" }}
-      // Cropper.js options
-      initialAspectRatio={16 / 9}
+      style={{ height: 200, width: "100%" }}
+      initialAspectRatio={1}
+      preview=".img-preview"
       guides={false}
+      viewMode={1}
+      autoCropArea={1}
+      background={false}
+      onInitialized={cropper => setCropper(cropper)}
     />
   );
 };

@@ -6,13 +6,19 @@ import { UploadPhotoCropper } from "./UploadPhotoCropper";
 
 export const UploadPhotoWidget = observer(() => {
   const [files, setFiles] = useState<any[]>([]);
-  const [image, setImage] = useState<Blob | null>(null);
+  const [cropper, setCropper] = useState<Cropper>();
+
+  const onCrop = () => {
+    if (cropper) {
+      cropper.getCroppedCanvas().toBlob((blob) => console.log(blob));
+    }
+  };
 
   useEffect(() => {
     return () => {
-      files.forEach((file) => URL.revokeObjectURL(file.preview));
+      files.forEach((file: any) => URL.revokeObjectURL(file.preview));
     };
-  });
+  }, [files]);
 
   return (
     <Fragment>
@@ -24,9 +30,9 @@ export const UploadPhotoWidget = observer(() => {
         <Grid.Column width={1} />
         <Grid.Column width={4}>
           <Header sub color="teal" content="Step 2 - Resize image" />
-          {files.length > 0 && (
+          {files && files.length > 0 && (
             <UploadPhotoCropper
-              setImage={setImage}
+              setCropper={setCropper}
               imagePreview={files[0].preview}
             />
           )}
@@ -34,7 +40,10 @@ export const UploadPhotoWidget = observer(() => {
         <Grid.Column width={1} />
         <Grid.Column width={4}>
           <Header sub color="teal" content="Step 3 - Preview & Upload" />
-          {files.length > 0 && <Image src={files[0].preview} />}
+          <div
+            className="img-preview"
+            style={{ minHeight: 200, overflow: "hidden" }}
+          ></div>
         </Grid.Column>
       </Grid>
     </Fragment>
