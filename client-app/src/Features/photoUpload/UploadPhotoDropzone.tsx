@@ -1,9 +1,15 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
-export const UploadPhotoDropzone = () => {
+interface IProps {
+  setFiles: (files: object[]) => void;
+}
+
+export const UploadPhotoDropzone: React.FC<IProps> = ({ setFiles }) => {
   const onDrop = useCallback((acceptedFiles) => {
-    console.log(acceptedFiles);
+    setFiles(acceptedFiles.map((file: object) => Object.assign(file, {
+      preview: URL.createObjectURL(file)
+    })));
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -17,4 +23,4 @@ export const UploadPhotoDropzone = () => {
       )}
     </div>
   );
-}
+};
