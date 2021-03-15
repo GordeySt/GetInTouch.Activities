@@ -1,29 +1,27 @@
 import { Fragment } from "react";
-import { Tab } from "semantic-ui-react";
+import { Grid, Header, Segment } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
 import { UploadPhotoDropzone } from "./UploadPhotoDropzone";
 
-const panes = [
-  {
-    menuItem: { key: "add", content: "Add Photo", icon: "photo" },
-    render: () => <UploadPhotoDropzone />,
-  },
-  {
-    menuItem: { key: "resize", content: "Resize Photo", icon: "compress" },
-    render: () => <Tab.Pane>Resize Photo</Tab.Pane>,
-  },
-  {
-    menuItem: {
-      key: "review",
-      content: "Review and Upload",
-      icon: "cloud upload",
-    },
-    render: () => <Tab.Pane>Review and Upload</Tab.Pane>,
-  },
-];
-
-export const UploadPhotoWidget = observer(() => (
-  <Fragment>
-    <Tab menu={{ fluid: true }} menuPosition="right" panes={panes} />
-  </Fragment>
-));
+export const UploadPhotoWidget = observer(() => {
+  return (
+    <Fragment>
+      <Segment>
+        <Grid>
+          <Grid.Row />
+          <Grid.Column width={4}>
+            <Header color="teal" sub content="Step 1 - Add Photo" />
+          </Grid.Column>
+          <Grid.Column width={1} />
+          <Grid.Column width={4}>
+            <Header sub color="teal" content="Step 2 - Resize image" />
+          </Grid.Column>
+          <Grid.Column width={1} />
+          <Grid.Column width={4}>
+            <Header sub color="teal" content="Step 3 - Preview & Upload" />
+          </Grid.Column>
+        </Grid>
+      </Segment>
+    </Fragment>
+  );
+});
