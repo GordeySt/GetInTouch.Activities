@@ -3,7 +3,6 @@ import { IActivity } from '../models/activity';
 import { ErrorsHandler } from "./errors"
 import { IUser, IUserFormValues } from "../models/user"
 import { IProfile } from "../models/profile"
-import { request } from "http";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
