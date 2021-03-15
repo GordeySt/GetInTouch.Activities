@@ -10,7 +10,7 @@ export const UploadPhotoWidget = observer(() => {
       <Grid>
         <Grid.Column width={4}>
           <Header color="teal" sub content="Step 1 - Add Photo" />
-          <UploadPhotoDropzone setFiles={setFiles}/>
+          <UploadPhotoDropzone setFiles={setFiles} />
         </Grid.Column>
         <Grid.Column width={1} />
         <Grid.Column width={4}>
