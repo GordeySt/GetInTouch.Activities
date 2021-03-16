@@ -14,6 +14,7 @@ export const ProfilePhotos = observer(() => {
     loadingSetMain,
   } = ProfileStore;
   const [addPhotoMode, setAddPhotoMode] = useState(false);
+  const [target, setTarget] = useState<string | null>(null);
 
   const handleUploadPhoto = (file: Blob) => {
     uploadPhoto(file).then(() => setAddPhotoMode(false));
@@ -48,10 +49,15 @@ export const ProfilePhotos = observer(() => {
                     {isCurrentUser && (
                       <Button.Group fluid width={2}>
                         <Button
+                          name={photo.id}
                           colour="gray"
-                          loading={loadingSetMain}
+                          loading={loadingSetMain && target === photo.id}
                           content="Main"
-                          onClick={() => setMainPhoto(photo)}
+                          onClick={(e) => {
+                            setMainPhoto(photo);
+                            setTarget(e.currentTarget.name);
+                          }}
+                          disabled={photo.isMain}
                         />
                         <Button color="black" icon="trash" />
                       </Button.Group>
