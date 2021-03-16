@@ -11,10 +11,13 @@ export const ProfilePhotos = observer(() => {
     uploadPhoto,
     uploading,
     setMainPhoto,
+    deletePhoto,
     loadingSetMain,
+    loadingDelete
   } = ProfileStore;
   const [addPhotoMode, setAddPhotoMode] = useState(false);
   const [target, setTarget] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   const handleUploadPhoto = (file: Blob) => {
     uploadPhoto(file).then(() => setAddPhotoMode(false));
@@ -59,7 +62,17 @@ export const ProfilePhotos = observer(() => {
                           }}
                           disabled={photo.isMain}
                         />
-                        <Button color="black" icon="trash" />
+                        <Button
+                          name={photo.id}
+                          disabled={photo.isMain}
+                          color="black"
+                          icon="trash"
+                          onClick={(e) => {
+                            deletePhoto(photo);
+                            setDeleteTarget(e.currentTarget.name);
+                          }}
+                          loading={loadingDelete && deleteTarget === photo.id}
+                        />
                       </Button.Group>
                     )}
                   </Card>

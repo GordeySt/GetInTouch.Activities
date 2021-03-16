@@ -12,6 +12,7 @@ class ProfileStore {
     @observable loadingProfile = false;
     @observable uploading = false;
     @observable loadingSetMain = false;
+    @observable loadingDelete = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -84,6 +85,23 @@ class ProfileStore {
             toast.error("Problem setting photo as main");
             runInAction(() => {
                 this.loadingSetMain = false;
+            })
+        }
+    }
+
+    @action deletePhoto = async (photo: IPhoto) => {
+        this.loadingDelete = true;
+
+        try {
+            await Profiles.deletePhoto(photo.id);
+            runInAction(() => {
+                this.profile!.photos = this.profile!.photos.filter(a => a.id !== photo.id);
+                this.loadingDelete = false;
+            })
+        } catch (error) {
+            toast.error("Problem deleting the photo");
+            runInAction(() => {
+                this.loadingDelete = false;
             })
         }
     }
