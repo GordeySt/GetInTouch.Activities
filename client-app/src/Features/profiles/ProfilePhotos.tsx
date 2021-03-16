@@ -1,13 +1,16 @@
+import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import { Card, Header, Tab, Image, Button, Grid } from "semantic-ui-react";
-import ModalStore from "../../App/stores/ModalStore";
 import ProfileStore from "../../App/stores/ProfileStore";
 import { UploadPhotoWidget } from "../photoUpload/UploadPhotoWidget";
 
-export const ProfilePhotos = () => {
-  const { profile, isCurrentUser } = ProfileStore;
-  const { openModal } = ModalStore;
+export const ProfilePhotos = observer(() => {
+  const { profile, isCurrentUser, uploadPhoto, uploading } = ProfileStore;
   const [addPhotoMode, setAddPhotoMode] = useState(false);
+
+  const handleUploadPhoto = (file: Blob) => {
+    uploadPhoto(file).then(() => setAddPhotoMode(false));
+  };
 
   return (
     <Tab.Pane>
@@ -17,7 +20,7 @@ export const ProfilePhotos = () => {
           {isCurrentUser && (
             <Button
               floated="right"
-              icon="photo"
+              icon={!addPhotoMode ? "photo" : "close"}
               basic
               onClick={() => setAddPhotoMode(!addPhotoMode)}
             />
@@ -25,7 +28,10 @@ export const ProfilePhotos = () => {
         </Grid.Column>
         <Grid.Column width={16}>
           {addPhotoMode ? (
-            <UploadPhotoWidget />
+            <UploadPhotoWidget
+              uploadPhoto={handleUploadPhoto}
+              loading={uploading}
+            />
           ) : (
             <Card.Group itemsPerRow={5}>
               {profile &&
@@ -46,4 +52,4 @@ export const ProfilePhotos = () => {
       </Grid>
     </Tab.Pane>
   );
-};
+});
