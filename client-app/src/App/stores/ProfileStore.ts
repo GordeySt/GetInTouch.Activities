@@ -1,7 +1,8 @@
+import { Agent } from "http";
 import { observable, action, makeAutoObservable, configure, runInAction, computed } from "mobx"
 import { toast } from "react-toastify";
 import { Profiles } from "../api/agent";
-import { IProfile } from "../models/profile";
+import { IPhoto, IProfile } from "../models/profile";
 import UserStore from "./UserStore";
 
 configure({ enforceActions: "always" });
@@ -10,6 +11,7 @@ class ProfileStore {
     @observable profile: IProfile | null = null;
     @observable loadingProfile = false;
     @observable uploading = false;
+    @observable loadingSetMain = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -61,6 +63,27 @@ class ProfileStore {
             toast.error('Problem uploading photo')
             runInAction(() => {
                 this.uploading = false;
+            })
+        }
+    }
+
+    @action setMainPhoto = async (photo: IPhoto) => {
+        this.loadingSetMain = true;
+
+        try {
+            await Profiles.setMainPhoto(photo.id);
+            runInAction(() => {
+                UserStore.user!.image = photo.url;
+                this.profile!.photos.find(a => a.isMain)!.isMain = false;
+                this.profile!.photos.find(a => a.id === photo.id)!.isMain = true;
+                this.profile!.mainImage = photo.url;
+                this.loadingSetMain = false;
+            })
+        } catch (error) {
+            console.log(error);
+            toast.error("Problem setting photo as main");
+            runInAction(() => {
+                this.loadingSetMain = false;
             })
         }
     }

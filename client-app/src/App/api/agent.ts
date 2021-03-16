@@ -3,6 +3,7 @@ import { IActivity } from '../models/activity';
 import { ErrorsHandler } from "./errors"
 import { IUser, IUserFormValues } from "../models/user"
 import { IPhoto, IProfile } from "../models/profile"
+import { request } from "http";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -63,5 +64,7 @@ export const User = {
 
 export const Profiles = {
     get: (username: string): Promise<IProfile> => requests.get(`/profiles/${username}`),
-    uploadPhoto: (photo: Blob): Promise<IPhoto> => requests.postForm('/photos', photo)
+    uploadPhoto: (photo: Blob): Promise<IPhoto> => requests.postForm('/photos', photo),
+    setMainPhoto: (id: string) => requests.post(`/photos/${id}/setMain`, {}),
+    deletePhoto: (id: string) => requests.del(`/photos/${id}`)
 }

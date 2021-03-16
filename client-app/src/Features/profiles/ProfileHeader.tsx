@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import {
   Segment,
   Item,
@@ -14,7 +15,7 @@ interface IProps {
   profile: IProfile | null;
 }
 
-export const ProfileHeader: React.FC<IProps> = ({ profile }) => {
+export const ProfileHeader: React.FC<IProps> = observer(({ profile }) => {
   return (
     <Segment>
       <Grid>
@@ -56,4 +57,4 @@ export const ProfileHeader: React.FC<IProps> = ({ profile }) => {
       </Grid>
     </Segment>
   );
-};
+});

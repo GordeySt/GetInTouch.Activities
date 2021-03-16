@@ -5,7 +5,14 @@ import ProfileStore from "../../App/stores/ProfileStore";
 import { UploadPhotoWidget } from "../photoUpload/UploadPhotoWidget";
 
 export const ProfilePhotos = observer(() => {
-  const { profile, isCurrentUser, uploadPhoto, uploading } = ProfileStore;
+  const {
+    profile,
+    isCurrentUser,
+    uploadPhoto,
+    uploading,
+    setMainPhoto,
+    loadingSetMain,
+  } = ProfileStore;
   const [addPhotoMode, setAddPhotoMode] = useState(false);
 
   const handleUploadPhoto = (file: Blob) => {
@@ -40,7 +47,12 @@ export const ProfilePhotos = observer(() => {
                     <Image src={photo.url} />
                     {isCurrentUser && (
                       <Button.Group fluid width={2}>
-                        <Button colour="gray" content="Main" />
+                        <Button
+                          colour="gray"
+                          loading={loadingSetMain}
+                          content="Main"
+                          onClick={() => setMainPhoto(photo)}
+                        />
                         <Button color="black" icon="trash" />
                       </Button.Group>
                     )}
