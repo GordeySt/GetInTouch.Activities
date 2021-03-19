@@ -1,8 +1,12 @@
 import { Fragment, useEffect } from "react";
 import { Button, Comment, Form, Icon, Segment } from "semantic-ui-react";
 import ActivityStore from "../../../App/stores/ActivityStore";
+import { Form as FinalForm, Field } from "react-final-form";
+import { Link } from "react-router-dom";
+import { TextAreaInput } from "../../../App/common/form/TextAreaInput";
+import { observer } from "mobx-react-lite";
 
-export const ActivityDetailedChat = () => {
+export const ActivityDetailedChat = observer(() => {
   const {
     createHubConnection,
     stopHubConnection,
@@ -29,47 +33,47 @@ export const ActivityDetailedChat = () => {
       >
         <Icon name="wechat" size="big" />
       </Segment>
-      <Segment attached>
+      <Segment attached clearing>
         <Comment.Group>
-          <Comment>
-            <Comment.Avatar src="/assets/user.jpg" />
-            <Comment.Content>
-              <Comment.Author as="a">Matt</Comment.Author>
-              <Comment.Metadata>
-                <div>Today at 5:42PM</div>
-              </Comment.Metadata>
-              <Comment.Text>How artistic!</Comment.Text>
-              <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-              </Comment.Actions>
-            </Comment.Content>
-          </Comment>
-
-          <Comment>
-            <Comment.Avatar src="/assets/user.jpg" />
-            <Comment.Content>
-              <Comment.Author as="a">Joe Henderson</Comment.Author>
-              <Comment.Metadata>
-                <div>5 days ago</div>
-              </Comment.Metadata>
-              <Comment.Text>Dude, this is awesome. Thanks so much</Comment.Text>
-              <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-              </Comment.Actions>
-            </Comment.Content>
-          </Comment>
-
-          <Form reply>
-            <Form.TextArea rows={2} placeholder="Message" />
-            <Button
-              content="Add Comment"
-              labelPosition="left"
-              icon="telegram plane"
-              color="black"
-            />
-          </Form>
+          {activity &&
+            activity.comments &&
+            activity.comments.map((comment) => (
+              <Comment key={comment.id}>
+                <Comment.Avatar circular src={comment.image || "/assets/user.jpg"} />
+                <Comment.Content>
+                  <Comment.Author as={Link} to={`/profile/${comment.userName}`}>
+                    {comment.displayedName}
+                  </Comment.Author>
+                  <Comment.Metadata>
+                    <div>{comment.createdAt}</div>
+                  </Comment.Metadata>
+                  <Comment.Text>{comment.body}</Comment.Text>
+                </Comment.Content>
+              </Comment>
+            ))}
+          <FinalForm
+            onSubmit={addComment}
+            render={({ handleSubmit, submitting, form }) => (
+              <Form onSubmit={() => handleSubmit()?.then(() => form.reset())}>
+                <Field
+                  name="body"
+                  component={TextAreaInput}
+                  rows={2}
+                  placeholder="Add your comment"
+                />
+                <Button
+                  content="Add Comment"
+                  labelPosition="left"
+                  icon="telegram plane"
+                  color="black"
+                  loading={submitting}
+                  floated="right"
+                />
+              </Form>
+            )}
+          />
         </Comment.Group>
       </Segment>
     </Fragment>
   );
-};
+});

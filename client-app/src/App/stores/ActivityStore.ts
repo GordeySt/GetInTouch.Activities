@@ -50,6 +50,7 @@ class ActivityStore {
             .withUrl('http://localhost:5000/chat', {
                 accessTokenFactory: () => CommonStore.token!
             })
+            .withAutomaticReconnect()
             .configureLogging(LogLevel.Information)
             .build();
 
@@ -58,7 +59,9 @@ class ActivityStore {
             .catch(error => console.log("Error establishinh connection: ", error))
 
         this.hubConnection.on("RecieveComment", comment => {
-            this.activity!.comments.push(comment);
+            runInAction(() => {
+                this.activity!.comments.push(comment);
+            })
         })
     }
 
