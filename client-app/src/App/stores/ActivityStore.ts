@@ -7,6 +7,8 @@ import { IActivity } from "../models/activity";
 import { IUser } from "../models/user";
 import UserStore from "./UserStore";
 import { createAttendee, setActivityProps } from "../common/utils/utils";
+import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import CommonStore from "./CommonStore";
 
 configure({ enforceActions: "always" });
 
@@ -19,6 +21,7 @@ class ActivityStore {
     @observable isMouseOver = false;
     @observable isJoined = true;
     @observable loading = false;
+    @observable.ref hubConnection: HubConnection | null = null;
 
     @computed get activitiesByDate() {
         return this.groupActivitiesByDate(Array.from(this.activitiesRegistry.values()))
@@ -40,6 +43,27 @@ class ActivityStore {
 
     constructor() {
         makeAutoObservable(this);
+    }
+
+    @action createHubConnection = () => {
+        this.hubConnection = new HubConnectionBuilder()
+            .withUrl('http://localhost:5000/chat', {
+                accessTokenFactory: () => CommonStore.token!
+            })
+            .configureLogging(LogLevel.Information)
+            .build();
+
+        this.hubConnection.start()
+            .then(() => console.log(this.hubConnection!.state))
+            .catch(error => console.log("Error establishinh connection: ", error))
+
+        this.hubConnection.on("RecieveComment", comment => {
+            this.activity!.comments.push(comment);
+        })
+    }
+
+    @action stopHubConnection = () => {
+        this.hubConnection!.stop();
     }
 
     @action loadActivities = async () => {
