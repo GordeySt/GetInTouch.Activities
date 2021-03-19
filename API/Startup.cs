@@ -18,8 +18,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using AutoMapper;
 using Infrastructure.Photos;
+using API.SignalR;
 
 namespace API
 {
@@ -51,6 +51,7 @@ namespace API
 
             services.AddMediatR(typeof(ActivitiesList.Handler).Assembly);
             services.AddAutoMapper(typeof(ActivitiesList.Handler));
+            services.AddSignalR();
 
             services.AddControllers(options =>
             {
@@ -114,6 +115,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
             });
         }
     }
