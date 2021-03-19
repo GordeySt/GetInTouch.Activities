@@ -1,13 +1,23 @@
-import React, { Fragment } from "react";
-import {
-  Button,
-  Comment,
-  Form,
-  Icon,
-  Segment,
-} from "semantic-ui-react";
+import { Fragment, useEffect } from "react";
+import { Button, Comment, Form, Icon, Segment } from "semantic-ui-react";
+import ActivityStore from "../../../App/stores/ActivityStore";
 
 export const ActivityDetailedChat = () => {
+  const {
+    createHubConnection,
+    stopHubConnection,
+    addComment,
+    activity,
+  } = ActivityStore;
+
+  useEffect(() => {
+    createHubConnection();
+
+    return () => {
+      stopHubConnection();
+    };
+  }, [createHubConnection, stopHubConnection]);
+
   return (
     <Fragment>
       <Segment
