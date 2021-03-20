@@ -7,8 +7,7 @@ import { IActivity } from "../models/activity";
 import { IUser } from "../models/user";
 import UserStore from "./UserStore";
 import { createAttendee, setActivityProps } from "../common/utils/utils";
-import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
-import CommonStore from "./CommonStore";
+
 
 configure({ enforceActions: "always" });
 
@@ -21,7 +20,6 @@ class ActivityStore {
     @observable isMouseOver = false;
     @observable isJoined = true;
     @observable loading = false;
-    @observable.ref hubConnection: HubConnection | null = null;
 
     @computed get activitiesByDate() {
         return this.groupActivitiesByDate(Array.from(this.activitiesRegistry.values()))
@@ -43,40 +41,6 @@ class ActivityStore {
 
     constructor() {
         makeAutoObservable(this);
-    }
-
-    @action createHubConnection = () => {
-        this.hubConnection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5000/chat', {
-                accessTokenFactory: () => CommonStore.token!
-            })
-            .withAutomaticReconnect()
-            .configureLogging(LogLevel.Information)
-            .build();
-
-        this.hubConnection.start()
-            .then(() => console.log(this.hubConnection!.state))
-            .catch(error => console.log("Error establishinh connection: ", error))
-
-        this.hubConnection.on("RecieveComment", comment => {
-            runInAction(() => {
-                this.activity!.comments.push(comment);
-            })
-        })
-    }
-
-    @action stopHubConnection = () => {
-        this.hubConnection!.stop();
-    }
-
-    @action addComment = async (values: any) => {
-        values.activityId = this.activity!.id;
-
-        try {
-            await this.hubConnection!.invoke("SendComment", values);
-        } catch (error) {
-            console.log(error);
-        }
     }
 
     @action loadActivities = async () => {
@@ -163,7 +127,6 @@ class ActivityStore {
             let attendees = [];
             attendees.push(attendee);
             activity.attendees = attendees;
-            activity.comments = [];
             activity.isHost = true;
             runInAction(() => {
                 this.addActivitiesFromResponseToClientArray(activity);

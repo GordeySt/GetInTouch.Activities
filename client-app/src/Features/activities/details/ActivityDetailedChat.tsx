@@ -1,26 +1,32 @@
 import { Fragment, useEffect } from "react";
 import { Button, Comment, Form, Icon, Segment } from "semantic-ui-react";
-import ActivityStore from "../../../App/stores/ActivityStore";
 import { Form as FinalForm, Field } from "react-final-form";
 import { Link } from "react-router-dom";
 import { TextAreaInput } from "../../../App/common/form/TextAreaInput";
 import { observer } from "mobx-react-lite";
+import CommentStore  from "../../../App/stores/CommentStore"
 
-export const ActivityDetailedChat = observer(() => {
+interface IProps {
+  activityId: string;
+}
+
+export const ActivityDetailedChat: React.FC<IProps> = observer(({ activityId }) => {
   const {
     createHubConnection,
-    stopHubConnection,
-    addComment,
-    activity,
-  } = ActivityStore;
-
+    clearComments,
+    comments,
+    addComment
+  } = CommentStore;
+  
   useEffect(() => {
-    createHubConnection();
+    if (activityId) {
+      createHubConnection(activityId);
+    }
 
     return () => {
-      stopHubConnection();
+      clearComments();
     };
-  }, [createHubConnection, stopHubConnection]);
+  }, [createHubConnection, clearComments, activityId]);
 
   return (
     <Fragment>
@@ -35,9 +41,7 @@ export const ActivityDetailedChat = observer(() => {
       </Segment>
       <Segment attached clearing>
         <Comment.Group>
-          {activity &&
-            activity.comments &&
-            activity.comments.map((comment) => (
+          {comments.map((comment) => (
               <Comment key={comment.id}>
                 <Comment.Avatar src={comment.image || "/assets/user.jpg"} />
                 <Comment.Content>
