@@ -32,7 +32,7 @@ class CommentStore {
             })
         })
 
-        this.hubConnection.on("RecieveComments", (comment: IComment) => {
+        this.hubConnection.on("RecieveComment", (comment: IComment) => {
             runInAction(() => {
                 this.comments.push(comment);
             })
@@ -54,6 +54,7 @@ class CommentStore {
 
     addComment = async (values: any) => {
         values.activityId = ActivityStore.activity?.id;
+        console.log(values);
 
         try {
             await this.hubConnection?.invoke("SendComment", values);
