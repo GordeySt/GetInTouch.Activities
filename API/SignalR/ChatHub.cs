@@ -19,8 +19,6 @@ namespace API.SignalR
         {
             string username = GetUserName();
 
-            command.UserName = username;
-
             var comment = await _mediator.Send(command);
 
             await Clients.Group(command.ActivityId.ToString()).SendAsync("RecieveComment", comment);

@@ -4,8 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Comments.Dto;
 using Application.Errors;
+using Application.Interfaces;
 using AutoMapper;
 using Domain;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
@@ -18,16 +20,25 @@ namespace Application.Comments.Commands
         {
             public string Body { get; set; }
             public Guid ActivityId { get; set; }
-            public string UserName { get; set; }
+        }
+
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Body).NotEmpty();
+            }
         }
 
         public class Handler : IRequestHandler<Command, CommentDto>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, IMapper mapper)
+            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor)
             {
+                _userAccessor = userAccessor;
                 _context = context;
                 _mapper = mapper;
             }
@@ -38,7 +49,7 @@ namespace Application.Comments.Commands
 
                 CheckIfActivityNotFound(activity);
 
-                var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == request.UserName);
+                var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUserName());
 
                 var comment = CreateNewComment(user, activity, request);
 
