@@ -163,6 +163,7 @@ class ActivityStore {
             let attendees = [];
             attendees.push(attendee);
             activity.attendees = attendees;
+            activity.comments = [];
             activity.isHost = true;
             runInAction(() => {
                 this.addActivitiesFromResponseToClientArray(activity);
