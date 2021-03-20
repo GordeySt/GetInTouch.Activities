@@ -13,8 +13,6 @@ namespace Application.Activities
         public class Command : IRequest
         {
             public Guid Id { get; set; }
-
-            public Command(Guid id) => Id = id;
         }
 
         public class Handler : IRequestHandler<Command>
