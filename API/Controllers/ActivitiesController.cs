@@ -6,6 +6,7 @@ using MediatR;
 using Application.Activities;
 using Microsoft.AspNetCore.Authorization;
 using Application.Activities.Commands;
+using Domain;
 
 namespace API.Controllers
 {
@@ -19,7 +20,10 @@ namespace API.Controllers
         public async Task<ActionResult<ActivityDto>> Details(Guid id) => await Mediator.Send(new ActivityDetails.Query { Id = id });
 
         [HttpPost]
-        public async Task<ActionResult<Unit>> Create(CreateActivity.Command command) => await Mediator.Send(command);
+        public async Task<IActionResult> Create(Activity activity) => Ok(await Mediator.Send(new CreateActivity.Command
+        {
+            Activity = activity
+        }));
 
         [HttpPut("{id}")]
         [Authorize(Policy = "IsActivityHost")]
