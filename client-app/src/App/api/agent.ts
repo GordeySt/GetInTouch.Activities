@@ -29,13 +29,13 @@ axios.interceptors.response.use(undefined, er => {
 const sleep = (ms: number) => (response: AxiosResponse) => 
     new Promise<AxiosResponse>(resolve => setTimeout(() => resolve(response), ms));
 
-const responseBody = (response: AxiosResponse) => response.data;
+const responseBody = <T> (response: AxiosResponse<T>) => response.data;
 
 const requests = {
-    get: (url: string) => axios.get(url).then(sleep(1000)).then(responseBody),
-    post: (url: string, body: {}) => axios.post(url, body).then(sleep(1000)).then(responseBody),
-    put: (url: string, body: {}) => axios.put(url, body).then(sleep(1000)).then(responseBody),
-    del: (url: string) => axios.delete(url).then(sleep(1000)).then(responseBody),
+    get: <T> (url: string) => axios.get<T>(url).then(sleep(1000)).then(responseBody),
+    post: <T> (url: string, body: {}) => axios.post<T>(url, body).then(sleep(1000)).then(responseBody),
+    put: <T> (url: string, body: {}) => axios.put<T>(url, body).then(sleep(1000)).then(responseBody),
+    del: <T> (url: string) => axios.delete<T>(url).then(sleep(1000)).then(responseBody),
     postForm: (url: string, file: Blob) => {
         let formData = new FormData();
         formData.append('File', file);
@@ -46,24 +46,24 @@ const requests = {
 }
 
 export const Activities = {
-    list: (): Promise<IActivity[]> => requests.get('/activities'),
-    details: (id: string): Promise<IActivity> => requests.get(`/activities/${id}`),
-    create: (activity: IActivity) => requests.post('/activities', activity),
-    update: (activity: IActivity) => requests.put(`/activities/${activity.id}`, activity),
-    delete: (id: string) => requests.del(`/activities/${id}`),
-    attend: (id: string) => requests.post(`/activities/${id}/attend`, {}),
-    unattend:  (id: string) => requests.del(`/activities/${id}/attend`)
+    list: (): Promise<IActivity[]> => requests.get<IActivity[]>('/activities'),
+    details: (id: string): Promise<IActivity> => requests.get<IActivity>(`/activities/${id}`),
+    create: (activity: IActivity) => requests.post<IActivity>('/activities', activity),
+    update: (activity: IActivity) => requests.put<IActivity>(`/activities/${activity.id}`, activity),
+    delete: (id: string) => requests.del<IActivity>(`/activities/${id}`),
+    attend: (id: string) => requests.post<IActivity>(`/activities/${id}/attend`, {}),
+    unattend: (id: string) => requests.del<IActivity>(`/activities/${id}/attend`)
 }
 
 export const User = {
-    current: (): Promise<IUser> => requests.get("/user"),
-    login: (user: IUserFormValues): Promise<IUser> => requests.post('/user/login', user),
-    register: (user: IUserFormValues): Promise<IUser> => requests.post("/user/register", user)
+    current: (): Promise<IUser> => requests.get<IUser>("/user"),
+    login: (user: IUserFormValues): Promise<IUser> => requests.post<IUser>('/user/login', user),
+    register: (user: IUserFormValues): Promise<IUser> => requests.post<IUser>("/user/register", user)
 }
 
 export const Profiles = {
-    get: (username: string): Promise<IProfile> => requests.get(`/profiles/${username}`),
+    get: (username: string): Promise<IProfile> => requests.get<IProfile>(`/profiles/${username}`),
     uploadPhoto: (photo: Blob): Promise<IPhoto> => requests.postForm('/photos', photo),
-    setMainPhoto: (id: string) => requests.post(`/photos/${id}/setMain`, {}),
-    deletePhoto: (id: string) => requests.del(`/photos/${id}`)
+    setMainPhoto: (id: string) => requests.post<IProfile>(`/photos/${id}/setMain`, {}),
+    deletePhoto: (id: string) => requests.del<IProfile>(`/photos/${id}`)
 }
