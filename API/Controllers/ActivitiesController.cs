@@ -10,7 +10,7 @@ using Application.Activities.Commands;
 
 namespace API.Controllers
 {
-    public class ActivitiesController : BaseController
+    public class ActivitiesController : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<List<ActivityDto>>> ActivitiesList() => await Mediator.Send(new ActivitiesList.Query());

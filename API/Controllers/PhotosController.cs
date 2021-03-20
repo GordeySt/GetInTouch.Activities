@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class PhotosController : BaseController
+    public class PhotosController : BaseApiController
     {
         [HttpPost]
         public async Task<ActionResult<Photo>> AddPhoto([FromForm] AddPhoto.Command command) => await Mediator.Send(command);
