@@ -27,10 +27,10 @@ namespace API.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Policy = "IsActivityHost")]
-        public async Task<ActionResult<Unit>> Edit(Guid id, EditActivity.Command command)
+        public async Task<IActionResult> Edit(Guid id, Activity activity)
         {
-            command.Id = id;
-            return await Mediator.Send(command);
+            activity.Id = id;
+            return Ok(await Mediator.Send(new EditActivity.Command { Activity = activity }));
         }
 
         [HttpDelete("{id}")]
