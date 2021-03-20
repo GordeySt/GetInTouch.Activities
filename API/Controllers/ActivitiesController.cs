@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Domain;
 using MediatR;
 using Application.Activities;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +16,7 @@ namespace API.Controllers
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<ActivityDto>> Details(Guid id) => await Mediator.Send(new ActivitiesDetails.Query(id));
+        public async Task<ActionResult<ActivityDto>> Details(Guid id) => await Mediator.Send(new ActivityDetails.Query { Id = id });
 
         [HttpPost]
         public async Task<ActionResult<Unit>> Create(CreateActivity.Command command) => await Mediator.Send(command);

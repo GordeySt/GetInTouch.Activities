@@ -6,18 +6,15 @@ using System.Threading.Tasks;
 using System.Threading;
 using Application.Errors;
 using System.Net;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 
 namespace Application.Activities
 {
-    public class ActivitiesDetails
+    public class ActivityDetails
     {
         public class Query : IRequest<ActivityDto>
         {
             public Guid Id { get; set; }
-
-            public Query(Guid id) => Id = id;
         }
 
         public class Handler : IRequestHandler<Query, ActivityDto>
