@@ -54,7 +54,6 @@ class CommentStore {
 
     addComment = async (values: any) => {
         values.activityId = ActivityStore.activity?.id;
-        console.log(values);
 
         try {
             await this.hubConnection?.invoke("SendComment", values);
