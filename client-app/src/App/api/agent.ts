@@ -48,22 +48,22 @@ const requests = {
 export const Activities = {
     list: (): Promise<IActivity[]> => requests.get<IActivity[]>('/activities'),
     details: (id: string): Promise<IActivity> => requests.get<IActivity>(`/activities/${id}`),
-    create: (activity: IActivity) => requests.post<IActivity>('/activities', activity),
-    update: (activity: IActivity) => requests.put<IActivity>(`/activities/${activity.id}`, activity),
-    delete: (id: string) => requests.del<IActivity>(`/activities/${id}`),
-    attend: (id: string) => requests.post<IActivity>(`/activities/${id}/attend`, {}),
-    unattend: (id: string) => requests.del<IActivity>(`/activities/${id}/attend`)
+    create: (activity: IActivity): Promise<void> => requests.post<void>('/activities', activity),
+    update: (activity: IActivity): Promise<void> => requests.put<void>(`/activities/${activity.id}`, activity),
+    delete: (id: string): Promise<void> => requests.del<void>(`/activities/${id}`),
+    attend: (id: string): Promise<void> => requests.post<void>(`/activities/${id}/attend`, {}),
+    unattend: (id: string): Promise<void> => requests.del<void>(`/activities/${id}/attend`)
 }
 
 export const User = {
     current: (): Promise<IUser> => requests.get<IUser>("/user"),
-    login: (user: IUserFormValues): Promise<IUser> => requests.post<IUser>('/user/login', user),
-    register: (user: IUserFormValues): Promise<IUser> => requests.post<IUser>("/user/register", user)
+    login: (user: IUserFormValues): Promise<IUser> => requests.post<void>('/user/login', user),
+    register: (user: IUserFormValues): Promise<IUser> => requests.post<void>("/user/register", user)
 }
 
 export const Profiles = {
     get: (username: string): Promise<IProfile> => requests.get<IProfile>(`/profiles/${username}`),
     uploadPhoto: (photo: Blob): Promise<IPhoto> => requests.postForm('/photos', photo),
-    setMainPhoto: (id: string) => requests.post<IProfile>(`/photos/${id}/setMain`, {}),
-    deletePhoto: (id: string) => requests.del<IProfile>(`/photos/${id}`)
+    setMainPhoto: (id: string): Promise<void> => requests.post<void>(`/photos/${id}/setMain`, {}),
+    deletePhoto: (id: string): Promise<void> => requests.del<void>(`/photos/${id}`)
 }
