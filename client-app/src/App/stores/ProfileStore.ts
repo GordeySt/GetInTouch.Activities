@@ -1,5 +1,4 @@
-import { Agent } from "http";
-import { observable, action, makeAutoObservable, configure, runInAction, computed } from "mobx"
+import { makeAutoObservable, configure, runInAction } from "mobx"
 import { toast } from "react-toastify";
 import { Profiles } from "../api/agent";
 import { IPhoto, IProfile } from "../models/profile";
@@ -7,18 +6,18 @@ import { store } from "./Store";
 
 configure({ enforceActions: "always" });
 
-class ProfileStore {
-    @observable profile: IProfile | null = null;
-    @observable loadingProfile = false;
-    @observable uploading = false;
-    @observable loadingSetMain = false;
-    @observable loadingDelete = false;
+export default class ProfileStore {
+    profile: IProfile | null = null;
+    loadingProfile = false;
+    uploading = false;
+    loadingSetMain = false;
+    loadingDelete = false;
 
     constructor() {
         makeAutoObservable(this);
     }
 
-    @computed get isCurrentUser() {
+    get isCurrentUser() {
         if (store.userStore.user && this.profile) {
             return store.userStore.user.userName === this.profile.userName;
         } else {
@@ -26,7 +25,7 @@ class ProfileStore {
         }
     }
 
-    @action loadProfile = async (username: string) => {
+    loadProfile = async (username: string) => {
         this.loadingProfile = true;
 
         try {
@@ -43,7 +42,7 @@ class ProfileStore {
         }
     }
 
-    @action uploadPhoto = async (file: Blob) => {
+    uploadPhoto = async (file: Blob) => {
         this.uploading = true;
 
         try {
@@ -68,7 +67,7 @@ class ProfileStore {
         }
     }
 
-    @action setMainPhoto = async (photo: IPhoto) => {
+    setMainPhoto = async (photo: IPhoto) => {
         this.loadingSetMain = true;
 
         try {
@@ -89,7 +88,7 @@ class ProfileStore {
         }
     }
 
-    @action deletePhoto = async (photo: IPhoto) => {
+    deletePhoto = async (photo: IPhoto) => {
         this.loadingDelete = true;
 
         try {
@@ -106,5 +105,3 @@ class ProfileStore {
         }
     }
 }
-
-export default new ProfileStore();
