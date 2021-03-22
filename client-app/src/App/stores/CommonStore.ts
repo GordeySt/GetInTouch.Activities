@@ -1,10 +1,10 @@
-import { observable, action, makeAutoObservable, configure, reaction } from "mobx"
+import { makeAutoObservable, configure, reaction } from "mobx"
 
 configure({ enforceActions: "always" });
 
-class CommonStore {    
-    @observable token: string | null = window.localStorage.getItem('jwt');
-    @observable appLoaded = false;
+export default class CommonStore {    
+    token: string | null = window.localStorage.getItem('jwt');
+    appLoaded = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -21,13 +21,11 @@ class CommonStore {
         )
     }
 
-    @action setToken = (token: string | null) => {
+    setToken = (token: string | null) => {
         this.token = token;
     }
 
-    @action setAppLoaded = () => {
+    setAppLoaded = () => {
         this.appLoaded = true;
     }
 }
-
-export default new CommonStore();
