@@ -5,7 +5,7 @@ import { history } from "../..";
 import { Activities } from "../api/agent";
 import { IActivity } from "../models/activity";
 import { IUser } from "../models/user";
-import UserStore from "./UserStore";
+import { store } from "./Store";
 import { createAttendee, setActivityProps } from "../common/utils/utils";
 
 
@@ -47,7 +47,7 @@ export default class ActivityStore {
         try {
             const activities = await Activities.list();
             runInAction(() => {
-                const user = UserStore.user;
+                const user = store.userStore.user;
                 this.mapAllActivitiesFromResponse(activities, user);
                 this.loadingInitial = false;
             });
@@ -89,7 +89,7 @@ export default class ActivityStore {
 
             try {
                 activity = await Activities.details(id);
-                const user = UserStore.user;
+                const user = store.userStore.user;
                 runInAction(() => {
                     activity.date = new Date(activity.date!);
                     setActivityProps(activity, user);
@@ -116,7 +116,7 @@ export default class ActivityStore {
 
         try {
             await Activities.create(activity);
-            const attendee = createAttendee(UserStore.user!);
+            const attendee = createAttendee(store.userStore.user!);
             attendee.isHost = true;
             let attendees = [];
             attendees.push(attendee);
@@ -218,7 +218,7 @@ export default class ActivityStore {
     }
 
     attendActivity = async () => {
-        const attendee = createAttendee(UserStore.user!);
+        const attendee = createAttendee(store.userStore.user!);
         this.loading = true;
 
         try {
@@ -247,7 +247,7 @@ export default class ActivityStore {
             runInAction(() => {
                 if (this.activity) {
                     this.activity.attendees = this.activity.attendees.filter(
-                        a => a.userName !== UserStore.user?.userName
+                        a => a.userName !== store.userStore.user?.userName
                     );
         
                     this.activity.isGoing = false;

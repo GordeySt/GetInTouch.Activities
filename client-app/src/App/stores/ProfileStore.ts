@@ -3,7 +3,7 @@ import { observable, action, makeAutoObservable, configure, runInAction, compute
 import { toast } from "react-toastify";
 import { Profiles } from "../api/agent";
 import { IPhoto, IProfile } from "../models/profile";
-import UserStore from "./UserStore";
+import { store } from "./Store";
 
 configure({ enforceActions: "always" });
 
@@ -19,8 +19,8 @@ class ProfileStore {
     }
 
     @computed get isCurrentUser() {
-        if (UserStore.user && this.profile) {
-            return UserStore.user.userName === this.profile.userName;
+        if (store.userStore.user && this.profile) {
+            return store.userStore.user.userName === this.profile.userName;
         } else {
             return false;
         }
@@ -52,8 +52,8 @@ class ProfileStore {
                 if (this.profile) {
                     this.profile.photos.push(photo);
                     
-                    if (photo.isMain && UserStore.user) {
-                        UserStore.user.image = photo.url;
+                    if (photo.isMain && store.userStore.user) {
+                        store.userStore.user.image = photo.url;
                         this.profile.mainImage = photo.url;
                     }
                 }
@@ -74,7 +74,7 @@ class ProfileStore {
         try {
             await Profiles.setMainPhoto(photo.id);
             runInAction(() => {
-                UserStore.user!.image = photo.url;
+                store.userStore.user!.image = photo.url;
                 this.profile!.photos.find(a => a.isMain)!.isMain = false;
                 this.profile!.photos.find(a => a.id === photo.id)!.isMain = true;
                 this.profile!.mainImage = photo.url;

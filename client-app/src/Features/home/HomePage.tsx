@@ -1,11 +1,12 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { Container, Segment } from "semantic-ui-react";
-import UserStore from "../../App/stores/UserStore";
+import { useStore } from "../../App/stores/Store";
 import { LogOutForm } from "./LogOutForm";
 import { LogInForm } from "./LogInForm";
 
 export const HomePage = () => {
-  const { isLoggedIn, user } = UserStore;
+  const { userStore } = useStore();
+  const { isLoggedIn, user } = userStore;
   return (
     <Fragment>
       <Segment inverted textAlign="center" vertical className="masthead">

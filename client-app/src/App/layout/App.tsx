@@ -15,13 +15,12 @@ import { ActivityDetails } from "../../Features/activities/details/ActivityDetai
 import { NotFound } from "./NotFound";
 import { ToastContainer } from "react-toastify";
 import { useStore } from "../stores/Store";
-import UserStore from "../stores/UserStore";
 import { ModalContainer } from "../common/modals/ModalContainer";
 import { ProfilePage } from "../../Features/profiles/ProfilePage"
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
-  const { commonStore } = useStore();
-  const { getUser } = UserStore;
+  const { commonStore, userStore } = useStore();
+  const { getUser } = userStore;
 
   useEffect(() => {
     if (commonStore.token) {

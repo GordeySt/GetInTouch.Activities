@@ -5,7 +5,7 @@ import { combineValidators, isRequired } from "revalidate";
 import { Form, Button, Segment, Header, Icon } from "semantic-ui-react";
 import { TextInput } from "../../App/common/form/TextInput";
 import { IUserFormValues } from "../../App/models/user";
-import UserStore from "../../App/stores/UserStore";
+import { useStore } from "../../App/stores/Store";
 import { ErrorMessage } from "../../App/common/form/ErrorMessage";
 
 const validate = combineValidators({
@@ -14,7 +14,8 @@ const validate = combineValidators({
 });
 
 export const LoginForm = () => {
-  const { login } = UserStore;
+  const { userStore } = useStore();
+  const { login } = userStore;
   return (
     <Segment clearing>
       <Header as="h4" color="black">

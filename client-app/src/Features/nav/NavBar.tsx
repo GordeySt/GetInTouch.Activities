@@ -1,10 +1,11 @@
 import { observer } from "mobx-react-lite";
 import { NavLink, Link } from "react-router-dom";
 import { Menu, Container, Button, Image, Dropdown } from "semantic-ui-react";
-import UserStore from "../../App/stores/UserStore";
+import { useStore } from "../../App/stores/Store";
 
 export const NavBar: React.FC = observer(() => {
-  const { logout, user } = UserStore;
+  const { userStore } = useStore();
+  const { user, logout } = userStore;
   return (
     <Menu fixed="top" inverted>
       <Container>
