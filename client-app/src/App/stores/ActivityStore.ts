@@ -1,4 +1,4 @@
-import { observable, action, makeAutoObservable, computed, configure, runInAction } from "mobx"
+import { makeAutoObservable, computed, configure, runInAction } from "mobx"
 import { SyntheticEvent } from "react";
 import { toast } from "react-toastify";
 import { history } from "../..";
@@ -11,15 +11,13 @@ import { createAttendee, setActivityProps } from "../common/utils/utils";
 
 configure({ enforceActions: "always" });
 
-class ActivityStore {
-    @observable activitiesRegistry = new Map();
-    @observable loadingInitial = false;
-    @observable activity: IActivity | null = null;
-    @observable submitting = false;
-    @observable target = '';
-    @observable isMouseOver = false;
-    @observable isJoined = true;
-    @observable loading = false;
+export default class ActivityStore {
+    activitiesRegistry = new Map();
+    loadingInitial = false;
+    activity: IActivity | null = null;
+    submitting = false;
+    target = '';
+    loading = false;
 
     @computed get activitiesByDate() {
         return this.groupActivitiesByDate(Array.from(this.activitiesRegistry.values()))
@@ -43,7 +41,7 @@ class ActivityStore {
         makeAutoObservable(this);
     }
 
-    @action loadActivities = async () => {
+    loadActivities = async () => {
         this.loadingInitial = true;
 
         try {
@@ -78,11 +76,7 @@ class ActivityStore {
         return activity;
     }
 
-    @action clearActivity = () => {
-        this.activity = null;
-    }
-
-    @action loadActivity = async (id: string) => {
+    loadActivity = async (id: string) => {
         let activity = this.getActivity(id);
 
         if (activity) {
@@ -117,7 +111,7 @@ class ActivityStore {
         return this.activitiesRegistry.get(id);
     }
 
-    @action createActivity = async (activity: IActivity) => {
+    createActivity = async (activity: IActivity) => {
         this.submitting = true;
 
         try {
@@ -143,7 +137,7 @@ class ActivityStore {
         }
     }
 
-    @action editActivity = async (activity: IActivity) => {
+    editActivity = async (activity: IActivity) => {
         this.submitting = true;
 
         try {
@@ -200,7 +194,7 @@ class ActivityStore {
         return months[activity.date!.getMonth()];
       };
 
-    @action deleteActivity = async (event: SyntheticEvent<HTMLButtonElement>,
+    deleteActivity = async (event: SyntheticEvent<HTMLButtonElement>,
         id: string) => {
             this.submitting = true;
             this.target = event.currentTarget.name;
@@ -223,15 +217,7 @@ class ActivityStore {
             }
     }
 
-    @action setIsJoined = () => {
-        this.isJoined = !this.isJoined;
-    }
-
-    @action setIsMouseOver = (mouseState: boolean) => {
-        this.isMouseOver = mouseState;
-    }
-
-    @action attendActivity = async () => {
+    attendActivity = async () => {
         const attendee = createAttendee(UserStore.user!);
         this.loading = true;
 
@@ -253,7 +239,7 @@ class ActivityStore {
         }
     }
 
-    @action cancelAttendance = async () => {
+    cancelAttendance = async () => {
         this.loading = true;
 
         try {
@@ -277,5 +263,3 @@ class ActivityStore {
         }
     }
 }
-
-export default new ActivityStore();
