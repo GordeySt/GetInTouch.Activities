@@ -1,7 +1,7 @@
 import { Grid } from "semantic-ui-react";
 import { ProfileHeader } from "./ProfileHeader";
 import { ProfileContent } from "./ProfileContent";
-import ProfileStore from "../../App/stores/ProfileStore";
+import { useStore } from "../../App/stores/Store";
 import { Fragment, useEffect } from "react";
 import { RouteComponentProps } from "react-router";
 import { LoadingComponent } from "../../App/layout/LoadingComponent";
@@ -15,7 +15,8 @@ interface RouteParams {
 interface IProps extends RouteComponentProps<RouteParams> {}
 
 export const ProfilePage: React.FC<IProps> = observer(({ match }) => {
-  const { loadingProfile, profile, loadProfile } = ProfileStore;
+  const { profileStore } = useStore();
+  const { loadingProfile, profile, loadProfile } = profileStore;
 
   useEffect(() => {
     loadProfile(match.params.username);
