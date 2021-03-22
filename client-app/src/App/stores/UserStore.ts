@@ -2,7 +2,7 @@ import { observable, action, makeAutoObservable, computed, configure, runInActio
 import { IUser, IUserFormValues } from "../models/user";
 import { User } from "../api/agent"
 import { history } from "../..";
-import CommonStore from "./CommonStore"
+import { store } from "./Store"
 import ModalStore from "./ModalStore";
 
 configure({ enforceActions: "always" });
@@ -22,7 +22,7 @@ class UserStore {
             runInAction(() => {
                 this.user = user;
             })
-            CommonStore.setToken(user.token);
+            store.commonStore.setToken(user.token);
             history.push("/activities");
         }
         catch (error) {
@@ -33,7 +33,7 @@ class UserStore {
     @action register = async (values: IUserFormValues) => {
         try {
             const user = await User.register(values);
-            CommonStore.setToken(user.token);
+            store.commonStore.setToken(user.token);
             runInAction(() => this.user = user);
             history.push("/activities");
             ModalStore.closeModal();
@@ -56,7 +56,7 @@ class UserStore {
     }
 
     @action logout = () => {
-        CommonStore.setToken(null);
+        store.commonStore.setToken(null);
         this.user = null;
         history.push("/");
     }

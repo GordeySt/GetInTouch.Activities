@@ -14,22 +14,22 @@ import { ActivityForm } from "../../Features/activities/form/ActivityForm";
 import { ActivityDetails } from "../../Features/activities/details/ActivityDetails";
 import { NotFound } from "./NotFound";
 import { ToastContainer } from "react-toastify";
-import CommonStore from "../stores/CommonStore";
+import { useStore } from "../stores/Store";
 import UserStore from "../stores/UserStore";
 import { ModalContainer } from "../common/modals/ModalContainer";
 import { ProfilePage } from "../../Features/profiles/ProfilePage"
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
-  const { setAppLoaded, token } = CommonStore;
+  const { commonStore } = useStore();
   const { getUser } = UserStore;
 
   useEffect(() => {
-    if (token) {
-      getUser().finally(() => setAppLoaded());
+    if (commonStore.token) {
+      getUser().finally(() => commonStore.setAppLoaded());
     } else {
-      setAppLoaded();
+      commonStore.setAppLoaded();
     }
-  }, [getUser, setAppLoaded, token]);
+  }, [getUser, commonStore]);
 
   return (
     <React.Fragment>

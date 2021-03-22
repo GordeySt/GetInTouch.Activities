@@ -2,7 +2,6 @@ import { IComment } from "../models/commets";
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import { makeAutoObservable, runInAction } from "mobx"
 import { store } from "./Store"
-import CommonStore from "./CommonStore";
 
 class CommentStore {
     comments: IComment[] = [];
@@ -16,7 +15,7 @@ class CommentStore {
         if (store.activityStore.activity) {
             this.hubConnection = new HubConnectionBuilder()
             .withUrl('http://localhost:5000/chat?activityId=' + activityId, {
-                accessTokenFactory: () => CommonStore.token!
+                accessTokenFactory: () => store.commonStore.token!
             })
             .withAutomaticReconnect()
             .configureLogging(LogLevel.Information)
