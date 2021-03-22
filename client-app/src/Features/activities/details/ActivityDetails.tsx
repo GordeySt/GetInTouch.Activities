@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { Grid } from "semantic-ui-react";
 import { LoadingComponent } from "../../../App/layout/LoadingComponent";
-import ActivityStore from "../../../App/stores/ActivityStore";
+import { useStore } from "../../../App/stores/Store";
 import { ActivityDetailedChat } from "./ActivityDetailedChat";
 import { ActivityDetailedInfo } from "./ActivityDetailedInfo";
 import { ActivityDetailedHeader } from "./ActivityDetailedHeader";
@@ -18,7 +18,8 @@ interface DetailParams {
 export const ActivityDetails: React.FC<
   RouteComponentProps<DetailParams>
 > = observer(({ match, history }) => {
-  const { activity, loadActivity, loadingInitial } = ActivityStore;
+  const { activityStore } = useStore();
+  const { activity, loadActivity, loadingInitial } = activityStore;
 
   useEffect(() => {
     loadActivity(match.params.id);

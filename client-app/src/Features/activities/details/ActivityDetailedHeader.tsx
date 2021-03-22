@@ -3,7 +3,7 @@ import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Header, Icon, Image, Item, Segment } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
-import ActivityStore from "../../../App/stores/ActivityStore";
+import { useStore } from "../../../App/stores/Store";
 
 const activityImageStyle = {
   filter: "brightness(30%)",
@@ -24,10 +24,11 @@ interface IProps {
 
 export const ActivityDetailedHeader: React.FC<IProps> = observer(
   ({ activity }) => {
-    const { loading, target, submitting, deleteActivity } = ActivityStore;
+    const { activityStore } = useStore();
+    const { loading, target, submitting, deleteActivity } = activityStore;
     const [isMouseOver, setIsMouseOver] = useState(false);
     const host = activity.attendees.filter((x) => x.isHost)[0];
-    const { attendActivity, cancelAttendance } = ActivityStore;
+    const { attendActivity, cancelAttendance } = activityStore;
 
     const determoneFunctionToCall = () => {
       activity.isGoing ? cancelAttendance() : attendActivity();

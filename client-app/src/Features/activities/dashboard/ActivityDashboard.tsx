@@ -2,15 +2,16 @@ import React, { useEffect } from "react";
 import { Grid } from "semantic-ui-react";
 import { ActivityList } from "./ActivityList";
 import { observer } from "mobx-react-lite";
-import ActivityStore from "../../../App/stores/ActivityStore";
+import { store, useStore } from "../../../App/stores/Store";
 import { LoadingComponent } from "../../../App/layout/LoadingComponent";
 
 export const ActivityDashboard: React.FC = observer(() => {
+  const { activityStore } = useStore();
   useEffect(() => {
-    ActivityStore.loadActivities();
-  }, []);
+    store.activityStore.loadActivities();
+  }, [activityStore]);
 
-  if (ActivityStore.loadingInitial) return <LoadingComponent />;
+  if (store.activityStore.loadingInitial) return <LoadingComponent />;
 
   return (
     <Grid>

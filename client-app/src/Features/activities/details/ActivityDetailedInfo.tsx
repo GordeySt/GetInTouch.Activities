@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { Grid, Icon, Segment } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
-import ActivityStore  from "../../../App/stores/ActivityStore"
+import { useStore } from "../../../App/stores/Store"
 
 interface IProps {
   activity: IActivity;
@@ -10,7 +10,8 @@ interface IProps {
 
 export const ActivityDetailedInfo: React.FC<IProps> = observer(
   ({ activity }) => {
-    const { modifyDayOfTheWeekToString, modifyMonthToString } = ActivityStore;
+    const { activityStore } = useStore();
+    const { modifyDayOfTheWeekToString, modifyMonthToString } = activityStore;
     return (
       <Segment.Group>
         <Segment attached="top">

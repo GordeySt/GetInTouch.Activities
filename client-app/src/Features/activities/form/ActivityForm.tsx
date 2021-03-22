@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Segment, Form, Button, Icon, Grid } from "semantic-ui-react";
 import { ActivityFormValues, IActivity } from "../../../App/models/activity";
 import { v4 as uuid } from "uuid";
-import ActivityStore from "../../../App/stores/ActivityStore";
+import { useStore } from "../../../App/stores/Store";
 import { observer } from "mobx-react-lite";
 import { RouteComponentProps } from "react-router-dom";
 import { Form as FinalForm, Field } from "react-final-form";
@@ -39,7 +39,8 @@ interface DetailsParams {
 export const ActivityForm: React.FC<
   RouteComponentProps<DetailsParams>
 > = observer(({ match, history }) => {
-  const { loadActivity, loadingInitial } = ActivityStore;
+  const { activityStore } = useStore();
+  const { loadActivity, loadingInitial } = activityStore;
 
   const [activity, setActivity] = useState(new ActivityFormValues());
 
@@ -57,9 +58,9 @@ export const ActivityForm: React.FC<
         ...values,
         id: uuid(),
       };
-      ActivityStore.createActivity(newActivity);
+      activityStore.createActivity(newActivity);
     } else {
-      ActivityStore.editActivity(values);
+      activityStore.editActivity(values);
     }
   };
 
@@ -126,7 +127,7 @@ export const ActivityForm: React.FC<
                   />
                   <Button
                     disabled={loadingInitial || invalid || pristine}
-                    loading={ActivityStore.submitting}
+                    loading={activityStore.submitting}
                     floated="right"
                     inverted
                     secondary

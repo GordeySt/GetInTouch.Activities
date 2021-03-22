@@ -1,7 +1,7 @@
 import { IComment } from "../models/commets";
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import { makeAutoObservable, runInAction } from "mobx"
-import ActivityStore from "./ActivityStore"
+import { store } from "./Store"
 import CommonStore from "./CommonStore";
 
 class CommentStore {
@@ -13,7 +13,7 @@ class CommentStore {
     }
 
     createHubConnection = (activityId: string) => {
-        if (ActivityStore.activity) {
+        if (store.activityStore.activity) {
             this.hubConnection = new HubConnectionBuilder()
             .withUrl('http://localhost:5000/chat?activityId=' + activityId, {
                 accessTokenFactory: () => CommonStore.token!
@@ -53,7 +53,7 @@ class CommentStore {
     }
 
     addComment = async (values: any) => {
-        values.activityId = ActivityStore.activity?.id;
+        values.activityId = store.activityStore.activity?.id;
 
         try {
             await this.hubConnection?.invoke("SendComment", values);
