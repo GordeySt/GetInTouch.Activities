@@ -7,16 +7,16 @@ import ModalStore from "./ModalStore";
 
 configure({ enforceActions: "always" });
 
-class UserStore {
-    @observable user: IUser | null = null;
+export default class UserStore {
+    user: IUser | null = null;
 
-    @computed get isLoggedIn() { return !!this.user }
+    get isLoggedIn() { return !!this.user }
 
     constructor() {
         makeAutoObservable(this);
     }
 
-    @action login = async (values: IUserFormValues) => {
+    login = async (values: IUserFormValues) => {
         try {
             const user = await User.login(values);
             runInAction(() => {
@@ -30,7 +30,7 @@ class UserStore {
         }
     }
 
-    @action register = async (values: IUserFormValues) => {
+    register = async (values: IUserFormValues) => {
         try {
             const user = await User.register(values);
             store.commonStore.setToken(user.token);
@@ -42,7 +42,7 @@ class UserStore {
         }
     }
 
-    @action getUser = async () => {
+    getUser = async () => {
         try {
             const user = await User.current();
             runInAction(() => {
@@ -55,11 +55,9 @@ class UserStore {
 
     }
 
-    @action logout = () => {
+    logout = () => {
         store.commonStore.setToken(null);
         this.user = null;
         history.push("/");
     }
 }
-
-export default new UserStore();
