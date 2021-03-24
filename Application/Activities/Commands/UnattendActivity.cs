@@ -33,7 +33,7 @@ namespace Application.Activities.Commands
             {
                 var activity = await _context.Activities.FindAsync(request.Id);
 
-                if (activity == null) ThrowRestExceptionForNotFoundActivity();
+                CheckIfActivityNotFound(activity);
 
                 var user = await _context.Users.SingleOrDefaultAsync(x =>
                     x.UserName == _userAccessor.GetCurrentUserName());
@@ -55,20 +55,13 @@ namespace Application.Activities.Commands
                 throw new Exception("Problem saving changes");
             }
 
-            private void ThrowRestExceptionForNotFoundActivity()
+            private void CheckIfActivityNotFound(Activity activity)
             {
-                throw new RestException(HttpStatusCode.NotFound, new
-                {
-                    activity = "Not Found"
-                });
-            }
-
-            private void ThrowRestExceptionForAlreadyAttendingActivity()
-            {
-                throw new RestException(HttpStatusCode.NotFound, new
-                {
-                    Attendance = "Already attending this activity"
-                });
+                if (activity == null)
+                    throw new RestException(HttpStatusCode.NotFound, new
+                        {
+                            activity = "Not Found"
+                        });
             }
 
             private void CheckIfAttendanceIsHost(UserActivity attendance) 
