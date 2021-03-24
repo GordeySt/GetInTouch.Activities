@@ -5,6 +5,7 @@ using System.Threading;
 using Persistance;
 using Application.Errors;
 using System.Net;
+using Domain;
 
 namespace Application.Activities
 {
@@ -28,7 +29,7 @@ namespace Application.Activities
             {
                 var activity = await _context.Activities.FindAsync(request.Id);
 
-                if (activity == null) ThrowRestExceptionForNotFoundActivity();
+                CheckIfActivityNotFound(activity);
 
                 _context.Remove(activity);
 
@@ -39,12 +40,13 @@ namespace Application.Activities
                 throw new Exception("Problem saving changes");
             }
 
-            private void ThrowRestExceptionForNotFoundActivity()
+            private void CheckIfActivityNotFound(Activity activity)
             {
-                throw new RestException(HttpStatusCode.NotFound, new
-                {
-                    activity = "Not Found"
-                });
+                if (activity == null) 
+                    throw new RestException(HttpStatusCode.NotFound, new
+                    {
+                        activity = "Not Found"
+                    });
             }
         }
     }
