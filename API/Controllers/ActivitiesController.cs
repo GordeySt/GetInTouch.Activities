@@ -38,15 +38,9 @@ namespace API.Controllers
         public async Task<IActionResult> DeleteActivity(Guid id) => Ok(await Mediator.Send(new DeleteActivity.Command{ Id = id }));
 
         [HttpPost("{id}/attend")]
-        public async Task<ActionResult<Unit>> AttendActivity(Guid id)
-        {
-            return await Mediator.Send(new AttendActivity.Command { Id = id });
-        }
+        public async Task<IActionResult> AttendActivity(Guid id) => Ok(await Mediator.Send(new AttendActivity.Command { Id = id }));
 
         [HttpDelete("{id}/attend")]
-        public async Task<ActionResult<Unit>> UnattendActivity(Guid id)
-        {
-            return await Mediator.Send(new UnattendActivity.Command { Id = id });
-        }
+        public async Task<IActionResult> UnattendActivity(Guid id) => Ok(await Mediator.Send(new UnattendActivity.Command { Id = id }));
     }
 }
