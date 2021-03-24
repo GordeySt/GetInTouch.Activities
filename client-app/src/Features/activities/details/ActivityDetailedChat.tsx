@@ -4,19 +4,20 @@ import { Form as FinalForm, Field } from "react-final-form";
 import { Link } from "react-router-dom";
 import { TextAreaInput } from "../../../App/common/form/TextAreaInput";
 import { observer } from "mobx-react-lite";
-import CommentStore  from "../../../App/stores/CommentStore"
+import { useStore }  from "../../../App/stores/Store"
 
 interface IProps {
   activityId: string;
 }
 
 export const ActivityDetailedChat: React.FC<IProps> = observer(({ activityId }) => {
+  const { commentStore } = useStore();
   const {
     createHubConnection,
     clearComments,
     comments,
     addComment
-  } = CommentStore;
+  } = commentStore;
   
   useEffect(() => {
     if (activityId) {
