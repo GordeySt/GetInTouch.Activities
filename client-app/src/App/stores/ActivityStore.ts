@@ -1,4 +1,4 @@
-import { makeAutoObservable, computed, configure, runInAction } from "mobx"
+import { makeAutoObservable, configure, runInAction } from "mobx"
 import { SyntheticEvent } from "react";
 import { toast } from "react-toastify";
 import { history } from "../..";
@@ -19,7 +19,7 @@ export default class ActivityStore {
     target = '';
     loading = false;
 
-    @computed get activitiesByDate() {
+    get activitiesByDate() {
         return this.groupActivitiesByDate(Array.from(this.activitiesRegistry.values()))
     }
 
