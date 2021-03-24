@@ -3,7 +3,7 @@ import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signal
 import { makeAutoObservable, runInAction } from "mobx"
 import { store } from "./Store"
 
-class CommentStore {
+export default class CommentStore {
     comments: IComment[] = [];
     hubConnection: HubConnection | null = null;
 
@@ -61,5 +61,3 @@ class CommentStore {
         }
     }
 }
-
-export default new CommentStore();
