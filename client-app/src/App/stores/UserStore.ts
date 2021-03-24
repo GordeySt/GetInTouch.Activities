@@ -1,9 +1,8 @@
-import { observable, action, makeAutoObservable, computed, configure, runInAction } from "mobx"
+import { makeAutoObservable, configure, runInAction } from "mobx"
 import { IUser, IUserFormValues } from "../models/user";
 import { User } from "../api/agent"
 import { history } from "../..";
 import { store } from "./Store"
-import ModalStore from "./ModalStore";
 
 configure({ enforceActions: "always" });
 
@@ -36,7 +35,7 @@ export default class UserStore {
             store.commonStore.setToken(user.token);
             runInAction(() => this.user = user);
             history.push("/activities");
-            ModalStore.closeModal();
+            store.modalStore.closeModal();
         } catch (error) {
             throw error;
         }

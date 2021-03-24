@@ -1,11 +1,12 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { Button, Divider, Grid, Header, Segment } from "semantic-ui-react";
 import { LoginForm } from "../../Features/user/LoginForm";
 import { RegisterForm } from "../../Features/user/RegisterForm";
-import ModalStore from "../../App/stores/ModalStore";
+import { useStore } from "../../App/stores/Store";
 
 export const LogOutForm = () => {
-  const { openModal } = ModalStore;
+  const { modalStore } = useStore();
+  const { openModal } = modalStore;
   return (
     <Fragment>
       <Header color="black" as="h3" content="Wanna try something new?" />
