@@ -43,7 +43,7 @@ namespace Application.Activities
             {
                 var activity = await _context.Activities.FindAsync(request.Activity.Id);
 
-                if (activity == null) ThrowRestExceptionForNotFoundActivity();
+                CheckIfActivityNotFound(activity);
 
                 ChangeActivityData(activity, request);
 
@@ -54,12 +54,12 @@ namespace Application.Activities
                 throw new Exception("Problem saving changes");
             }
 
-            private void ThrowRestExceptionForNotFoundActivity()
+            private void CheckIfActivityNotFound(Activity activity)
             {
-                throw new RestException(HttpStatusCode.NotFound, new
-                {
-                    activity = "Not Found"
-                });
+                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new
+                    {
+                        activity = "Not Found"
+                    });
             }
 
             private void ChangeActivityData(Activity activity, Command request)
