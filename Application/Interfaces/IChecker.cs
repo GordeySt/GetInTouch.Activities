@@ -2,7 +2,7 @@ using Domain;
 
 namespace Application.Interfaces
 {
-    public interface IChecking
+    public interface IChecker
     {
         void checkIfActivityNotFound(Activity activity);
     }

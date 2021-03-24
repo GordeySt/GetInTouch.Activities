@@ -7,6 +7,7 @@ using FluentValidation;
 using Application.Errors;
 using System.Net;
 using Domain;
+using Application.Interfaces;
 
 namespace Application.Activities
 {
@@ -33,9 +34,11 @@ namespace Application.Activities
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
+            private readonly IChecker _checker;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IChecker checker)
             {
+                _checker = checker;
                 _context = context;
             }
 
@@ -43,7 +46,7 @@ namespace Application.Activities
             {
                 var activity = await _context.Activities.FindAsync(request.Activity.Id);
 
-                CheckIfActivityNotFound(activity);
+                _checker.checkIfActivityNotFound(activity);
 
                 ChangeActivityData(activity, request);
 
@@ -52,14 +55,6 @@ namespace Application.Activities
                 if (success) return Unit.Value;
 
                 throw new Exception("Problem saving changes");
-            }
-
-            private void CheckIfActivityNotFound(Activity activity)
-            {
-                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new
-                    {
-                        activity = "Not Found"
-                    });
             }
 
             private void ChangeActivityData(Activity activity, Command request)

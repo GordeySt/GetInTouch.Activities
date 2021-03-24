@@ -5,7 +5,7 @@ using Domain;
 
 namespace Infrastructure.Common
 {
-    public class Checking : IChecking
+    public class Checker : IChecker
     {
         public void checkIfActivityNotFound(Activity activity)
         {

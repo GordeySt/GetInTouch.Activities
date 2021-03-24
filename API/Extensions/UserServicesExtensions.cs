@@ -16,7 +16,7 @@ namespace API.Extensions
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
-            services.AddScoped<IChecking, Checking>();
+            services.AddScoped<IChecker, Checker>();
             services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
 
             return services;

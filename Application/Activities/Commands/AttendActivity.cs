@@ -22,9 +22,11 @@ namespace Application.Activities.Commands
         {
             private readonly DataContext _context;
             private readonly IUserAccessor _userAccessor;
+            private readonly IChecker _checker;
 
-            public Handler(DataContext context, IUserAccessor userAccessor)
+            public Handler(DataContext context, IUserAccessor userAccessor, IChecker checking)
             {
+                _checker = checking;
                 _userAccessor = userAccessor;
                 _context = context;
             }
@@ -33,7 +35,7 @@ namespace Application.Activities.Commands
             {
                 var activity = await _context.Activities.FindAsync(request.Id);
 
-                CheckIfActivityNotFound(activity);
+                _checker.checkIfActivityNotFound(activity);
 
                 var user = await _context.Users.SingleOrDefaultAsync(x =>
                     x.UserName == _userAccessor.GetCurrentUserName());
@@ -58,17 +60,9 @@ namespace Application.Activities.Commands
             private void CheckIfAttendanceExists(UserActivity attendance)
             {
                 if (attendance != null) throw new RestException(HttpStatusCode.NotFound, new
-                    {
-                        Attendance = "Already attending this activity"
-                    });
-            }
-
-            private void CheckIfActivityNotFound(Activity activity)
-            {
-                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new
-                    {
-                        activity = "Not Found"
-                    });
+                {
+                    Attendance = "Already attending this activity"
+                });
             }
 
             private UserActivity CreateNewAttendance(Activity activity, AppUser user)

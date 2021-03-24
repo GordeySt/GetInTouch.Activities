@@ -6,6 +6,7 @@ using Persistance;
 using Application.Errors;
 using System.Net;
 using Domain;
+using Application.Interfaces;
 
 namespace Application.Activities
 {
@@ -19,9 +20,11 @@ namespace Application.Activities
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
+            private readonly IChecker _checker;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IChecker checking)
             {
+                _checker = checking;
                 _context = context;
             }
 
@@ -29,7 +32,7 @@ namespace Application.Activities
             {
                 var activity = await _context.Activities.FindAsync(request.Id);
 
-                CheckIfActivityNotFound(activity);
+                _checker.checkIfActivityNotFound(activity);
 
                 _context.Remove(activity);
 
@@ -38,15 +41,6 @@ namespace Application.Activities
                 if (success) return Unit.Value;
 
                 throw new Exception("Problem saving changes");
-            }
-
-            private void CheckIfActivityNotFound(Activity activity)
-            {
-                if (activity == null) 
-                    throw new RestException(HttpStatusCode.NotFound, new
-                    {
-                        activity = "Not Found"
-                    });
             }
         }
     }
