@@ -1,4 +1,4 @@
-import { observable, action, makeAutoObservable, configure } from "mobx"
+import { makeAutoObservable, configure } from "mobx"
 
 configure({ enforceActions: "always" });
 
@@ -7,8 +7,8 @@ interface Modal {
     body: JSX.Element | null,
 }
 
-class ModalStore {
-    @observable modal: Modal = {
+export default class ModalStore {
+    modal: Modal = {
         open: false,
         body: null
     }
@@ -17,16 +17,14 @@ class ModalStore {
         makeAutoObservable(this);
     }
 
-    @action openModal = (content: JSX.Element) => {
+    openModal = (content: JSX.Element) => {
         this.modal.open = true;
         this.modal.body = content;
     }
 
-    @action closeModal = () => {
+    closeModal = () => {
         this.modal.open = false;
         this.modal.body = null;
     }
 
 }
-
-export default new ModalStore();
