@@ -35,9 +35,11 @@ namespace Application.Comments.Commands
             private readonly DataContext _context;
             private readonly IMapper _mapper;
             private readonly IUserAccessor _userAccessor;
+            private readonly IChecker _checker;
 
-            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor)
+            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor, IChecker checker)
             {
+                _checker = checker;
                 _userAccessor = userAccessor;
                 _context = context;
                 _mapper = mapper;
@@ -47,7 +49,7 @@ namespace Application.Comments.Commands
             {
                 var activity = await _context.Activities.FindAsync(request.ActivityId);
 
-                CheckIfActivityNotFound(activity);
+                _checker.checkIfActivityNotFound(activity);
 
                 var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUserName());
 
@@ -60,14 +62,6 @@ namespace Application.Comments.Commands
                 if (success) return _mapper.Map<CommentDto>(comment);
 
                 throw new Exception("Problem saving changes");
-            }
-
-            private void CheckIfActivityNotFound(Activity activity)
-            {
-                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new
-                {
-                    Activity = "Not Found"
-                });
             }
 
             private Comment CreateNewComment(AppUser user, Activity activity, Command request)
