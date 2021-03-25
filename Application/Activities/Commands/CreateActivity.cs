@@ -6,7 +6,7 @@ using Persistance;
 using Domain;
 using FluentValidation;
 using Application.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using Application.Activities.Commands;
 
 namespace Application.Activities
 {
@@ -30,23 +30,16 @@ namespace Application.Activities
             }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class ActivityHandler : Handler, IRequestHandler<Command>
         {
-            private readonly DataContext _context;
-            private readonly IUserAccessor _userAccessor;
-
-            public Handler(DataContext context, IUserAccessor userAccessor)
-            {
-                _userAccessor = userAccessor;
-                _context = context;
-            }
+            public ActivityHandler(DataContext context, IUserAccessor userAccessor) : base(context, userAccessor)
+            { }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 AddNewActivityToDatabase(request.Activity);
 
-                var user = await _context.Users.SingleOrDefaultAsync(x =>
-                    x.UserName == _userAccessor.GetCurrentUserName());
+                var user = await GetUserFromDB();
 
                 var attendee = CreateNewAttendee(user, request.Activity);
 

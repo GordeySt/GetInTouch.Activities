@@ -6,7 +6,6 @@ using Application.Errors;
 using Application.Interfaces;
 using Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistance;
 
 namespace Application.Activities.Commands
@@ -18,31 +17,22 @@ namespace Application.Activities.Commands
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class ActivityHandler : Handler, IRequestHandler<Command>
         {
-            private readonly DataContext _context;
-            private readonly IUserAccessor _userAccessor;
-
-            public Handler(DataContext context, IUserAccessor userAccessor)
-            {
-                _userAccessor = userAccessor;
-                _context = context;
-            }
+            public ActivityHandler(DataContext context, IUserAccessor userAccessor) : base(context, userAccessor)
+            { }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities.FindAsync(request.Id);
+                var activity = await GetActivityFromDB(request.Id);
 
                 CheckIfActivityNotFound(activity);
 
-                var user = await _context.Users.SingleOrDefaultAsync(x =>
-                    x.UserName == _userAccessor.GetCurrentUserName());
+                var user = await GetUserFromDB();
 
-                var attendance = await _context.UserActivities
-                    .SingleOrDefaultAsync(x => x.ActivityId == activity.Id &&
-                        x.AppUserId == user.Id);
+                var attendance = await GetAttendanceFromDB(activity, user);
 
-                if (attendance == null) return Unit.Value;
+                CheckIfAttendaceNotFound(attendance);
 
                 CheckIfAttendanceIsHost(attendance);
 
@@ -55,16 +45,15 @@ namespace Application.Activities.Commands
                 throw new Exception("Problem saving changes");
             }
 
-            private void CheckIfActivityNotFound(Activity activity)
+            private void CheckIfAttendaceNotFound(UserActivity attendance)
             {
-                if (activity == null)
-                    throw new RestException(HttpStatusCode.NotFound, new
-                        {
-                            activity = "Not Found"
-                        });
+                if (attendance == null) throw new RestException(HttpStatusCode.NotFound, new
+                {
+                    attendance = "Not Found"
+                });
             }
 
-            private void CheckIfAttendanceIsHost(UserActivity attendance) 
+            private void CheckIfAttendanceIsHost(UserActivity attendance)
             {
                 if (attendance.IsHost) ThrowRestExceptionForAttendaceHost();
             }

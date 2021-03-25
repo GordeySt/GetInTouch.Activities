@@ -3,10 +3,9 @@ using System;
 using System.Threading.Tasks;
 using System.Threading;
 using Persistance;
-using Application.Errors;
-using System.Net;
 using Domain;
 using Application.Interfaces;
+using Application.Activities.Commands;
 
 namespace Application.Activities
 {
@@ -17,30 +16,29 @@ namespace Application.Activities
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class ActivityHandler : Handler, IRequestHandler<Command>
         {
-            private readonly DataContext _context;
-            private readonly IChecker _checker;
-
-            public Handler(DataContext context, IChecker checking)
-            {
-                _checker = checking;
-                _context = context;
-            }
+            public ActivityHandler(DataContext context, IUserAccessor userAccessor) : base(context, userAccessor)
+            { }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities.FindAsync(request.Id);
+                var activity = await GetActivityFromDB(request.Id);
 
-                _checker.checkIfActivityNotFound(activity);
+                CheckIfActivityNotFound(activity);
 
-                _context.Remove(activity);
+                RemoveActivityFromDB(activity);
 
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success) return Unit.Value;
 
                 throw new Exception("Problem saving changes");
+            }
+
+            private void RemoveActivityFromDB(Activity activity)
+            {
+                _context.Remove(activity);
             }
         }
     }

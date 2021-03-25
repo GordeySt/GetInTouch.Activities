@@ -23,13 +23,13 @@ namespace Application.Activities.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var activity = await getActivityFromDB(request.Id);
+                var activity = await GetActivityFromDB(request.Id);
 
-                checkIfActivityNotFound(activity);
+                CheckIfActivityNotFound(activity);
 
-                var user = await getUserFromDB();
+                var user = await GetUserFromDB();
 
-                var attendance = await getAttendanceFromDB(activity, user);
+                var attendance = await GetAttendanceFromDB(activity, user);
 
                 CheckIfAttendanceExists(attendance);
 

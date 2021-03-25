@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 using System.Threading;
 using Persistance;
 using FluentValidation;
-using Application.Errors;
-using System.Net;
 using Domain;
 using Application.Interfaces;
+using Application.Activities.Commands;
 
 namespace Application.Activities
 {
@@ -31,22 +30,16 @@ namespace Application.Activities
             }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class ActivityHandler : Handler, IRequestHandler<Command>
         {
-            private readonly DataContext _context;
-            private readonly IChecker _checker;
-
-            public Handler(DataContext context, IChecker checker)
-            {
-                _checker = checker;
-                _context = context;
-            }
+            public ActivityHandler(DataContext context, IUserAccessor userAccessor) : base(context, userAccessor)
+            { }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities.FindAsync(request.Activity.Id);
+                var activity = await GetActivityFromDB(request.Activity.Id);
 
-                _checker.checkIfActivityNotFound(activity);
+                CheckIfActivityNotFound(activity);
 
                 ChangeActivityData(activity, request);
 
