@@ -1,13 +1,11 @@
 using System;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Errors;
+using Application.Common;
 using Application.Interfaces;
 using Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistance;
 
 namespace Application.Photos
@@ -19,24 +17,20 @@ namespace Application.Photos
             public string Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class PhotoHandler : Handler, IRequestHandler<Command>
         {
-            private readonly DataContext _context;
-            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, IUserAccessor userAccessor)
-            {
-                _userAccessor = userAccessor;
-                _context = context;
-            }
+            public PhotoHandler(DataContext context, IUserAccessor userAccessor) 
+                : base(context, userAccessor)
+            { }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUserName());
+                var user = await GetUserFromDB();
 
                 var photo = FindPhotoToSetAsMain(user, request);
 
-                CheckIfPhotoWasFound(photo);
+                CheckIfPhotoNotFound(photo);
 
                 var currentMainPhoto = FindCurrentMainPhoto(user); 
 
@@ -54,12 +48,6 @@ namespace Application.Photos
                 var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
 
                 return photo;
-            }
-
-            private void CheckIfPhotoWasFound(Photo photo)
-            {
-                if (photo == null)
-                    throw new RestException(HttpStatusCode.NotFound, new { Photo = "Not Found" });
             }
 
             private Photo FindCurrentMainPhoto(AppUser user)

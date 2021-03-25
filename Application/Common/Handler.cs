@@ -52,5 +52,14 @@ namespace Application.Common
 
             return attendance;
         }
+
+        protected void CheckIfPhotoNotFound(Photo photo)
+        {
+            if (photo == null)
+                    throw new RestException(HttpStatusCode.NotFound, new
+                    {
+                        Photo = "Not Found"
+                    });
+        }
     }
 }
