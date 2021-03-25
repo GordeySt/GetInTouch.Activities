@@ -1,11 +1,9 @@
 using System;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Interfaces;
 using Domain;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 
@@ -22,7 +20,7 @@ namespace Application.Activities.Commands
             _userAccessor = userAccessor;
         }
 
-        protected void checkIfActivityNotFound(Activity activity)
+        protected void CheckIfActivityNotFound(Activity activity)
         {
             if (activity == null)
                 throw new RestException(HttpStatusCode.NotFound, new
@@ -31,7 +29,7 @@ namespace Application.Activities.Commands
                 });
         }
 
-        protected async Task<AppUser> getUserFromDB()
+        protected async Task<AppUser> GetUserFromDB()
         {
             var user = await _context.Users.SingleOrDefaultAsync(x =>
                     x.UserName == _userAccessor.GetCurrentUserName());
@@ -39,14 +37,14 @@ namespace Application.Activities.Commands
             return user;
         }
 
-        protected async Task<Activity> getActivityFromDB(Guid ActivityId)
+        protected async Task<Activity> GetActivityFromDB(Guid ActivityId)
         {
             var activity = await _context.Activities.FindAsync(ActivityId);
 
             return activity;
         }
 
-        protected async Task<UserActivity> getAttendanceFromDB(Activity activity, AppUser user)
+        protected async Task<UserActivity> GetAttendanceFromDB(Activity activity, AppUser user)
         {
             var attendance = await _context.UserActivities
                     .SingleOrDefaultAsync(x => x.ActivityId == activity.Id &&

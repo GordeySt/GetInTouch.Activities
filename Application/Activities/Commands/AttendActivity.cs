@@ -6,7 +6,6 @@ using Application.Errors;
 using Application.Interfaces;
 using Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistance;
 
 namespace Application.Activities.Commands
@@ -17,32 +16,20 @@ namespace Application.Activities.Commands
         {
             public Guid Id { get; set; }
         }
-
-        public class Handler : IRequestHandler<Command>
+        public class ActivityHandler : Handler, IRequestHandler<Command>
         {
-            private readonly DataContext _context;
-            private readonly IUserAccessor _userAccessor;
-            private readonly IChecker _checker;
-
-            public Handler(DataContext context, IUserAccessor userAccessor, IChecker checking)
-            {
-                _checker = checking;
-                _userAccessor = userAccessor;
-                _context = context;
-            }
+            public ActivityHandler(DataContext context, IUserAccessor userAccessor) : base(context, userAccessor)
+            { }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities.FindAsync(request.Id);
+                var activity = await getActivityFromDB(request.Id);
 
-                _checker.checkIfActivityNotFound(activity);
+                checkIfActivityNotFound(activity);
 
-                var user = await _context.Users.SingleOrDefaultAsync(x =>
-                    x.UserName == _userAccessor.GetCurrentUserName());
+                var user = await getUserFromDB();
 
-                var attendance = await _context.UserActivities
-                    .SingleOrDefaultAsync(x => x.ActivityId == activity.Id &&
-                        x.AppUserId == user.Id);
+                var attendance = await getAttendanceFromDB(activity, user);
 
                 CheckIfAttendanceExists(attendance);
 
