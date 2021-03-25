@@ -1,16 +1,13 @@
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Activities.Commands;
 using Application.Comments.Dto;
-using Application.Errors;
+using Application.Common;
 using Application.Interfaces;
 using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistance;
 
 namespace Application.Comments.Commands

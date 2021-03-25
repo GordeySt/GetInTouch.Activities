@@ -7,7 +7,7 @@ using Domain;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 
-namespace Application.Activities.Commands
+namespace Application.Common
 {
     public class Handler
     {

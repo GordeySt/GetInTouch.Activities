@@ -5,7 +5,7 @@ using System.Threading;
 using Persistance;
 using Domain;
 using Application.Interfaces;
-using Application.Activities.Commands;
+using Application.Common;
 
 namespace Application.Activities
 {

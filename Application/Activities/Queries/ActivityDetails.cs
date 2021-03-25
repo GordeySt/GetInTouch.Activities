@@ -4,11 +4,9 @@ using MediatR;
 using Persistance;
 using System.Threading.Tasks;
 using System.Threading;
-using Application.Errors;
-using System.Net;
 using AutoMapper;
 using Application.Interfaces;
-using Application.Activities.Commands;
+using Application.Common;
 
 namespace Application.Activities
 {

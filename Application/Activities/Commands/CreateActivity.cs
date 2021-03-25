@@ -6,7 +6,7 @@ using Persistance;
 using Domain;
 using FluentValidation;
 using Application.Interfaces;
-using Application.Activities.Commands;
+using Application.Common;
 
 namespace Application.Activities
 {

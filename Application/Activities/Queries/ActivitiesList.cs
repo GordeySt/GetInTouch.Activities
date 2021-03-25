@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Persistance;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
-using Application.Activities.Commands;
 using Application.Interfaces;
+using Application.Common;
 
 namespace Application.Activities
 {
