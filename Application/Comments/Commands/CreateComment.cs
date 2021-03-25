@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Activities.Commands;
 using Application.Comments.Dto;
 using Application.Errors;
 using Application.Interfaces;
@@ -30,28 +31,22 @@ namespace Application.Comments.Commands
             }
         }
 
-        public class Handler : IRequestHandler<Command, CommentDto>
+        public class CommentHandler : Handler, IRequestHandler<Command, CommentDto>
         {
-            private readonly DataContext _context;
             private readonly IMapper _mapper;
-            private readonly IUserAccessor _userAccessor;
-            private readonly IChecker _checker;
 
-            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor, IChecker checker)
+            public CommentHandler(DataContext context, IMapper mapper, IUserAccessor userAccessor) : base(context, userAccessor)
             {
-                _checker = checker;
-                _userAccessor = userAccessor;
-                _context = context;
                 _mapper = mapper;
             }
 
             public async Task<CommentDto> Handle(Command request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities.FindAsync(request.ActivityId);
+                var activity = await GetActivityFromDB(request.ActivityId);
 
-                _checker.checkIfActivityNotFound(activity);
+                CheckIfActivityNotFound(activity);
 
-                var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUserName());
+                var user = await GetUserFromDB();
 
                 var comment = CreateNewComment(user, activity, request);
 
