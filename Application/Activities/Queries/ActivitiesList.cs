@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Persistance;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Application.Activities.Commands;
+using Application.Interfaces;
 
 namespace Application.Activities
 {
@@ -13,15 +15,13 @@ namespace Application.Activities
     {
         public class Query : IRequest<List<ActivityDto>> {}
 
-        public class Handler : IRequestHandler<Query, List<ActivityDto>>
+        public class ActivityHandler : Handler, IRequestHandler<Query, List<ActivityDto>>
         {
-            private readonly DataContext _context;
             private readonly IMapper _mapper;
 
-            public Handler(DataContext context, IMapper mapper)
+            public ActivityHandler(DataContext context, IMapper mapper, IUserAccessor userAccessor) : base(context, userAccessor)
             {
                 _mapper = mapper;
-                _context = context;
             }
 
             public async Task<List<ActivityDto>> Handle(Query request, CancellationToken cancellationToken)
