@@ -39,8 +39,6 @@ namespace Application.Activities
             {
                 var activity = await GetActivityFromDB(request.Activity.Id);
 
-                CheckIfActivityNotFound(activity);
-
                 ChangeActivityData(activity, request);
 
                 var success = await _context.SaveChangesAsync() > 0;

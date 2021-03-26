@@ -25,8 +25,6 @@ namespace Application.Activities
             {
                 var activity = await GetActivityFromDB(request.Id);
 
-                CheckIfActivityNotFound(activity);
-
                 RemoveActivityFromDB(activity);
 
                 var success = await _context.SaveChangesAsync() > 0;

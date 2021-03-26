@@ -20,15 +20,6 @@ namespace Application.Common
             _userAccessor = userAccessor;
         }
 
-        protected void CheckIfActivityNotFound(Activity activity)
-        {
-            if (activity == null)
-                throw new RestException(HttpStatusCode.NotFound, new
-                {
-                    activity = "Not Found"
-                });
-        }
-
         protected async Task<AppUser> GetUserFromDB()
         {
             var user = await _context.Users.SingleOrDefaultAsync(x =>
@@ -41,8 +32,20 @@ namespace Application.Common
         {
             var activity = await _context.Activities.FindAsync(ActivityId);
 
+            CheckIfActivityNotFound(activity);
+
             return activity;
         }
+
+        private void CheckIfActivityNotFound(Activity activity)
+        {
+            if (activity == null)
+                throw new RestException(HttpStatusCode.NotFound, new
+                {
+                    activity = "Not Found"
+                });
+        }
+
 
         protected async Task<UserActivity> GetAttendanceFromDB(Activity activity, AppUser user)
         {
@@ -53,13 +56,21 @@ namespace Application.Common
             return attendance;
         }
 
+        protected void CheckIfAttendanceNotFound(UserActivity attendance)
+        {
+            if (attendance == null) throw new RestException(HttpStatusCode.NotFound, new
+            {
+                Attendance = "Attendance not found"
+            });
+        }
+
         protected void CheckIfPhotoNotFound(Photo photo)
         {
             if (photo == null)
-                    throw new RestException(HttpStatusCode.NotFound, new
-                    {
-                        Photo = "Not Found"
-                    });
+                throw new RestException(HttpStatusCode.NotFound, new
+                {
+                    Photo = "Not Found"
+                });
         }
     }
 }

@@ -27,14 +27,11 @@ namespace Application.Activities.Commands
             {
                 var activity = await GetActivityFromDB(request.Id);
 
-                CheckIfActivityNotFound(activity);
-
                 var user = await GetUserFromDB();
 
                 var attendance = await GetAttendanceFromDB(activity, user);
 
-                CheckIfAttendaceNotFound(attendance);
-
+                CheckIfAttendanceNotFound(attendance);
                 CheckIfAttendanceIsHost(attendance);
 
                 RemoveAttendanceFromDB(attendance);
@@ -44,14 +41,6 @@ namespace Application.Activities.Commands
                 if (success) return Unit.Value;
 
                 throw new Exception("Problem saving changes");
-            }
-
-            private void CheckIfAttendaceNotFound(UserActivity attendance)
-            {
-                if (attendance == null) throw new RestException(HttpStatusCode.NotFound, new
-                {
-                    attendance = "Not Found"
-                });
             }
 
             private void CheckIfAttendanceIsHost(UserActivity attendance)

@@ -41,8 +41,6 @@ namespace Application.Comments.Commands
             {
                 var activity = await GetActivityFromDB(request.ActivityId);
 
-                CheckIfActivityNotFound(activity);
-
                 var user = await GetUserFromDB();
 
                 var comment = CreateNewComment(user, activity, request);

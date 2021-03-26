@@ -26,8 +26,6 @@ namespace Application.Activities.Commands
             {
                 var activity = await GetActivityFromDB(request.Id);
 
-                CheckIfActivityNotFound(activity);
-
                 var user = await GetUserFromDB();
 
                 var attendance = await GetAttendanceFromDB(activity, user);

@@ -30,8 +30,6 @@ namespace Application.Activities
             {
                 var activity = await GetActivityFromDB(request.Id);
 
-                CheckIfActivityNotFound(activity);
-
                 var activityToReturn = _mapper.Map<Activity, ActivityDto>(activity);
 
                 return activityToReturn;
