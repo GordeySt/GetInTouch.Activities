@@ -53,22 +53,10 @@ namespace Application.User
 
             public async Task<User> Handle(Command request, CancellationToken cancellationToken)
             {
-                if (await _context.Users.AnyAsync(x => x.Email == request.Email))
-                {
-                    throw new RestException(HttpStatusCode.BadRequest, new { Email = "Email already exists" });
-                }
+                await CheckIfEmailAlreadyExists(request);
+                await CheckIfUserAlreadyExists(request);
 
-                if (await _context.Users.AnyAsync(x => x.UserName == request.UserName))
-                {
-                    throw new RestException(HttpStatusCode.BadRequest, new { UserName = "UserName already exists" });
-                }
-
-                var user = new AppUser
-                {
-                    DisplayedName = request.DisplayedName,
-                    Email = request.Email,
-                    UserName = request.UserName
-                };
+                var user = CreateNewUser(request);
 
                 var result = await _userManager.CreateAsync(user, request.Password);
 
@@ -84,6 +72,34 @@ namespace Application.User
                 }
 
                 throw new Exception("Problem creating user");
+            }
+
+            private async Task CheckIfEmailAlreadyExists(Command request)
+            {
+                if (await _context.Users.AnyAsync(x => x.Email == request.Email))
+                {
+                    throw new RestException(HttpStatusCode.BadRequest, new { Email = "Email already exists" });
+                }
+            }
+
+            private async Task CheckIfUserAlreadyExists(Command request)
+            {
+                if (await _context.Users.AnyAsync(x => x.UserName == request.UserName))
+                {
+                    throw new RestException(HttpStatusCode.BadRequest, new { UserName = "UserName already exists" });
+                }
+            }
+
+            private AppUser CreateNewUser(Command request)
+            {
+                var user = new AppUser
+                {
+                    DisplayedName = request.DisplayedName,
+                    Email = request.Email,
+                    UserName = request.UserName
+                };
+
+                return user;
             }
         }
     }

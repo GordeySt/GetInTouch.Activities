@@ -5,7 +5,6 @@ using Application.Interfaces;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Persistance;
 
 namespace Application.User
 {
@@ -32,7 +31,7 @@ namespace Application.User
 
             public async Task<User> Handle(Query request, CancellationToken cancellationToken)
             {
-                var user = await _userManager.FindByNameAsync(_userAccessor.GetCurrentUserName());
+                var user = await FindCurrentUser();
 
                 return new User
                 {
@@ -41,6 +40,13 @@ namespace Application.User
                     Token = _jwtGenerator.CreateToken(user),
                     Image = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
                 };
+            }
+
+            private async Task<AppUser> FindCurrentUser()
+            {
+                var user = await _userManager.FindByNameAsync(_userAccessor.GetCurrentUserName());
+
+                return user;
             }
         }
     }
