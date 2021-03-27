@@ -7,6 +7,7 @@ using FluentValidation;
 using Domain;
 using Application.Interfaces;
 using Application.Common;
+using Application.Activities.Validators;
 
 namespace Application.Activities
 {
@@ -21,12 +22,7 @@ namespace Application.Activities
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Activity.Title).NotEmpty();
-                RuleFor(x => x.Activity.Description).NotEmpty();
-                RuleFor(x => x.Activity.Category).NotEmpty();
-                RuleFor(x => x.Activity.Date).NotEmpty();
-                RuleFor(x => x.Activity.City).NotEmpty();
-                RuleFor(x => x.Activity.Venue).NotEmpty();
+                RuleFor(x => x.Activity).SetValidator(new ActivityValidator());
             }
         }
 
