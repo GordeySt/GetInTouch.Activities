@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Application.Core;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace API.Middleware
@@ -12,53 +13,58 @@ namespace API.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ErrorHandlingMiddleware> _logger;
+        private readonly IHostEnvironment _env;
 
-        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
+        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger,
+        IHostEnvironment env)
         {
+            _env = env;
             _next = next;
             _logger = logger;
         }
 
-        public async Task Invoke(HttpContext context) 
+        public async Task InvokeAsync(HttpContext context)
         {
-            try 
+            try
             {
                 await _next(context);
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex, _logger);
+                await HandleExceptionAsync(context, ex);
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception ex, ILogger<ErrorHandlingMiddleware> logger)
+        private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             object errors = null;
 
-            switch (ex) 
+            switch (ex)
             {
                 case RestException re:
-                   logger.LogError(ex, "REST ERROR");
-                   errors = re.Errors;
-                   context.Response.StatusCode = (int)re.Code;
-                   break;
+                    _logger.LogError(ex, "REST ERROR");
+                    errors = re.Errors;
+                    context.Response.StatusCode = (int)re.Code;
+                    break;
                 case Exception e:
-                   logger.LogError(ex, "SERVER ERROR");
-                   errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
-                   context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                   break;
+                    _logger.LogError(ex, ex.Message);
+                    errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    break;
             }
 
             context.Response.ContentType = "application/json";
 
-            if (errors != null)
-            {
-                var result = JsonSerializer.Serialize(new {
-                    errors
-                });
+            var response = _env.IsDevelopment()
+                ? new AppException(context.Response.StatusCode, ex.Message, ex.StackTrace?.ToString())
+                : new AppException(context.Response.StatusCode, "Server Error");
 
-                await context.Response.WriteAsync(result);
-            }
+
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
+            var json = JsonSerializer.Serialize(response, options);
+
+            await context.Response.WriteAsync(json);
         }
     }
 }
