@@ -1,15 +1,13 @@
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Comments.Dto;
-using Application.Errors;
+using Application.Common;
 using Application.Interfaces;
 using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistance;
 
 namespace Application.Comments.Commands
@@ -30,26 +28,20 @@ namespace Application.Comments.Commands
             }
         }
 
-        public class Handler : IRequestHandler<Command, CommentDto>
+        public class CommentHandler : Handler, IRequestHandler<Command, CommentDto>
         {
-            private readonly DataContext _context;
             private readonly IMapper _mapper;
-            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor)
+            public CommentHandler(DataContext context, IMapper mapper, IUserAccessor userAccessor) : base(context, userAccessor)
             {
-                _userAccessor = userAccessor;
-                _context = context;
                 _mapper = mapper;
             }
 
             public async Task<CommentDto> Handle(Command request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities.FindAsync(request.ActivityId);
+                var activity = await GetActivityFromDB(request.ActivityId);
 
-                CheckIfActivityNotFound(activity);
-
-                var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUserName());
+                var user = await GetUserFromDB();
 
                 var comment = CreateNewComment(user, activity, request);
 
@@ -60,14 +52,6 @@ namespace Application.Comments.Commands
                 if (success) return _mapper.Map<CommentDto>(comment);
 
                 throw new Exception("Problem saving changes");
-            }
-
-            private void CheckIfActivityNotFound(Activity activity)
-            {
-                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new
-                {
-                    Activity = "Not Found"
-                });
             }
 
             private Comment CreateNewComment(AppUser user, Activity activity, Command request)

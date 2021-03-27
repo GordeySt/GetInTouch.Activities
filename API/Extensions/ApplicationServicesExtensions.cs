@@ -20,8 +20,8 @@ namespace API.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services,
         IConfiguration config)
         {
-            services.AddMediatR(typeof(ActivitiesList.Handler).Assembly);
-            services.AddAutoMapper(typeof(ActivitiesList.Handler));
+            services.AddMediatR(typeof(ActivitiesList.ActivityHandler).Assembly);
+            services.AddAutoMapper(typeof(ActivitiesList.ActivityHandler));
             services.AddSignalR();
 
             services.AddControllers(options =>

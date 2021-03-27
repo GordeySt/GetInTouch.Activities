@@ -3,8 +3,9 @@ using System;
 using System.Threading.Tasks;
 using System.Threading;
 using Persistance;
-using Application.Errors;
-using System.Net;
+using Domain;
+using Application.Interfaces;
+using Application.Common;
 
 namespace Application.Activities
 {
@@ -15,22 +16,16 @@ namespace Application.Activities
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class ActivityHandler : Handler, IRequestHandler<Command>
         {
-            private readonly DataContext _context;
-
-            public Handler(DataContext context)
-            {
-                _context = context;
-            }
+            public ActivityHandler(DataContext context, IUserAccessor userAccessor) : base(context, userAccessor)
+            { }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities.FindAsync(request.Id);
+                var activity = await GetActivityFromDB(request.Id);
 
-                if (activity == null) ThrowRestExceptionForNotFoundActivity();
-
-                _context.Remove(activity);
+                RemoveActivityFromDB(activity);
 
                 var success = await _context.SaveChangesAsync() > 0;
 
@@ -39,12 +34,9 @@ namespace Application.Activities
                 throw new Exception("Problem saving changes");
             }
 
-            private void ThrowRestExceptionForNotFoundActivity()
+            private void RemoveActivityFromDB(Activity activity)
             {
-                throw new RestException(HttpStatusCode.NotFound, new
-                {
-                    activity = "Not Found"
-                });
+                _context.Remove(activity);
             }
         }
     }

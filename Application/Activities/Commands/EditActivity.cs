@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using System.Threading;
 using Persistance;
 using FluentValidation;
-using Application.Errors;
-using System.Net;
 using Domain;
+using Application.Interfaces;
+using Application.Common;
 
 namespace Application.Activities
 {
@@ -30,20 +30,14 @@ namespace Application.Activities
             }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class ActivityHandler : Handler, IRequestHandler<Command>
         {
-            private readonly DataContext _context;
-
-            public Handler(DataContext context)
-            {
-                _context = context;
-            }
+            public ActivityHandler(DataContext context, IUserAccessor userAccessor) : base(context, userAccessor)
+            { }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities.FindAsync(request.Activity.Id);
-
-                if (activity == null) ThrowRestExceptionForNotFoundActivity();
+                var activity = await GetActivityFromDB(request.Activity.Id);
 
                 ChangeActivityData(activity, request);
 
@@ -52,14 +46,6 @@ namespace Application.Activities
                 if (success) return Unit.Value;
 
                 throw new Exception("Problem saving changes");
-            }
-
-            private void ThrowRestExceptionForNotFoundActivity()
-            {
-                throw new RestException(HttpStatusCode.NotFound, new
-                {
-                    activity = "Not Found"
-                });
             }
 
             private void ChangeActivityData(Activity activity, Command request)

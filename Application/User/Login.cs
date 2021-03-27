@@ -46,13 +46,12 @@ namespace Application.User
             {
                 var user = await _userManager.FindByEmailAsync(request.Email);
 
-                if (user == null) throw new RestException(HttpStatusCode.Unauthorized);
+                CheckIfUserNotFound(user);
 
                 var results = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
                 if (results.Succeeded)
                 {
-                    // TODO: Generate JWT Token
                     return new User
                     {
                         DisplayedName = user.DisplayedName,
@@ -63,6 +62,11 @@ namespace Application.User
                 }
 
                 throw new RestException(HttpStatusCode.Unauthorized);
+            }
+
+            private void CheckIfUserNotFound(AppUser user)
+            {
+                if (user == null) throw new RestException(HttpStatusCode.Unauthorized);
             }
         }
     }

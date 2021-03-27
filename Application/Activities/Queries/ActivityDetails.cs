@@ -4,9 +4,9 @@ using MediatR;
 using Persistance;
 using System.Threading.Tasks;
 using System.Threading;
-using Application.Errors;
-using System.Net;
 using AutoMapper;
+using Application.Interfaces;
+using Application.Common;
 
 namespace Application.Activities
 {
@@ -17,26 +17,18 @@ namespace Application.Activities
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, ActivityDto>
+        public class ActivityHandler : Handler, IRequestHandler<Query, ActivityDto>
         {
-            private readonly DataContext _context;
             private readonly IMapper _mapper;
 
-            public Handler(DataContext context, IMapper mapper)
+            public ActivityHandler(DataContext context, IMapper mapper, IUserAccessor userAccessor) : base(context, userAccessor)
             {
                 _mapper = mapper;
-                _context = context;
             }
 
             public async Task<ActivityDto> Handle(Query request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities
-                    .FindAsync(request.Id);
-
-                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new
-                {
-                    activity = "Not Found"
-                });
+                var activity = await GetActivityFromDB(request.Id);
 
                 var activityToReturn = _mapper.Map<Activity, ActivityDto>(activity);
 
