@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Grid } from "semantic-ui-react";
 import { LoadingComponent } from "../../../App/layout/LoadingComponent";
 import { useStore } from "../../../App/stores/Store";
@@ -11,19 +11,14 @@ import { ActivityDetailedSidebar } from "./ActivityDetailedSidebar";
 import { NotFound } from "../../../App/layout/NotFound";
 import { GoToPreviousPageButton } from "../../buttons/GoToPreviousPageButton";
 
-interface DetailParams {
-  id: string;
-}
-
-export const ActivityDetails: React.FC<
-  RouteComponentProps<DetailParams>
-> = observer(({ match, history }) => {
+export const ActivityDetails: React.FC = observer(() => {
   const { activityStore } = useStore();
   const { activity, loadActivity, loadingInitial } = activityStore;
+  const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
-    loadActivity(match.params.id);
-  }, [loadActivity, match.params.id, history]);
+    if (id) loadActivity(id);
+  }, [id, loadActivity]);
 
   if (loadingInitial) return <LoadingComponent />;
 
