@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Application.Errors;
+using Application.Core;
 using Application.Interfaces;
 using Domain;
 using Microsoft.EntityFrameworkCore;

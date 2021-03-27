@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Errors;
 using Application.Interfaces;
 using Application.Validators;
 using Domain;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 using System.Linq;
+using Application.Core;
 
 namespace Application.User
 {

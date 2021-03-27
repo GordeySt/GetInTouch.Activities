@@ -2,13 +2,12 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Errors;
+using Application.Core;
 using Application.Interfaces;
 using Domain;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Persistance;
 
 namespace Application.User
 {
