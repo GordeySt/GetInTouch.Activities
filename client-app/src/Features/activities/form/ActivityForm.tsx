@@ -4,7 +4,7 @@ import { ActivityFormValues, IActivity } from "../../../App/models/activity";
 import { v4 as uuid } from "uuid";
 import { useStore } from "../../../App/stores/Store";
 import { observer } from "mobx-react-lite";
-import { RouteComponentProps } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Form as FinalForm, Field } from "react-final-form";
 import { TextInput } from "../../../App/common/form/TextInput";
 import { TextAreaInput } from "../../../App/common/form/TextAreaInput";
@@ -32,25 +32,21 @@ const validate = combineValidators({
   date: isRequired("Date"),
 });
 
-interface DetailsParams {
-  id: string;
-}
-
-export const ActivityForm: React.FC<
-  RouteComponentProps<DetailsParams>
-> = observer(({ match, history }) => {
+export const ActivityForm: React.FC = observer(() => {
   const { activityStore } = useStore();
   const { loadActivity, loadingInitial } = activityStore;
+  const { id } = useParams<{ id: string }>();
+  const history = useHistory();
 
   const [activity, setActivity] = useState(new ActivityFormValues());
 
   useEffect(() => {
-    if (match.params.id) {
-      loadActivity(match.params.id).then((activity) =>
+    if (id) {
+      loadActivity(id).then((activity) =>
         setActivity(new ActivityFormValues(activity))
       );
     }
-  }, [loadActivity, match.params.id]);
+  }, [loadActivity, id]);
 
   const handleFinalFormSubmit = (values: IActivity) => {
     if (!activity.id) {

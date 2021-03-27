@@ -5,8 +5,8 @@ import { NavBar } from "../../Features/nav/NavBar";
 import { ActivityDashboard } from "../../Features/activities/dashboard/ActivityDashboard";
 import {
   Route,
-  RouteComponentProps,
   Switch,
+  useLocation,
   withRouter,
 } from "react-router-dom";
 import { HomePage } from "../../Features/home/HomePage";
@@ -18,9 +18,10 @@ import { useStore } from "../stores/Store";
 import { ModalContainer } from "../common/modals/ModalContainer";
 import { ProfilePage } from "../../Features/profiles/ProfilePage"
 
-const App: React.FC<RouteComponentProps> = ({ location }) => {
+const App: React.FC= () => {
   const { commonStore, userStore } = useStore();
   const { getUser } = userStore;
+  const location = useLocation();
 
   useEffect(() => {
     if (commonStore.token) {

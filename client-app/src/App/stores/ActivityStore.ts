@@ -107,7 +107,7 @@ export default class ActivityStore {
         }
     }
 
-    private getActivity = (id: string) => {
+    private getActivity = (id: string): IActivity => {
         return this.activitiesRegistry.get(id);
     }
 
