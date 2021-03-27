@@ -8,12 +8,13 @@ using FluentValidation;
 using Application.Interfaces;
 using Application.Common;
 using Application.Activities.Validators;
+using Application.Core;
 
 namespace Application.Activities
 {
     public class CreateActivity
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             public Activity Activity { get; set; }
         }
@@ -26,12 +27,12 @@ namespace Application.Activities
             }
         }
 
-        public class ActivityHandler : Handler, IRequestHandler<Command>
+        public class ActivityHandler : Handler, IRequestHandler<Command, Result<Unit>>
         {
             public ActivityHandler(DataContext context, IUserAccessor userAccessor) : base(context, userAccessor)
             { }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 AddNewActivityToDatabase(request.Activity);
 
@@ -43,9 +44,9 @@ namespace Application.Activities
 
                 var success = await _context.SaveChangesAsync() > 0;
 
-                if (success) return Unit.Value;
+                if (success) return Result<Unit>.Success(Unit.Value);
 
-                throw new Exception("Problem saving changes");
+                return Result<Unit>.Failure("Failed to create activity");
             }
 
             private void AddNewActivityToDatabase(Activity activity)

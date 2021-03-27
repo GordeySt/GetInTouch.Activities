@@ -7,17 +7,18 @@ using System.Threading;
 using AutoMapper;
 using Application.Interfaces;
 using Application.Common;
+using Application.Core;
 
 namespace Application.Activities
 {
     public class ActivityDetails
     {
-        public class Query : IRequest<ActivityDto>
+        public class Query : IRequest<Result<ActivityDto>>
         {
             public Guid Id { get; set; }
         }
 
-        public class ActivityHandler : Handler, IRequestHandler<Query, ActivityDto>
+        public class ActivityHandler : Handler, IRequestHandler<Query, Result<ActivityDto>>
         {
             private readonly IMapper _mapper;
 
@@ -26,13 +27,13 @@ namespace Application.Activities
                 _mapper = mapper;
             }
 
-            public async Task<ActivityDto> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<ActivityDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var activity = await GetActivityFromDB(request.Id);
 
                 var activityToReturn = _mapper.Map<Activity, ActivityDto>(activity);
 
-                return activityToReturn;
+                return Result<ActivityDto>.Success(activityToReturn);
             }
         }
     }

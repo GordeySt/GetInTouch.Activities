@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common;
+using Application.Core;
 using Application.Errors;
 using Application.Interfaces;
 using Domain;
@@ -13,16 +14,16 @@ namespace Application.Activities.Commands
 {
     public class AttendActivity
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             public Guid Id { get; set; }
         }
-        public class ActivityHandler : Handler, IRequestHandler<Command>
+        public class ActivityHandler : Handler, IRequestHandler<Command, Result<Unit>>
         {
             public ActivityHandler(DataContext context, IUserAccessor userAccessor) : base(context, userAccessor)
             { }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var activity = await GetActivityFromDB(request.Id);
 
@@ -38,9 +39,9 @@ namespace Application.Activities.Commands
 
                 var success = await _context.SaveChangesAsync() > 0;
 
-                if (success) return Unit.Value;
+                if (success) return Result<Unit>.Success(Unit.Value);
 
-                throw new Exception("Problem saving changes");
+                return Result<Unit>.Failure("Failed to attend activity");
             }
 
             private void CheckIfAttendanceExists(UserActivity attendance)

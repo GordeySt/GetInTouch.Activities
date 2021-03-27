@@ -42,7 +42,7 @@ namespace Application.Common
             if (activity == null)
                 throw new RestException(HttpStatusCode.NotFound, new
                 {
-                    activity = "Not Found"
+                    activity = "Activity not found"
                 });
         }
 

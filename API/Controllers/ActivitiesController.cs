@@ -13,14 +13,15 @@ namespace API.Controllers
     public class ActivitiesController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<List<ActivityDto>>> GetActivities() => await Mediator.Send(new ActivitiesList.Query());
+        public async Task<IActionResult> GetActivities() => HandleResult(await Mediator.Send(new ActivitiesList.Query()));
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<ActivityDto>> GetActivity(Guid id) => await Mediator.Send(new ActivityDetails.Query { Id = id });
+        public async Task<IActionResult> GetActivity(Guid id) => HandleResult(await Mediator.Send(new ActivityDetails.Query { Id = id }));
+
 
         [HttpPost]
-        public async Task<IActionResult> CreateActivity(Activity activity) => Ok(await Mediator.Send(new CreateActivity.Command
+        public async Task<IActionResult> CreateActivity(Activity activity) => HandleResult(await Mediator.Send(new CreateActivity.Command
         {
             Activity = activity
         }));
@@ -30,17 +31,17 @@ namespace API.Controllers
         public async Task<IActionResult> EditActivity(Guid id, Activity activity)
         {
             activity.Id = id;
-            return Ok(await Mediator.Send(new EditActivity.Command { Activity = activity }));
+            return HandleResult(await Mediator.Send(new EditActivity.Command { Activity = activity }));
         }
 
         [HttpDelete("{id}")]
         [Authorize(Policy = "IsActivityHost")]
-        public async Task<IActionResult> DeleteActivity(Guid id) => Ok(await Mediator.Send(new DeleteActivity.Command{ Id = id }));
+        public async Task<IActionResult> DeleteActivity(Guid id) => HandleResult(await Mediator.Send(new DeleteActivity.Command { Id = id }));
 
         [HttpPost("{id}/attend")]
-        public async Task<IActionResult> AttendActivity(Guid id) => Ok(await Mediator.Send(new AttendActivity.Command { Id = id }));
+        public async Task<IActionResult> AttendActivity(Guid id) => HandleResult(await Mediator.Send(new AttendActivity.Command { Id = id }));
 
         [HttpDelete("{id}/attend")]
-        public async Task<IActionResult> UnattendActivity(Guid id) => Ok(await Mediator.Send(new UnattendActivity.Command { Id = id }));
+        public async Task<IActionResult> UnattendActivity(Guid id) => HandleResult(await Mediator.Send(new UnattendActivity.Command { Id = id }));
     }
 }

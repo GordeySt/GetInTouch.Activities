@@ -8,14 +8,15 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Application.Interfaces;
 using Application.Common;
+using Application.Core;
 
 namespace Application.Activities
 {
     public class ActivitiesList
     {
-        public class Query : IRequest<List<ActivityDto>> {}
+        public class Query : IRequest<Result<List<ActivityDto>>> {}
 
-        public class ActivityHandler : Handler, IRequestHandler<Query, List<ActivityDto>>
+        public class ActivityHandler : Handler, IRequestHandler<Query, Result<List<ActivityDto>>>
         {
             private readonly IMapper _mapper;
 
@@ -24,12 +25,14 @@ namespace Application.Activities
                 _mapper = mapper;
             }
 
-            public async Task<List<ActivityDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var activities = await _context.Activities
                     .ToListAsync();
 
-                return _mapper.Map<List<Activity>, List<ActivityDto>>(activities);
+                var result = _mapper.Map<List<Activity>, List<ActivityDto>>(activities);
+
+                return Result<List<ActivityDto>>.Success(result);
             }
         }
     }
