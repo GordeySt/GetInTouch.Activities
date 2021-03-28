@@ -57,8 +57,8 @@ export const Activities = {
 
 export const User = {
     current: (): Promise<IUser> => requests.get<IUser>("/user"),
-    login: (user: IUserFormValues): Promise<IUser> => requests.post<void>('/user/login', user),
-    register: (user: IUserFormValues): Promise<IUser> => requests.post<void>("/user/register", user)
+    login: (user: IUserFormValues): Promise<IUser> => requests.post<IUser>('/user/login', user),
+    register: (user: IUserFormValues): Promise<IUser> => requests.post<IUser>("/user/register", user)
 }
 
 export const Profiles = {
