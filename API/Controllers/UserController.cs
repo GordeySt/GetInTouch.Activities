@@ -22,6 +22,7 @@ namespace API.Controllers
             return await Mediator.Send(command);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<User>> CurrentUser()
         {
