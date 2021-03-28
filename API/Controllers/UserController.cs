@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Application.User;
-using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +21,6 @@ namespace API.Controllers
             return await Mediator.Send(command);
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<User>> CurrentUser()
         {
