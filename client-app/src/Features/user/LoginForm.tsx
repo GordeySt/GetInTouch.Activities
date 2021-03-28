@@ -1,17 +1,11 @@
 import { FORM_ERROR } from "final-form";
-import React from "react";
 import { Form as FinalForm, Field } from "react-final-form";
-import { combineValidators, isRequired } from "revalidate";
 import { Form, Button, Segment, Header, Icon } from "semantic-ui-react";
 import { TextInput } from "../../App/common/form/TextInput";
 import { IUserFormValues } from "../../App/models/user";
 import { useStore } from "../../App/stores/Store";
 import { ErrorMessage } from "../../App/common/form/ErrorMessage";
-
-const validate = combineValidators({
-  email: isRequired("email"),
-  password: isRequired("password"),
-});
+import { TextAreaInput } from "../../App/common/form/TextAreaInput";
 
 export const LoginForm = () => {
   const { userStore } = useStore();
@@ -28,7 +22,6 @@ export const LoginForm = () => {
             [FORM_ERROR]: error,
           }))
         }
-        validate={validate}
         render={({
           handleSubmit,
           submitting,
@@ -38,10 +31,10 @@ export const LoginForm = () => {
           dirtySinceLastSubmit,
         }) => (
           <Form onSubmit={handleSubmit} error>
-            <Field name="email" component={TextInput} placeholder="Email" />
+            <Field name="email" component={TextAreaInput} placeholder="Email" />
             <Field
               name="password"
-              component={TextInput}
+              component={TextAreaInput}
               placeholder="Password"
               type="password"
             />

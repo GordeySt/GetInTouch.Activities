@@ -1,44 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { Segment, Form, Button, Icon, Grid } from "semantic-ui-react";
+import { Segment, Button, Icon, Grid, Header } from "semantic-ui-react";
 import { ActivityFormValues, IActivity } from "../../../App/models/activity";
 import { v4 as uuid } from "uuid";
 import { useStore } from "../../../App/stores/Store";
 import { observer } from "mobx-react-lite";
 import { useHistory, useParams } from "react-router-dom";
-import { Form as FinalForm, Field } from "react-final-form";
 import { TextInput } from "../../../App/common/form/TextInput";
-import { TextAreaInput } from "../../../App/common/form/TextAreaInput";
+import { TextArea } from "../../../App/common/form/TextArea";
 import { SelectInput } from "../../../App/common/form/SelectInput";
-import { category } from "../../../App/common/options/categoryOptions";
+import { categoryOptions } from "../../../App/common/options/categoryOptions";
 import { DateInput } from "../../../App/common/form/DateInput";
-import {
-  combineValidators,
-  composeValidators,
-  hasLengthGreaterThan,
-  isRequired,
-} from "revalidate";
-
-const validate = combineValidators({
-  title: isRequired({ message: "The title is required" }),
-  category: isRequired("Category"),
-  description: composeValidators(
-    isRequired("Description"),
-    hasLengthGreaterThan(4)({
-      message: "Description needs to be at least 5 characters",
-    })
-  )(),
-  city: isRequired("City"),
-  venue: isRequired("Venue"),
-  date: isRequired("Date"),
-});
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { LoadingComponent } from "../../../App/layout/LoadingComponent";
 
 export const ActivityForm: React.FC = observer(() => {
   const { activityStore } = useStore();
-  const { loadActivity, loadingInitial } = activityStore;
+  const { loadActivity, loadingInitial, submitting } = activityStore;
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
 
   const [activity, setActivity] = useState(new ActivityFormValues());
+
+  const validationSchema = Yup.object({
+    title: Yup.string().required("The activity title is required"),
+    description: Yup.string().required("The activity description is required"),
+    category: Yup.string().required(),
+    date: Yup.string().required().nullable(),
+    venue: Yup.string().required(),
+    city: Yup.string().required(),
+  });
 
   useEffect(() => {
     if (id) {
@@ -48,7 +39,7 @@ export const ActivityForm: React.FC = observer(() => {
     }
   }, [loadActivity, id]);
 
-  const handleFinalFormSubmit = (values: IActivity) => {
+  const handleSubmit = (values: IActivity) => {
     if (!activity.id) {
       let newActivity = {
         ...values,
@@ -66,6 +57,8 @@ export const ActivityForm: React.FC = observer(() => {
       : history.push(`/activities/${activity.id}`);
   };
 
+  if (loadingInitial) return <LoadingComponent />;
+
   return (
     <Grid>
       <Grid.Column width={10}>
@@ -77,61 +70,61 @@ export const ActivityForm: React.FC = observer(() => {
             style={{ marginBottom: "10px", cursor: "pointer" }}
           />
           <Segment clearing>
-            <FinalForm
-              validate={validate}
+            <Header
+              content="Activity Details"
+              sub
+              color="black"
+              style={{ marginBottom: "10px" }}
+            />
+            <Formik
+              validationSchema={validationSchema}
+              enableReinitialize
               initialValues={activity}
-              onSubmit={handleFinalFormSubmit}
-              render={({ handleSubmit, invalid, pristine }) => (
-                <Form onSubmit={handleSubmit} loading={loadingInitial}>
-                  <Field
-                    name="title"
-                    placeholder="Title"
-                    value={activity.title}
-                    component={TextInput}
-                  />
-                  <Field
+              onSubmit={(values) => handleSubmit(values)}
+            >
+              {({ handleSubmit, isValid, isSubmitting, dirty }) => (
+                <Form
+                  onSubmit={handleSubmit}
+                  autoComplete="off"
+                  className="ui form"
+                >
+                  <TextInput name="title" placeholder="Title" />
+                  <TextArea
+                    rowsize={4}
                     name="description"
-                    rows={3}
                     placeholder="Description"
-                    value={activity.description}
-                    component={TextAreaInput}
                   />
-                  <Field
+                  <SelectInput
                     name="category"
                     placeholder="Category"
-                    options={category}
-                    value={activity.category}
-                    component={SelectInput}
+                    options={categoryOptions}
                   />
-                  <Field
+                  <DateInput
                     name="date"
-                    placeholder="Date"
-                    value={activity.date}
-                    component={DateInput}
+                    placeholderText="Date"
+                    showTimeSelect
+                    timeCaption="time"
+                    dateFormat="MMMM d, yyyy h:mm aa"
                   />
-                  <Field
-                    name="city"
-                    placeholder="City"
-                    value={activity.city}
-                    component={TextInput}
+                  <Header
+                    content="Location Details"
+                    sub
+                    color="black"
+                    style={{ marginBottom: "10px" }}
                   />
-                  <Field
-                    name="venue"
-                    placeholder="Venue"
-                    value={activity.venue}
-                    component={TextInput}
-                  />
+                  <TextInput name="city" placeholder="City" />
+                  <TextInput name="venue" placeholder="Venue" />
                   <Button
-                    disabled={loadingInitial || invalid || pristine}
-                    loading={activityStore.submitting}
+                    disabled={isSubmitting || !dirty || !isValid}
+                    loading={submitting}
                     floated="right"
-                    inverted
+                    type="submit"
                     secondary
                     content="Submit"
                   />
                 </Form>
               )}
-            ></FinalForm>
+            </Formik>
           </Segment>
         </React.Fragment>
       </Grid.Column>

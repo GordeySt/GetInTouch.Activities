@@ -1,19 +1,12 @@
 import { FORM_ERROR } from "final-form";
 import React, { Fragment } from "react";
 import { Form as FinalForm, Field } from "react-final-form";
-import { combineValidators, isRequired } from "revalidate";
 import { Form, Button, Segment, Header, Icon } from "semantic-ui-react";
 import { TextInput } from "../../App/common/form/TextInput";
 import { IUserFormValues } from "../../App/models/user";
 import { useStore } from "../../App/stores/Store";
 import { ErrorMessage } from "../../App/common/form/ErrorMessage";
-
-const validate = combineValidators({
-  username: isRequired("email"),
-  displayedName: isRequired("email"),
-  email: isRequired("email"),
-  password: isRequired("password"),
-});
+import { TextAreaInput } from "../../App/common/form/TextAreaInput";
 
 export const RegisterForm: React.FC = () => {
   const { userStore } = useStore();
@@ -31,7 +24,6 @@ export const RegisterForm: React.FC = () => {
               [FORM_ERROR]: error,
             }))
           }
-          validate={validate}
           render={({
             handleSubmit,
             submitting,
@@ -43,18 +35,18 @@ export const RegisterForm: React.FC = () => {
             <Form onSubmit={handleSubmit} error>
               <Field
                 name="username"
-                component={TextInput}
+                component={TextAreaInput}
                 placeholder="Username"
               />
               <Field
                 name="displayedName"
-                component={TextInput}
+                component={TextAreaInput}
                 placeholder="Displayed name"
               />
-              <Field name="email" component={TextInput} placeholder="Email" />
+              <Field name="email" component={TextAreaInput} placeholder="Email" />
               <Field
                 name="password"
-                component={TextInput}
+                component={TextAreaInput}
                 placeholder="Password"
                 type="password"
               />

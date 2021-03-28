@@ -1,31 +1,32 @@
 import React from "react";
-import { FieldRenderProps } from "react-final-form";
-import { FormField, FormFieldProps, Label, Select } from "semantic-ui-react";
+import { useField } from "formik";
+import { Form, Label, Select } from "semantic-ui-react";
 
-interface IProps
-  extends FieldRenderProps<string, HTMLElement>,
-    FormFieldProps {}
+interface IProps {
+  placeholder: string;
+  name: string;
+  options: any;
+  label?: string;
+}
 
-export const SelectInput: React.FC<IProps> = ({
-  input,
-  width,
-  options,
-  placeholder,
-  meta: { touched, error },
-}) => {
+export const SelectInput: React.FC<IProps> = (props) => {
+  const [field, meta, helpers] = useField(props.name);
   return (
-    <FormField error={touched && !!error} width={width}>
+    <Form.Field error={meta.touched && !!meta.error}>
+      <label>{props.label}</label>
       <Select
-        value={input.value}
-        onChange={(e, data) => input.onChange(data.value)}
-        placeholder={placeholder}
-        options={options}
+        clearable
+        options={props.options}
+        value={field.value || null}
+        onChange={(e, data) => helpers.setValue(data.value)}
+        onBlur={() => helpers.setTouched(true)}
+        placeholder={props.placeholder}
       />
-      {touched && error && (
+      {meta.touched && meta.error ? (
         <Label basic color="red">
-          {error}
+          {meta.error}
         </Label>
-      )}
-    </FormField>
+      ) : null}
+    </Form.Field>
   );
 };

@@ -1,34 +1,23 @@
 import React from "react";
-import { FieldRenderProps } from "react-final-form";
-import { FormField, FormFieldProps, Label } from "semantic-ui-react";
-import DatePicker from "react-datepicker";
-import "./style.css";
-import "react-datepicker/dist/react-datepicker.css";
+import { useField } from "formik";
+import { Form, Label } from "semantic-ui-react";
+import DatePicker, { ReactDatePickerProps } from "react-datepicker";
 
-interface IProps extends FieldRenderProps<Date, HTMLElement>, FormFieldProps {}
-
-export const DateInput: React.FC<IProps> = ({
-  input,
-  width,
-  placeholder,
-  meta: { touched, error },
-}) => {
+export const DateInput: React.FC<Partial<ReactDatePickerProps>> = (props) => {
+  const [field, meta, helpers] = useField(props.name!);
   return (
-    <FormField error={touched && !!error} width={width}>
+    <Form.Field error={meta.touched && !!meta.error}>
       <DatePicker
-        selected={input.value || undefined}
-        onChange={(data) => input.onChange(data)}
-        showTimeSelect
-        dateFormat="MM/dd/yyyy  EE hh:mm a"
-        onBlur={input.onBlur}
-        onKeyDown={(e) => e.preventDefault()}
-        placeholderText={placeholder}
+        {...field}
+        {...props}
+        selected={(field.value && new Date(field.value)) || null}
+        onChange={(value) => helpers.setValue(value)}
       />
-      {touched && error && (
+      {meta.touched && meta.error ? (
         <Label basic color="red">
-          {error}
+          {meta.error}
         </Label>
-      )}
-    </FormField>
+      ) : null}
+    </Form.Field>
   );
 };
