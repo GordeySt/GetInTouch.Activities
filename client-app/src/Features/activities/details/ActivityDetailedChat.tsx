@@ -1,8 +1,6 @@
 import { Fragment, useEffect } from "react";
 import { Button, Comment, Form, Icon, Segment } from "semantic-ui-react";
-import { Form as FinalForm, Field } from "react-final-form";
 import { Link } from "react-router-dom";
-import { TextAreaInput } from "../../../App/common/form/TextAreaInput";
 import { observer } from "mobx-react-lite";
 import { useStore }  from "../../../App/stores/Store"
 
@@ -56,27 +54,6 @@ export const ActivityDetailedChat: React.FC<IProps> = observer(({ activityId }) 
                 </Comment.Content>
               </Comment>
             ))}
-          <FinalForm
-            onSubmit={addComment}
-            render={({ handleSubmit, submitting, form }) => (
-              <Form onSubmit={() => handleSubmit()?.then(() => form.reset())}>
-                <Field
-                  name="body"
-                  component={TextAreaInput}
-                  rows={2}
-                  placeholder="Add your comment"
-                />
-                <Button
-                  content="Add Comment"
-                  labelPosition="left"
-                  icon="telegram plane"
-                  color="black"
-                  loading={submitting}
-                  floated="right"
-                />
-              </Form>
-            )}
-          />
         </Comment.Group>
       </Segment>
     </Fragment>
