@@ -1,7 +1,14 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Item, Icon, Segment, Label } from "semantic-ui-react";
+import {
+  Button,
+  Item,
+  Icon,
+  Segment,
+  Label,
+  LabelDetail,
+} from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
 import moment from "moment";
 import { ActivityListItemAttendees } from "./ActivityListItemAttendees";
@@ -14,6 +21,14 @@ export const ActivityListItem: React.FC<IProps> = observer(({ activity }) => {
   const host = activity.attendees.filter((x) => x.isHost)[0];
   return (
     <Segment.Group>
+      {activity.isCancelled && (
+        <Label
+          attached="top"
+          color="red"
+          content="Cancelled"
+          style={{ textAlign: "center" }}
+        />
+      )}
       <Segment>
         <Item.Group>
           <Item key={activity.id}>

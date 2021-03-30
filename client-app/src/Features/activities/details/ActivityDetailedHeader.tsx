@@ -1,7 +1,15 @@
 import { observer } from "mobx-react-lite";
 import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Header, Icon, Image, Item, Segment } from "semantic-ui-react";
+import {
+  Button,
+  Header,
+  Icon,
+  Image,
+  Item,
+  Label,
+  Segment,
+} from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
 import { useStore } from "../../../App/stores/Store";
 
@@ -25,7 +33,13 @@ interface IProps {
 export const ActivityDetailedHeader: React.FC<IProps> = observer(
   ({ activity }) => {
     const { activityStore } = useStore();
-    const { loading, target, submitting, deleteActivity } = activityStore;
+    const {
+      loading,
+      target,
+      submitting,
+      deleteActivity,
+      cancelActivity,
+    } = activityStore;
     const [isMouseOver, setIsMouseOver] = useState(false);
     const host = activity.attendees.filter((x) => x.isHost)[0];
     const { attendActivity, cancelAttendance } = activityStore;
@@ -37,6 +51,14 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
     return (
       <Segment.Group>
         <Segment basic attached="top" style={{ padding: "0" }}>
+          {activity.isCancelled && (
+            <Label
+              style={{ position: "absolute", zIndex: 1000, left: -14, top: 20 }}
+              ribbon
+              color="red"
+              content="Cancelled"
+            />
+          )}
           <Image
             src={`/assets/categories/${activity.category}.jpg`}
             fluid
@@ -95,6 +117,7 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
                 to={`/manage/${activity.id}`}
                 circular
                 icon
+                disabled={activity.isCancelled}
                 floated="right"
               >
                 <Icon name="settings" />
@@ -108,6 +131,16 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
                 circular
               >
                 <Icon name="trash" />
+              </Button>
+              <Button
+                name="cancel"
+                loading={target === "cancel" && submitting}
+                onClick={(e) => cancelActivity(e)}
+                floated="right"
+                icon
+                circular
+              >
+                <Icon name={!activity.isCancelled ? "cancel" : "check"} />
               </Button>
             </Fragment>
           )}

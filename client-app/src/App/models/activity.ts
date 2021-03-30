@@ -8,6 +8,7 @@ export interface IActivity {
   venue: string;
   isGoing: boolean;
   isHost: boolean;
+  isCancelled: boolean;
   attendees: IAttendee[];
 }
 
@@ -23,6 +24,7 @@ export class ActivityFormValues implements IActivityFormValues {
   venue: string = "";
   isGoing: boolean = false;
   isHost: boolean = false;
+  isCancelled: boolean = false;
   attendees: IAttendee[] = [];
 
   constructor(init?: IActivity) {
