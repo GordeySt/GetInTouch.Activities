@@ -1,63 +1,73 @@
 import { IComment } from "../models/commets";
-import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
-import { makeAutoObservable, runInAction } from "mobx"
-import { store } from "./Store"
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  LogLevel,
+} from "@microsoft/signalr";
+import { makeAutoObservable, runInAction } from "mobx";
+import { store } from "./Store";
 
 export default class CommentStore {
-    comments: IComment[] = [];
-    hubConnection: HubConnection | null = null;
+  comments: IComment[] = [];
+  hubConnection: HubConnection | null = null;
 
-    constructor() {
-        makeAutoObservable(this);
-    }
+  constructor() {
+    makeAutoObservable(this);
+  }
 
-    createHubConnection = (activityId: string) => {
-        if (store.activityStore.activity) {
-            this.hubConnection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5000/chat?activityId=' + activityId, {
-                accessTokenFactory: () => store.commonStore.token!
-            })
-            .withAutomaticReconnect()
-            .configureLogging(LogLevel.Information)
-            .build();
-
-        this.hubConnection.start()
-            .then(() => console.log(this.hubConnection!.state))
-            .catch(error => console.log("Error establishinh connection: ", error))
-
-        this.hubConnection.on("LoadComments", (comments: IComment[]) => {
-            runInAction(() => {
-                this.comments = comments;
-            })
+  createHubConnection = (activityId: string) => {
+    if (store.activityStore.activity) {
+      this.hubConnection = new HubConnectionBuilder()
+        .withUrl("http://localhost:5000/chat?activityId=" + activityId, {
+          accessTokenFactory: () => store.commonStore.token!,
         })
+        .withAutomaticReconnect()
+        .configureLogging(LogLevel.Information)
+        .build();
 
-        this.hubConnection.on("RecieveComment", (comment: IComment) => {
-            runInAction(() => {
-                this.comments.push(comment);
-            })
-        })
+      this.hubConnection
+        .start()
+        .then(() => console.log(this.hubConnection!.state))
+        .catch((error) =>
+          console.log("Error establishinh connection: ", error)
+        );
 
-        }
+      this.hubConnection.on("LoadComments", (comments: IComment[]) => {
+        runInAction(() => {
+          comments.forEach((comment) => {
+            comment.createdAt = new Date(comment.createdAt);
+          });
+          this.comments = comments;
+        });
+      });
+
+      this.hubConnection.on("RecieveComment", (comment: IComment) => {
+        runInAction(() => {
+          comment.createdAt = new Date(comment.createdAt);
+          this.comments.unshift(comment);
+        });
+      });
     }
+  };
 
-    stopHubConnection = () => {
-        this.hubConnection!
-            .stop()
-            .catch(error => console.log("Error stopping connection: ", error));
+  stopHubConnection = () => {
+    this.hubConnection!.stop().catch((error) =>
+      console.log("Error stopping connection: ", error)
+    );
+  };
+
+  clearComments = () => {
+    this.comments = [];
+    this.stopHubConnection();
+  };
+
+  addComment = async (values: any) => {
+    values.activityId = store.activityStore.activity?.id;
+
+    try {
+      await this.hubConnection?.invoke("SendComment", values);
+    } catch (error) {
+      console.log(error);
     }
-
-    clearComments = () => {
-        this.comments = [];
-        this.stopHubConnection();
-    }
-
-    addComment = async (values: any) => {
-        values.activityId = store.activityStore.activity?.id;
-
-        try {
-            await this.hubConnection?.invoke("SendComment", values);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+  };
 }

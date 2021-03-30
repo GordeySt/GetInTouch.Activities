@@ -288,4 +288,8 @@ export default class ActivityStore {
       runInAction(() => (this.submitting = false));
     }
   };
+
+  clearActivity = () => {
+    this.activity = null;
+  };
 }
