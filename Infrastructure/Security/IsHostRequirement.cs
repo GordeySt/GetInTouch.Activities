@@ -28,10 +28,14 @@ namespace Infrastructure.Security
         {
             var currentUserName = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
+            if (currentUserName == null) return Task.CompletedTask;
+
             var activityId = Guid.Parse(_httpContextAccessor.HttpContext.Request.RouteValues
                 .SingleOrDefault(x => x.Key == "id").Value.ToString());
 
             var activity = _context.Activities.FindAsync(activityId).Result;
+
+            if (activity == null) return Task.CompletedTask;
 
             var host = activity.UserActivities.FirstOrDefault(x => x.IsHost);
 
