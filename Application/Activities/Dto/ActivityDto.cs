@@ -14,6 +14,7 @@ namespace Application.Activities
         public string City { get; set; }
         public string Venue { get; set; }
         public DateTime Date { get; set; }
+        public bool IsCancelled { get; set; }
 
         [JsonPropertyName("attendees")]
         public ICollection<AttendeeDto> UserActivities { get; set; }
