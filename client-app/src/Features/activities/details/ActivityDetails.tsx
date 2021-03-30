@@ -13,12 +13,19 @@ import { GoToPreviousPageButton } from "../../buttons/GoToPreviousPageButton";
 
 export const ActivityDetails: React.FC = observer(() => {
   const { activityStore } = useStore();
-  const { activity, loadActivity, loadingInitial } = activityStore;
+  const {
+    activity,
+    loadActivity,
+    loadingInitial,
+    clearActivity,
+  } = activityStore;
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     if (id) loadActivity(id);
-  }, [id, loadActivity]);
+
+    return () => clearActivity();
+  }, [id, loadActivity, clearActivity]);
 
   if (loadingInitial) return <LoadingComponent />;
 

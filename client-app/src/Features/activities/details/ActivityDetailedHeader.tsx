@@ -44,7 +44,7 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
     const host = activity.attendees.filter((x) => x.isHost)[0];
     const { attendActivity, cancelAttendance } = activityStore;
 
-    const determoneFunctionToCall = () => {
+    const determineFunctionToCall = () => {
       activity.isGoing ? cancelAttendance() : attendActivity();
     };
 
@@ -90,7 +90,7 @@ export const ActivityDetailedHeader: React.FC<IProps> = observer(
               loading={loading}
               onMouseOver={() => setIsMouseOver(true)}
               onMouseOut={() => setIsMouseOver(false)}
-              onClick={determoneFunctionToCall}
+              onClick={determineFunctionToCall}
               icon
               circular
               color="black"
