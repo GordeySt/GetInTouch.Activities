@@ -37,6 +37,10 @@ namespace API.Controllers
         [Authorize(Policy = "IsActivityHost")]
         public async Task<IActionResult> DeleteActivity(Guid id) => HandleResult(await Mediator.Send(new DeleteActivity.Command { Id = id }));
 
+        [HttpPost("{id}/cancel")]
+        [Authorize(Policy = "IsActivityHost")]
+        public async Task<IActionResult> CancelActivity(Guid id) => HandleResult(await Mediator.Send(new CancelActivity.Command { Id = id}));
+        
         [HttpPost("{id}/attend")]
         public async Task<IActionResult> AttendActivity(Guid id) => HandleResult(await Mediator.Send(new AttendActivity.Command { Id = id }));
 

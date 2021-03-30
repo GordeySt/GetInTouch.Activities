@@ -26,8 +26,7 @@ namespace Infrastructure.Security
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsHostRequirement requirement)
         {
-            var currentUserName = _httpContextAccessor.HttpContext.User?.Claims?.SingleOrDefault(x => x.Type ==
-                ClaimTypes.NameIdentifier)?.Value;
+            var currentUserName = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
             var activityId = Guid.Parse(_httpContextAccessor.HttpContext.Request.RouteValues
                 .SingleOrDefault(x => x.Key == "id").Value.ToString());
