@@ -95,7 +95,12 @@ export default class ActivityStore {
 
       try {
         activity = await Activities.details(id);
-        const user = store.userStore.user;
+        let user = store.userStore.user;
+
+        if (!user) await store.userStore.getUser();
+
+        user = store.userStore.user;
+
         runInAction(() => {
           activity.date = new Date(activity.date!);
           setActivityProps(activity, user);

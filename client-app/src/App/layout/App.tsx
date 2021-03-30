@@ -3,12 +3,7 @@ import "semantic-ui-css/semantic.min.css";
 import { Container } from "semantic-ui-react";
 import { NavBar } from "../../Features/nav/NavBar";
 import { ActivityDashboard } from "../../Features/activities/dashboard/ActivityDashboard";
-import {
-  Route,
-  Switch,
-  useLocation,
-  withRouter,
-} from "react-router-dom";
+import { Route, Switch, useLocation, withRouter } from "react-router-dom";
 import { HomePage } from "../../Features/home/HomePage";
 import { ActivityForm } from "../../Features/activities/form/ActivityForm";
 import { ActivityDetails } from "../../Features/activities/details/ActivityDetails";
@@ -16,11 +11,12 @@ import { NotFound } from "./NotFound";
 import { ToastContainer } from "react-toastify";
 import { useStore } from "../stores/Store";
 import { ModalContainer } from "../common/modals/ModalContainer";
-import { ProfilePage } from "../../Features/profiles/ProfilePage"
+import { ProfilePage } from "../../Features/profiles/ProfilePage";
+import { LoadingComponent } from "./LoadingComponent";
 
-const App: React.FC= () => {
+const App: React.FC = () => {
   const { commonStore, userStore } = useStore();
-  const { getUser } = userStore;
+  const { getUser, loadingUser } = userStore;
   const location = useLocation();
 
   useEffect(() => {
@@ -30,6 +26,8 @@ const App: React.FC= () => {
       commonStore.setAppLoaded();
     }
   }, [getUser, commonStore]);
+
+  if (loadingUser) return <LoadingComponent />;
 
   return (
     <React.Fragment>
@@ -50,7 +48,10 @@ const App: React.FC= () => {
                   path={["/createActivity", "/manage/:id"]}
                   component={ActivityForm}
                 />
-                <Route path='/profile/:username' component={ProfilePage}></Route>
+                <Route
+                  path="/profile/:username"
+                  component={ProfilePage}
+                ></Route>
                 <Route component={NotFound} />
               </Switch>
             </Container>

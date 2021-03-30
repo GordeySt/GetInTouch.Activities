@@ -8,6 +8,7 @@ configure({ enforceActions: "always" });
 
 export default class UserStore {
   user: IUser | null = null;
+  loadingUser: boolean = false;
 
   get isLoggedIn() {
     return !!this.user;
@@ -43,6 +44,8 @@ export default class UserStore {
   };
 
   getUser = async () => {
+    this.loadingUser = true;
+
     try {
       const user = await User.current();
       runInAction(() => {
@@ -50,6 +53,8 @@ export default class UserStore {
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      runInAction(() => (this.loadingUser = false));
     }
   };
 
