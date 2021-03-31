@@ -12,7 +12,7 @@ namespace Application.Common
     public class Handler
     {
         protected readonly DataContext _context;
-        private readonly IUserAccessor _userAccessor;
+        protected readonly IUserAccessor _userAccessor;
 
         public Handler(DataContext context, IUserAccessor userAccessor)
         {
@@ -20,10 +20,10 @@ namespace Application.Common
             _userAccessor = userAccessor;
         }
 
-        protected async Task<AppUser> GetUserFromDB()
+        protected async Task<AppUser> GetUserFromDB(string userNameToFind)
         {
             var user = await _context.Users.SingleOrDefaultAsync(x =>
-                    x.UserName == _userAccessor.GetCurrentUserName());
+                    x.UserName == userNameToFind);
 
             return user;
         }
