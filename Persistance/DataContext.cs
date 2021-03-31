@@ -39,6 +39,20 @@ namespace Persistance
                 .HasOne(a => a.Activity)
                 .WithMany(u => u.UserActivities)
                 .HasForeignKey(a => a.ActivityId);
+
+            builder.Entity<UserFollowing>(b => {
+                b.HasKey(a => new { a.ObserverId, a.TargetId });
+
+                b.HasOne(k => k.Observer)
+                    .WithMany(f => f.Followings)
+                    .HasForeignKey(a => a.ObserverId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                b.HasOne(k => k.Target)
+                    .WithMany(f => f.Followers)
+                    .HasForeignKey(a => a.TargetId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
         }
     }
 }
