@@ -15,6 +15,7 @@ namespace Persistance
         public DbSet<UserActivity> UserActivities { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<UserFollowing> UserFollowings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -40,7 +41,8 @@ namespace Persistance
                 .WithMany(u => u.UserActivities)
                 .HasForeignKey(a => a.ActivityId);
 
-            builder.Entity<UserFollowing>(b => {
+            builder.Entity<UserFollowing>(b =>
+            {
                 b.HasKey(a => new { a.ObserverId, a.TargetId });
 
                 b.HasOne(k => k.Observer)
