@@ -38,7 +38,7 @@ namespace Application.Followers
 
                 if (success) return Result<Unit>.Success(Unit.Value);
 
-                return Result<Unit>.Failure("Failed to attend activity");
+                return Result<Unit>.Failure("Failed to follow user");
             }
 
             private void CheckIfTargetNotFound(AppUser target)
