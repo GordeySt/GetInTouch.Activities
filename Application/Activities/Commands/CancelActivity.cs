@@ -26,7 +26,7 @@ namespace Application.Activities.Commands
             {
                 var activity = await GetActivityFromDB(request.Id);
 
-                var user = await GetUserFromDB();
+                var user = await GetUserFromDB(_userAccessor.GetCurrentUserName());
 
                 var attendance = await GetAttendanceFromDB(activity, user);
 

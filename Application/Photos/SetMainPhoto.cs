@@ -20,19 +20,19 @@ namespace Application.Photos
         public class PhotoHandler : Handler, IRequestHandler<Command>
         {
 
-            public PhotoHandler(DataContext context, IUserAccessor userAccessor) 
+            public PhotoHandler(DataContext context, IUserAccessor userAccessor)
                 : base(context, userAccessor)
             { }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var user = await GetUserFromDB();
+                var user = await GetUserFromDB(_userAccessor.GetCurrentUserName());
 
                 var photo = FindPhotoToSetAsMain(user, request);
 
                 CheckIfPhotoNotFound(photo);
 
-                var currentMainPhoto = FindCurrentMainPhoto(user); 
+                var currentMainPhoto = FindCurrentMainPhoto(user);
 
                 SetNewMainPhoto(currentMainPhoto, photo);
 

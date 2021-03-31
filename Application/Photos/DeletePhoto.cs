@@ -23,7 +23,7 @@ namespace Application.Photos
         {
             private readonly IPhotoAccessor _photoAccessor;
 
-            public PhotoHandler(DataContext context, IUserAccessor userAccessor, IPhotoAccessor photoAccessor) 
+            public PhotoHandler(DataContext context, IUserAccessor userAccessor, IPhotoAccessor photoAccessor)
                 : base(context, userAccessor)
             {
                 _photoAccessor = photoAccessor;
@@ -31,7 +31,7 @@ namespace Application.Photos
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var user = await GetUserFromDB();
+                var user = await GetUserFromDB(_userAccessor.GetCurrentUserName());
 
                 var photo = SearchPhoto(user, request);
 

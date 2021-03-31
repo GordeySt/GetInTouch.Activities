@@ -41,7 +41,7 @@ namespace Application.Comments.Commands
             {
                 var activity = await GetActivityFromDB(request.ActivityId);
 
-                var user = await GetUserFromDB();
+                var user = await GetUserFromDB(_userAccessor.GetCurrentUserName());
 
                 var comment = CreateNewComment(user, activity, request);
 

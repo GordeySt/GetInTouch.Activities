@@ -36,7 +36,7 @@ namespace Application.Activities
             {
                 AddNewActivityToDatabase(request.Activity);
 
-                var user = await GetUserFromDB();
+                var user = await GetUserFromDB(_userAccessor.GetCurrentUserName());
 
                 var attendee = CreateNewAttendee(user, request.Activity);
 
