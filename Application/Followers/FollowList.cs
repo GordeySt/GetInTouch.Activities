@@ -51,7 +51,10 @@ namespace Application.Followers
                     case "following":
                         profiles = await _context.UserFollowings.Where(x => x.Observer.UserName == request.UserName)
                             .Select(u => u.Target)
-                            .ProjectTo<Profiles.Profile>(_mapper.ConfigurationProvider)
+                            .ProjectTo<Profiles.Profile>(_mapper.ConfigurationProvider, new
+                            {
+                                currentUserName = _userAccessor.GetCurrentUserName()
+                            })
                             .ToListAsync();
                         break;
                 }

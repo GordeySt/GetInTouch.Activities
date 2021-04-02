@@ -8,6 +8,8 @@ using AutoMapper;
 using Application.Interfaces;
 using Application.Common;
 using Application.Core;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Activities
 {
@@ -29,11 +31,14 @@ namespace Application.Activities
 
             public async Task<Result<ActivityDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var activity = await GetActivityFromDB(request.Id);
+                var activity = await _context.Activities
+                    .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new
+                    {
+                        currentUserName = _userAccessor.GetCurrentUserName()
+                    })
+                    .FirstOrDefaultAsync(x => x.Id == request.Id);
 
-                var activityToReturn = _mapper.Map<Activity, ActivityDto>(activity);
-
-                return Result<ActivityDto>.Success(activityToReturn);
+                return Result<ActivityDto>.Success(activity);
             }
         }
     }
