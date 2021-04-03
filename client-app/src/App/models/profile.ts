@@ -4,7 +4,7 @@ export interface IProfile {
   bio: string;
   mainImage: string;
   followersCount: number;
-  followingCount: number;
+  followingsCount: number;
   isFollowing: boolean;
   photos: IPhoto[];
 }
