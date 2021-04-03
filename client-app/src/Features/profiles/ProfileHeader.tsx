@@ -36,7 +36,10 @@ export const ProfileHeader: React.FC<IProps> = observer(({ profile }) => {
         <Grid.Column width={4}>
           <Statistic.Group widths={2}>
             <Statistic label="Followers" value={profile?.followersCount || 0} />
-            <Statistic label="Following" value={profile?.followingCount || 0} />
+            <Statistic
+              label="Following"
+              value={profile?.followingsCount || 0}
+            />
           </Statistic.Group>
           <Divider />
           <FollowButton profile={profile!} />
