@@ -13,6 +13,7 @@ export default class ProfileStore {
   loadingSetMain = false;
   loadingDelete = false;
   loadingFollow = false;
+  loadingFollowingsList = false;
   followings: IProfile[] = [];
 
   constructor() {
@@ -114,7 +115,6 @@ export default class ProfileStore {
 
     try {
       await Profiles.updateFollowing(username);
-      //   store.activityStore.updateAttendeeFollowing(username);
       runInAction(() => {
         if (
           this.profile &&
@@ -138,6 +138,25 @@ export default class ProfileStore {
     } catch (error) {
       console.log(error);
       runInAction(() => (this.loadingFollow = false));
+    }
+  };
+
+  loadFollowings = async (predicate: string) => {
+    this.loadingFollowingsList = true;
+
+    try {
+      const followings = await Profiles.getListOfFollowings(
+        this.profile!.userName,
+        predicate
+      );
+
+      runInAction(() => {
+        this.followings = followings;
+        this.loadingFollowingsList = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => (this.loadingFollowingsList = false));
     }
   };
 }
