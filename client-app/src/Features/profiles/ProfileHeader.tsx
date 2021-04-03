@@ -3,13 +3,12 @@ import {
   Segment,
   Item,
   Header,
-  Button,
   Grid,
   Statistic,
   Divider,
-  Reveal,
 } from "semantic-ui-react";
 import { IProfile } from "../../App/models/profile";
+import { FollowButton } from "../profiles/FollowButton";
 
 interface IProps {
   profile: IProfile | null;
@@ -40,19 +39,7 @@ export const ProfileHeader: React.FC<IProps> = observer(({ profile }) => {
             <Statistic label="Following" value={profile?.followingCount || 0} />
           </Statistic.Group>
           <Divider />
-          <Reveal animated="move">
-            <Reveal.Content visible style={{ width: "100%" }}>
-              <Button fluid color="black" content="Following" />
-            </Reveal.Content>
-            <Reveal.Content hidden>
-              <Button
-                fluid
-                basic
-                colour={true ? "gray" : "black"}
-                content={true ? "Unfollow" : "Follow"}
-              />
-            </Reveal.Content>
-          </Reveal>
+          <FollowButton profile={profile!} />
         </Grid.Column>
       </Grid>
     </Segment>
