@@ -13,9 +13,9 @@ export const ProfileCard: React.FC<IProps> = ({ profile }) => {
       return str.length > 40 ? str.substring(0, 37) + "..." : str;
     }
   };
-  
+
   return (
-    <Card as={Link} to={`/profiles/${profile?.userName}`}>
+    <Card as={Link} to={`/profile/${profile.userName}`}>
       <Image src={profile?.mainImage || "/assets/user.jpg"} />
       <Card.Content>
         <Card.Header>{profile?.displayedName}</Card.Header>
