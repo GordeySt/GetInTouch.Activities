@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { Card, Icon, Image } from "semantic-ui-react";
 import { IAttendee } from "../../App/models/activity";
+import { IProfile } from "../../App/models/profile";
 
 interface IProps {
-  profile: IAttendee;
+  profile: IAttendee | IProfile;
 }
 
 export const ProfileCard: React.FC<IProps> = ({ profile }) => {
@@ -12,7 +13,7 @@ export const ProfileCard: React.FC<IProps> = ({ profile }) => {
       return str.length > 40 ? str.substring(0, 37) + "..." : str;
     }
   };
-
+  
   return (
     <Card as={Link} to={`/profiles/${profile?.userName}`}>
       <Image src={profile?.mainImage || "/assets/user.jpg"} />
