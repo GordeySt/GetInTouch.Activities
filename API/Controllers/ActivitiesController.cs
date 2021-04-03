@@ -7,13 +7,15 @@ using Application.Activities;
 using Microsoft.AspNetCore.Authorization;
 using Application.Activities.Commands;
 using Domain;
+using Application.Core;
 
 namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController
     {
         [HttpGet]
-        public async Task<IActionResult> GetActivities() => HandleResult(await Mediator.Send(new ActivitiesList.Query()));
+        public async Task<IActionResult> GetActivities([FromQuery] PagingParams param) =>
+            HandleResult(await Mediator.Send(new ActivitiesList.Query { Params = param }));
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetActivity(Guid id) => HandleResult(await Mediator.Send(new ActivityDetails.Query { Id = id }));
@@ -39,8 +41,8 @@ namespace API.Controllers
 
         [HttpPost("{id}/cancel")]
         [Authorize(Policy = "IsActivityHost")]
-        public async Task<IActionResult> CancelActivity(Guid id) => HandleResult(await Mediator.Send(new CancelActivity.Command { Id = id}));
-        
+        public async Task<IActionResult> CancelActivity(Guid id) => HandleResult(await Mediator.Send(new CancelActivity.Command { Id = id }));
+
         [HttpPost("{id}/attend")]
         public async Task<IActionResult> AttendActivity(Guid id) => HandleResult(await Mediator.Send(new AttendActivity.Command { Id = id }));
 
