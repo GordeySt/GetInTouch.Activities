@@ -93,4 +93,6 @@ export const Profiles = {
     requests.del<void>(`/photos/${id}`),
   updateFollowing: (username: string) =>
     requests.post(`/follow/${username}`, {}),
+  getListOfFollowings: (username: string, predicate: string) =>
+    requests.get<IProfile[]>(`/follow/${username}?predicate=${predicate}`),
 };
