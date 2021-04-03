@@ -39,7 +39,7 @@ export const ActivityDetailedSidebar: React.FC<IProps> = observer(
                 <Image
                   circular
                   size="mini"
-                  src={attendee.image || "/assets/user.jpg"}
+                  src={attendee.mainImage || "/assets/user.jpg"}
                   style={{ marginRight: "10px" }}
                 />
                 <Item.Content verticalAlign="middle">
@@ -48,7 +48,9 @@ export const ActivityDetailedSidebar: React.FC<IProps> = observer(
                       {attendee.displayedName}
                     </Link>
                   </Item.Header>
-                  <Item.Extra style={{ color: "black" }}>Friend</Item.Extra>
+                  {attendee.isFollowing && (
+                    <Item.Extra style={{ color: "black" }}>Friend</Item.Extra>
+                  )}
                 </Item.Content>
               </Item>
             ))}

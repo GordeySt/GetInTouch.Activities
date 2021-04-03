@@ -35,7 +35,7 @@ export const ActivityListItem: React.FC<IProps> = observer(({ activity }) => {
             <Item.Image
               size="tiny"
               circular
-              src={host.image || "/assets/user.jpg"}
+              src={host.mainImage || "/assets/user.jpg"}
               style={{ marginBottom: 3 }}
             />
             <Item.Content>
