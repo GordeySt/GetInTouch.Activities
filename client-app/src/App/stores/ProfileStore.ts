@@ -1,4 +1,4 @@
-import { makeAutoObservable, configure, runInAction } from "mobx";
+import { makeAutoObservable, configure, runInAction, reaction } from "mobx";
 import { toast } from "react-toastify";
 import { Profiles } from "../api/agent";
 import { IPhoto, IProfile } from "../models/profile";
@@ -15,10 +15,27 @@ export default class ProfileStore {
   loadingFollow = false;
   loadingFollowingsList = false;
   followings: IProfile[] = [];
+  activeTab = 0;
 
   constructor() {
     makeAutoObservable(this);
+
+    reaction(
+      () => this.activeTab,
+      (activeTab) => {
+        if (activeTab === 3 || activeTab === 4) {
+          const predicate = activeTab === 3 ? "followers" : "following";
+          this.loadFollowings(predicate);
+        } else {
+          this.followings = [];
+        }
+      }
+    );
   }
+
+  setActiveTab = (activeTab: any) => {
+    this.activeTab = activeTab;
+  };
 
   get isCurrentUser() {
     if (store.userStore.user && this.profile) {
