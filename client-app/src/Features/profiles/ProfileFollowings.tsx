@@ -9,13 +9,9 @@ export const ProfileFollowings = observer(() => {
   const {
     profile,
     followings,
-    loadFollowings,
     loadingFollowingsList,
+    activeTab,
   } = profileStore;
-
-  useEffect(() => {
-    loadFollowings("following");
-  }, [loadFollowings]);
 
   return (
     <Tab.Pane loading={loadingFollowingsList}>
@@ -24,7 +20,11 @@ export const ProfileFollowings = observer(() => {
           <Header
             floated="left"
             icon="user"
-            content={`People following ${profile?.displayedName}`}
+            content={
+              activeTab === 3
+                ? `People following ${profile?.displayedName}`
+                : `People ${profile?.displayedName} is following`
+            }
           />
         </Grid.Column>
         <Grid.Column width={16}>

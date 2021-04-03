@@ -16,10 +16,12 @@ interface IProps extends RouteComponentProps<RouteParams> {}
 
 export const ProfilePage: React.FC<IProps> = observer(({ match }) => {
   const { profileStore } = useStore();
-  const { loadingProfile, profile, loadProfile } = profileStore;
+  const { loadingProfile, profile, loadProfile, setActiveTab } = profileStore;
 
   useEffect(() => {
     loadProfile(match.params.username);
+
+    return () => setActiveTab(0);
   }, [loadProfile, match]);
 
   if (loadingProfile) return <LoadingComponent />;
