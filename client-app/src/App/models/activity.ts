@@ -35,6 +35,10 @@ export class ActivityFormValues implements IActivityFormValues {
 export interface IAttendee {
   userName: string;
   displayedName: string;
-  image: string;
+  followersCount?: number;
+  followingCount?: number;
+  isFollowing?: boolean;
   isHost: boolean;
+  mainImage?: string;
+  bio?: string;
 }
