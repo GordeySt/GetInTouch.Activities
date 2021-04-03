@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { List, Image, Popup } from "semantic-ui-react";
 import { IAttendee } from "../../../App/models/activity";
 import { ProfileCard } from "../../profiles/ProfileCard";
@@ -8,22 +9,16 @@ interface IProps {
 }
 
 export const ActivityListItemAttendees: React.FC<IProps> = ({ attendees }) => {
-  const styles = {
-    borderColor: "orange",
-    borderWidth: 3,
-    cursor: "pointer",
-  };
-
   return (
     <List horizontal>
       {attendees?.map((attendee) => (
         <List.Item key={attendee.userName}>
           <Popup
-            header={attendee.displayedName}
             trigger={
               <Image
+                as={Link}
+                to={`/profile/${attendee.userName}`}
                 bordered
-                style={attendee.isFollowing ? styles : { cursor: "pointer" }}
                 size="mini"
                 circular
                 src={attendee.mainImage || "/assets/user.jpg"}
