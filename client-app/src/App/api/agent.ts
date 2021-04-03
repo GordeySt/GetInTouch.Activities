@@ -91,4 +91,6 @@ export const Profiles = {
     requests.post<void>(`/photos/${id}/setMain`, {}),
   deletePhoto: (id: string): Promise<void> =>
     requests.del<void>(`/photos/${id}`),
+  updateFollowing: (username: string) =>
+    requests.post(`/follow/${username}`, {}),
 };
