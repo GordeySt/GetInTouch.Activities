@@ -76,6 +76,7 @@ export const Activities = {
   list: (params: URLSearchParams) =>
     axios
       .get<PaginatedResult<IActivity[]>>("/activities", { params })
+      .then(sleep(1000))
       .then(responseBody),
   details: (id: string): Promise<IActivity> =>
     requests.get<IActivity>(`/activities/${id}`),
