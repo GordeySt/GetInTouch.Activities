@@ -21,14 +21,18 @@ export default class ActivityStore {
   pagination: IPagination | null = null;
   pagingParams = new PagingParams();
 
+  constructor() {
+    makeAutoObservable(this);
+  }
+
   setPagingParams = (pagingParams: PagingParams) => {
     this.pagingParams = pagingParams;
   };
 
   get axiosParams() {
     const params = new URLSearchParams();
-    params.append('pageNumber', this.pagingParams.pageNumber.toString());
-    params.append('pageSize', this.pagingParams.pageSize.toString());
+    params.append("pageNumber", this.pagingParams.pageNumber.toString());
+    params.append("pageSize", this.pagingParams.pageSize.toString());
 
     return params;
   }
@@ -55,10 +59,6 @@ export default class ActivityStore {
         return activities;
       }, {} as { [key: string]: IActivity[] })
     );
-  }
-
-  constructor() {
-    makeAutoObservable(this);
   }
 
   loadActivities = async () => {
