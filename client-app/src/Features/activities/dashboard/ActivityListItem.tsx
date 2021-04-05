@@ -7,7 +7,6 @@ import {
   Icon,
   Segment,
   Label,
-  LabelDetail,
 } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
 import moment from "moment";

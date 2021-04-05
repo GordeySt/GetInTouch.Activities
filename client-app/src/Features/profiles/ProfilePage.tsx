@@ -22,7 +22,7 @@ export const ProfilePage: React.FC<IProps> = observer(({ match }) => {
     loadProfile(match.params.username);
 
     return () => setActiveTab(0);
-  }, [loadProfile, match]);
+  }, [loadProfile, match, setActiveTab]);
 
   if (loadingProfile) return <LoadingComponent />;
 

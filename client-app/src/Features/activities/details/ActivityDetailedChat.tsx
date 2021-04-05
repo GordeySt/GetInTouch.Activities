@@ -1,5 +1,5 @@
 import { Fragment, useEffect } from "react";
-import { Button, Comment, Icon, Loader, Segment } from "semantic-ui-react";
+import { Comment, Icon, Loader, Segment } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../App/stores/Store";
