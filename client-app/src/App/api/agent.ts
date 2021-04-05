@@ -3,6 +3,7 @@ import { IActivity } from "../models/activity";
 import { ErrorsHandler } from "./errors";
 import { IUser, IUserFormValues } from "../models/user";
 import { IPhoto, IProfile } from "../models/profile";
+import { PaginatedResult } from "../models/pagination";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -19,15 +20,27 @@ axios.interceptors.request.use(
   }
 );
 
-axios.interceptors.response.use(undefined, (er) => {
-  ErrorsHandler.handleNetworkError(er);
+axios.interceptors.response.use(
+  async (response) => {
+    const pagination = response.headers["pagination"];
+    if (pagination) {
+      response.data = new PaginatedResult(response.data, pagination);
 
-  ErrorsHandler.handle404Error(er.response);
-  ErrorsHandler.handle400Error(er.response);
-  ErrorsHandler.handle500Error(er.response);
+      return response as AxiosResponse<PaginatedResult<any>>;
+    }
 
-  throw er.response;
-});
+    return response;
+  },
+  (er) => {
+    ErrorsHandler.handleNetworkError(er);
+
+    ErrorsHandler.handle404Error(er.response);
+    ErrorsHandler.handle400Error(er.response);
+    ErrorsHandler.handle500Error(er.response);
+
+    throw er.response;
+  }
+);
 
 const sleep = (ms: number) => (response: AxiosResponse) =>
   new Promise<AxiosResponse>((resolve) =>
@@ -57,7 +70,10 @@ const requests = {
 };
 
 export const Activities = {
-  list: (): Promise<IActivity[]> => requests.get<IActivity[]>("/activities"),
+  list: (params: URLSearchParams) =>
+    axios
+      .get<PaginatedResult<IActivity[]>>("/activities", { params })
+      .then(responseBody),
   details: (id: string): Promise<IActivity> =>
     requests.get<IActivity>(`/activities/${id}`),
   create: (activity: IActivity): Promise<void> =>
