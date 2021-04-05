@@ -7,6 +7,7 @@ import { IActivity } from "../models/activity";
 import { IUser } from "../models/user";
 import { store } from "./Store";
 import { createAttendee, setActivityProps } from "../common/utils/utils";
+import { IPagination, PagingParams } from "../models/pagination";
 
 configure({ enforceActions: "always" });
 
@@ -17,6 +18,20 @@ export default class ActivityStore {
   submitting = false;
   target = "";
   loading = false;
+  pagination: IPagination | null = null;
+  pagingParams = new PagingParams();
+
+  setPagingParams = (pagingParams: PagingParams) => {
+    this.pagingParams = pagingParams;
+  };
+
+  get axiosParams() {
+    const params = new URLSearchParams();
+    params.append('pageNumber', this.pagingParams.pageNumber.toString());
+    params.append('pageSize', this.pagingParams.pageSize.toString());
+
+    return params;
+  }
 
   get activitiesByDate() {
     return this.groupActivitiesByDate(
@@ -50,10 +65,11 @@ export default class ActivityStore {
     this.loadingInitial = true;
 
     try {
-      const activities = await Activities.list();
+      const result = await Activities.list(this.axiosParams);
       runInAction(() => {
         const user = store.userStore.user;
-        this.mapAllActivitiesFromResponse(activities, user);
+        this.mapAllActivitiesFromResponse(result.data, user);
+        this.setPagination(result.pagination);
         this.loadingInitial = false;
       });
     } catch (error) {
@@ -62,6 +78,10 @@ export default class ActivityStore {
       });
       console.log(error);
     }
+  };
+
+  setPagination = (pagination: IPagination) => {
+    this.pagination = pagination;
   };
 
   private mapAllActivitiesFromResponse = (
