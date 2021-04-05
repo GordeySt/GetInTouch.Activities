@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, Grid, Loader } from "semantic-ui-react";
+import { Grid, Loader } from "semantic-ui-react";
 import { ActivityList } from "./ActivityList";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../App/stores/Store";
-import { LoadingComponent } from "../../../App/layout/LoadingComponent";
 import { ActivityFilters } from "./ActivityFilters";
 import { PagingParams } from "../../../App/models/pagination";
 import InfiniteScroll from "react-infinite-scroller";
+import { ActivityListItemPlaceholder } from "./ActivityListItemPlaceholder";
 
 export const ActivityDashboard: React.FC = observer(() => {
   const { activityStore } = useStore();
@@ -31,23 +31,28 @@ export const ActivityDashboard: React.FC = observer(() => {
     if (activitiesRegistry.size <= 1) loadActivities();
   }, [activitiesRegistry.size, loadActivities]);
 
-  if (loadingInitial && !loadingNext) return <LoadingComponent />;
-
   return (
     <Grid>
       <Grid.Column width={10}>
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={handleGetNext}
-          hasMore={
-            !loadingNext &&
-            !!pagination &&
-            pagination.currentPage < pagination.totalPages
-          }
-          initialLoad={false}
-        >
-          <ActivityList />
-        </InfiniteScroll>
+        {loadingInitial && !loadingNext ? (
+          <React.Fragment>
+            <ActivityListItemPlaceholder />
+            <ActivityListItemPlaceholder />
+          </React.Fragment>
+        ) : (
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={handleGetNext}
+            hasMore={
+              !loadingNext &&
+              !!pagination &&
+              pagination.currentPage < pagination.totalPages
+            }
+            initialLoad={false}
+          >
+            <ActivityList />
+          </InfiniteScroll>
+        )}
       </Grid.Column>
       <Grid.Column width={6}>
         <ActivityFilters />
