@@ -101,7 +101,7 @@ export const User = {
   register: (user: IUserFormValues): Promise<IUser> =>
     requests.post<IUser>("/user/register", user),
   fbLogin: (accessToken: string) =>
-    requests.post<IUser>(`/account/fbLogin?accessToken=${accessToken}`, {}),
+    requests.post<IUser>(`/user/fbLogin?accessToken=${accessToken}`, {}),
 };
 
 export const Profiles = {

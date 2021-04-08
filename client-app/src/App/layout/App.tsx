@@ -16,14 +16,14 @@ import { LoadingComponent } from "./LoadingComponent";
 
 const App: React.FC = () => {
   const { commonStore, userStore } = useStore();
-  const { getUser, loadingUser } = userStore;
+  const { getUser, loadingUser, getFacebookLoginStatus } = userStore;
   const location = useLocation();
 
   useEffect(() => {
     if (commonStore.token) {
       getUser().finally(() => commonStore.setAppLoaded());
     } else {
-      commonStore.setAppLoaded();
+      getFacebookLoginStatus().then(() => commonStore.setAppLoaded());
     }
   }, [getUser, commonStore]);
 

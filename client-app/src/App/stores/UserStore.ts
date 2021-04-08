@@ -8,7 +8,9 @@ configure({ enforceActions: "always" });
 
 export default class UserStore {
   user: IUser | null = null;
-  loadingUser: boolean = false;
+  loadingUser = false;
+  fbAccessToken: string | null = null;
+  fbLoading = false;
 
   get isLoggedIn() {
     return !!this.user;
@@ -65,14 +67,43 @@ export default class UserStore {
     history.push("/");
   };
 
-  facebookLogin = () => {
-    window.FB.login(
-      (response) => {
-        console.log(response);
-      },
-      {
-        scope: "public_profile,email",
+  getFacebookLoginStatus = async () => {
+    window.FB.getLoginStatus((response) => {
+      if (response.status === "connected") {
+        this.fbAccessToken = response.authResponse.accessToken;
       }
-    );
+    });
+  };
+
+  facebookLogin = () => {
+    this.fbLoading = true;
+    const apiLogin = (accessToken: string) => {
+      User.fbLogin(accessToken)
+        .then((user) => {
+          store.commonStore.setToken(user.token);
+          runInAction(() => {
+            this.user = user;
+            this.fbLoading = false;
+          });
+          history.push("/activities");
+        })
+        .catch((error) => {
+          console.log(error);
+          runInAction(() => (this.fbLoading = false));
+        });
+    };
+
+    if (this.fbAccessToken) {
+      apiLogin(this.fbAccessToken);
+    } else {
+      window.FB.login(
+        (response) => {
+          apiLogin(response.authResponse.accessToken);
+        },
+        {
+          scope: "public_profile,email",
+        }
+      );
+    }
   };
 }

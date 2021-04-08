@@ -10,8 +10,9 @@ import {
 import { LoginForm } from "../../Features/user/LoginForm";
 import { RegisterForm } from "../../Features/user/RegisterForm";
 import { useStore } from "../../App/stores/Store";
+import { observer } from "mobx-react-lite";
 
-export const LogOutForm = () => {
+export const LogOutForm = observer(() => {
   const { modalStore, userStore } = useStore();
   const { openModal } = modalStore;
   return (
@@ -35,6 +36,7 @@ export const LogOutForm = () => {
               color="facebook"
               icon
               circular
+              loading={userStore.fbLoading}
               onClick={userStore.facebookLogin}
             >
               <Icon name="facebook" /> Use Facebook
@@ -46,4 +48,4 @@ export const LogOutForm = () => {
       </Segment>
     </Fragment>
   );
-};
+});
