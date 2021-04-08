@@ -100,6 +100,8 @@ export const User = {
     requests.post<IUser>("/user/login", user),
   register: (user: IUserFormValues): Promise<IUser> =>
     requests.post<IUser>("/user/register", user),
+  fbLogin: (accessToken: string) =>
+    requests.post<IUser>(`/account/fbLogin?accessToken=${accessToken}`, {}),
 };
 
 export const Profiles = {
@@ -115,6 +117,8 @@ export const Profiles = {
     requests.post(`/follow/${username}`, {}),
   getListOfFollowings: (username: string, predicate: string) =>
     requests.get<IProfile[]>(`/follow/${username}?predicate=${predicate}`),
-  getListOfActivities: (username: string, predicate: string) => 
-    requests.get<IUserActivity[]>(`/profiles/${username}/activities?predicate=${predicate}`)
+  getListOfActivities: (username: string, predicate: string) =>
+    requests.get<IUserActivity[]>(
+      `/profiles/${username}/activities?predicate=${predicate}`
+    ),
 };

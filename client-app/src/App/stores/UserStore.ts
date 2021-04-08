@@ -64,4 +64,15 @@ export default class UserStore {
     this.user = null;
     history.push("/");
   };
+
+  facebookLogin = () => {
+    window.FB.login(
+      (response) => {
+        console.log(response);
+      },
+      {
+        scope: "public_profile,email",
+      }
+    );
+  };
 }

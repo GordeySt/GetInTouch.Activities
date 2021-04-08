@@ -1,11 +1,18 @@
 import { Fragment } from "react";
-import { Button, Divider, Grid, Header, Segment } from "semantic-ui-react";
+import {
+  Button,
+  Divider,
+  Grid,
+  Header,
+  Icon,
+  Segment,
+} from "semantic-ui-react";
 import { LoginForm } from "../../Features/user/LoginForm";
 import { RegisterForm } from "../../Features/user/RegisterForm";
 import { useStore } from "../../App/stores/Store";
 
 export const LogOutForm = () => {
-  const { modalStore } = useStore();
+  const { modalStore, userStore } = useStore();
   const { openModal } = modalStore;
   return (
     <Fragment>
@@ -18,11 +25,20 @@ export const LogOutForm = () => {
 
           <Grid.Column verticalAlign="middle">
             <Button
+              style={{ marginBottom: "10px" }}
               onClick={() => openModal(<RegisterForm />)}
               content="Sign up"
               icon="signup"
               size="big"
             />
+            <Button
+              color="facebook"
+              icon
+              circular
+              onClick={userStore.facebookLogin}
+            >
+              <Icon name="facebook" /> Use Facebook
+            </Button>
           </Grid.Column>
         </Grid>
 
