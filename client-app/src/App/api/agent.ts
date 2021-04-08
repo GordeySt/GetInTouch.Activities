@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { IActivity } from "../models/activity";
 import { ErrorsHandler } from "./errors";
 import { IUser, IUserFormValues } from "../models/user";
-import { IPhoto, IProfile } from "../models/profile";
+import { IPhoto, IProfile, IUserActivity } from "../models/profile";
 import { PaginatedResult } from "../models/pagination";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
@@ -115,4 +115,6 @@ export const Profiles = {
     requests.post(`/follow/${username}`, {}),
   getListOfFollowings: (username: string, predicate: string) =>
     requests.get<IProfile[]>(`/follow/${username}?predicate=${predicate}`),
+  getListOfActivities: (username: string, predicate: string) => 
+    requests.get<IUserActivity[]>(`/profiles/${username}/activities?predicate=${predicate}`)
 };
