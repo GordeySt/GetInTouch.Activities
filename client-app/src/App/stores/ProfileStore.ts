@@ -1,7 +1,7 @@
 import { makeAutoObservable, configure, runInAction, reaction } from "mobx";
 import { toast } from "react-toastify";
 import { Profiles } from "../api/agent";
-import { IPhoto, IProfile } from "../models/profile";
+import { IPhoto, IProfile, IUserActivity } from "../models/profile";
 import { store } from "./Store";
 
 configure({ enforceActions: "always" });
@@ -16,6 +16,8 @@ export default class ProfileStore {
   loadingFollowingsList = false;
   followings: IProfile[] = [];
   activeTab = 0;
+  userActivities: IUserActivity[] = [];
+  loadingActivities = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -176,4 +178,21 @@ export default class ProfileStore {
       runInAction(() => (this.loadingFollowingsList = false));
     }
   };
+
+  loadUserActivities = async (username: string, predicate?: string) => {
+    this.loadingActivities = true;
+
+    try {
+      const activities = await Profiles.getListOfActivities(username, predicate!);
+      runInAction(() => {
+        this.userActivities = activities;
+        this.loadingActivities = false;
+      })
+    } catch (error) {
+      console.log(error);
+      runInAction(() => {
+        this.loadingActivities = false;
+      })
+    }
+  }
 }
