@@ -33,7 +33,7 @@ namespace Infrastructure.Security
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(7),
+                Expires = DateTime.Now.AddMinutes(5),
                 SigningCredentials = creds
             };
 
@@ -47,10 +47,11 @@ namespace Infrastructure.Security
         public RefreshToken GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
-
-            return new RefreshToken { Token = Convert.ToBase64String(randomNumber) };
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return new RefreshToken { Token = Convert.ToBase64String(randomNumber) };
+            }
         }
     }
 }
