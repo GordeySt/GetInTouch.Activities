@@ -33,13 +33,11 @@ namespace Application.User
             {
                 var user = await FindCurrentUser();
 
-                return new User
-                {
-                    DisplayedName = user.DisplayedName,
-                    UserName = user.UserName,
-                    Token = _jwtGenerator.CreateToken(user),
-                    Image = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
-                };
+                var refreshToken = _jwtGenerator.GenerateRefreshToken();
+                user.RefreshTokens.Add(refreshToken);
+                await _userManager.UpdateAsync(user);
+
+                return new User(user, _jwtGenerator, refreshToken.Token);
             }
 
             private async Task<AppUser> FindCurrentUser()
