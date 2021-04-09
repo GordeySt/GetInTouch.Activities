@@ -25,7 +25,7 @@ const App: React.FC = () => {
     } else {
       getFacebookLoginStatus().then(() => commonStore.setAppLoaded());
     }
-  }, [getUser, commonStore]);
+  }, [getUser, commonStore, getFacebookLoginStatus]);
 
   if (loadingUser) return <LoadingComponent />;
 
