@@ -40,6 +40,7 @@ axios.interceptors.response.use(
     ErrorsHandler.handle404Error(er.response);
     ErrorsHandler.handle400Error(er.response);
     ErrorsHandler.handle500Error(er.response);
+    ErrorsHandler.handle401Error(er.response);
 
     throw er.response;
   }
@@ -102,6 +103,7 @@ export const User = {
     requests.post<IUser>("/user/register", user),
   fbLogin: (accessToken: string) =>
     requests.post<IUser>(`/user/fbLogin?accessToken=${accessToken}`, {}),
+  refreshToken: () => requests.post<IUser>(`/user/refreshToken`, {}),
 };
 
 export const Profiles = {
