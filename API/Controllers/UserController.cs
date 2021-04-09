@@ -1,11 +1,12 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Application.User;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -43,14 +44,20 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(Register.Command command)
         {
-            return await Mediator.Send(command);
+            var user = await Mediator.Send(command);
+            SetTokenCookie(user.RefreshToken);
+
+            return user;
         }
 
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<User>> CurrentUser()
         {
-            return await Mediator.Send(new CurrentUser.Query());
+            var user = await Mediator.Send(new CurrentUser.Query());
+            SetTokenCookie(user.RefreshToken);
+
+            return user;
         }
 
         [AllowAnonymous]
@@ -77,7 +84,17 @@ namespace API.Controllers
             var user = await _userManager.Users.Include(p => p.Photos)
                 .FirstOrDefaultAsync(x => x.UserName == username);
 
-            if (user != null) return CreateUserObject(user);
+            var refreshToken = _jwtGenerator.GenerateRefreshToken();
+            User userToReturn;
+
+            if (user != null)
+            {
+                user.RefreshTokens.Add(refreshToken);
+                await _userManager.UpdateAsync(user);
+                userToReturn = new User(user, _jwtGenerator, refreshToken.Token);
+                SetTokenCookie(userToReturn.RefreshToken);
+                return Ok(userToReturn);
+            }
 
             user = new AppUser
             {
@@ -98,18 +115,30 @@ namespace API.Controllers
 
             if (!result.Succeeded) return BadRequest("Problem creating user account");
 
-            return CreateUserObject(user);
+            userToReturn = new User(user, _jwtGenerator, refreshToken.Token);
+            SetTokenCookie(userToReturn.RefreshToken);
+            return Ok(userToReturn);
         }
 
-        private User CreateUserObject(AppUser user)
+        [HttpPost("refreshToken")]
+        public async Task<ActionResult<User>> RefreshToken(Application.User.RefreshToken.Command command)
         {
-            return new User
+            command.RefreshToken = Request.Cookies["refreshToken"];
+            var user = await Mediator.Send(command);
+            SetTokenCookie(user.RefreshToken);
+
+            return Ok(user);
+        }
+
+        private void SetTokenCookie(string refreshToken)
+        {
+            var cookieOptions = new CookieOptions
             {
-                DisplayedName = user.DisplayedName,
-                UserName = user.UserName,
-                Token = _jwtGenerator.CreateToken(user),
-                Image = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(7),
             };
+
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
         }
     }
 }
