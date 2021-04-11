@@ -104,6 +104,10 @@ export const User = {
   fbLogin: (accessToken: string) =>
     requests.post<IUser>(`/user/fbLogin?accessToken=${accessToken}`, {}),
   refreshToken: () => requests.post<IUser>(`/user/refreshToken`, {}),
+  verifyEmail: (token: string, email: string) =>
+    requests.post<void>(`/user/verifyEmail`, { token, email }),
+  resendEmailVerification: (email: string) =>
+    requests.get(`/user/resendEmailVerification?email=${email}`),
 };
 
 export const Profiles = {
