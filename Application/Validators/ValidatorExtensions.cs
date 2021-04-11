@@ -23,9 +23,9 @@ namespace Application.Validators
         public static IRuleBuilder<T, string> DisplayedName<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             var options = ruleBuilder
-                .NotEmpty().WithMessage("{PropertyName} must not be empty")
-                .Must(BeAValidDisplayedName).WithMessage("{PropertyName} should conatin only symbols")
-                .Length(2, 50).WithMessage("{PropertyName} length should be 2-50 characters");
+                .NotEmpty().WithMessage("DisplayedName must not be empty")
+                .Length(2, 50).WithMessage("DisplayedName length should be 2-50 characters")
+                .Must(BeAValidDisplayedName).WithMessage("{PropertyName} must contain only symbols");
 
             return options;
         }
@@ -33,9 +33,9 @@ namespace Application.Validators
         public static IRuleBuilder<T, string> UserName<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             var options = ruleBuilder
-                .NotEmpty().WithMessage("{PropertyName} must not be empty")
-                .Length(6, 50).WithMessage("{PropertyName} length should be 6-50 characters")
-                .Must(BeAValidUsernameOrPassword).WithMessage("{PropertyName} must not contain spaces");
+                .NotEmpty().WithMessage("UserName must not be empty")
+                .Length(6, 50).WithMessage("UserName length should be 6-50 characters")
+                .Must(BeAValidUsernameOrPassword).WithMessage("UserName must not contation spaces");
 
             return options;
         }
@@ -43,8 +43,8 @@ namespace Application.Validators
         public static IRuleBuilder<T, string> Email<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             var options = ruleBuilder
-                .NotEmpty().WithMessage("{PropertyName} must not be empty")
-                .EmailAddress().WithMessage("Invalid {PropertyName} address");
+                .NotEmpty().WithMessage("Email must not be empty")
+                .EmailAddress().WithMessage("Invalid Email address");
 
             return options;
         }
