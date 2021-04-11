@@ -140,6 +140,16 @@ namespace API.Controllers
             return Ok("Email confirmed - you can now login");
         }
 
+        [AllowAnonymous]
+        [HttpGet("resendEmailVerification")]
+        public async Task<IActionResult> ResendEmailVerification([FromQuery] ResendEmailVerification.Query query)
+        {
+            query.Origin = Request.Headers["origin"];
+            await Mediator.Send(query);
+
+            return Ok("Email verification link resent - please check email");
+        }
+
         private void SetTokenCookie(string refreshToken)
         {
             var cookieOptions = new CookieOptions
