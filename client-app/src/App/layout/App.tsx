@@ -13,6 +13,8 @@ import { useStore } from "../stores/Store";
 import { ModalContainer } from "../common/modals/ModalContainer";
 import { ProfilePage } from "../../Features/profiles/ProfilePage";
 import { LoadingComponent } from "./LoadingComponent";
+import { RegisterSuccess } from "../../Features/user/RegisterSuccess";
+import { VerifyEmail } from "../../Features/user/VerifyEmail";
 
 const App: React.FC = () => {
   const { commonStore, userStore } = useStore();
@@ -52,6 +54,11 @@ const App: React.FC = () => {
                   path="/profile/:username"
                   component={ProfilePage}
                 ></Route>
+                <Route
+                  path="/user/registerSuccess"
+                  component={RegisterSuccess}
+                />
+                <Route path="/user/verifyEmail" component={VerifyEmail} />
                 <Route component={NotFound} />
               </Switch>
             </Container>
