@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite";
+import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Menu, Container, Button, Image, Dropdown } from "semantic-ui-react";
 import { useStore } from "../../App/stores/Store";
@@ -17,20 +18,28 @@ export const NavBar: React.FC = observer(() => {
           />
           InTouch
         </Menu.Item>
-        <Menu.Item name="Activities" as={NavLink} to="/activities" />
-        <Menu.Item>
-          <Button
-            as={NavLink}
-            to="/createActivity"
-            basic
-            inverted
-            colour="gray"
-            content="Create Activity"
-          />
-        </Menu.Item>
+        {user && (
+          <React.Fragment>
+            <Menu.Item name="Activities" as={NavLink} to="/activities" />
+            <Menu.Item>
+              <Button
+                as={NavLink}
+                to="/createActivity"
+                basic
+                inverted
+                colour="gray"
+                content="Create Activity"
+              />
+            </Menu.Item>
+          </React.Fragment>
+        )}
         {user && (
           <Menu.Item position="right">
-            <Image avatar spaced="right" src={user?.image || "/assets/user.jpg"} />
+            <Image
+              avatar
+              spaced="right"
+              src={user?.image || "/assets/user.jpg"}
+            />
             <Dropdown pointing="top left" text={user.displayedName}>
               <Dropdown.Menu>
                 <Dropdown.Item
