@@ -14,7 +14,7 @@ export const TextInput: React.FC<IProps> = (props) => {
   return (
     <Form.Field error={meta.touched && !!meta.error}>
       <label>{props.label}</label>
-      <input {...field} {...props} />
+      <input maxLength={200} {...field} {...props} />
       {meta.touched && meta.error ? (
         <Label basic color="red">
           {meta.error}
