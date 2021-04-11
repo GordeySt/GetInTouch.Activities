@@ -6,7 +6,7 @@ import { useStore } from "../../App/stores/Store";
 
 export const NavBar: React.FC = observer(() => {
   const { userStore } = useStore();
-  const { user, logout } = userStore;
+  const { isLoggedIn, user, logout } = userStore;
   return (
     <Menu fixed="top" inverted>
       <Container>
@@ -18,7 +18,7 @@ export const NavBar: React.FC = observer(() => {
           />
           InTouch
         </Menu.Item>
-        {user && (
+        {isLoggedIn && user && (
           <React.Fragment>
             <Menu.Item name="Activities" as={NavLink} to="/activities" />
             <Menu.Item>
@@ -31,27 +31,25 @@ export const NavBar: React.FC = observer(() => {
                 content="Create Activity"
               />
             </Menu.Item>
+            <Menu.Item position="right">
+              <Image
+                avatar
+                spaced="right"
+                src={user?.image || "/assets/user.jpg"}
+              />
+              <Dropdown pointing="top left" text={user.displayedName}>
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    as={Link}
+                    to={`/profile/${user.userName}`}
+                    text="My profile"
+                    icon="user"
+                  />
+                  <Dropdown.Item onClick={logout} text="Logout" icon="power" />
+                </Dropdown.Menu>
+              </Dropdown>
+            </Menu.Item>
           </React.Fragment>
-        )}
-        {user && (
-          <Menu.Item position="right">
-            <Image
-              avatar
-              spaced="right"
-              src={user?.image || "/assets/user.jpg"}
-            />
-            <Dropdown pointing="top left" text={user.displayedName}>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  as={Link}
-                  to={`/profile/${user.userName}`}
-                  text="My profile"
-                  icon="user"
-                />
-                <Dropdown.Item onClick={logout} text="Logout" icon="power" />
-              </Dropdown.Menu>
-            </Dropdown>
-          </Menu.Item>
         )}
       </Container>
     </Menu>
