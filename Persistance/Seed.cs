@@ -22,7 +22,8 @@ namespace Persistence
                         Id = "a",
                         DisplayedName = "Bob",
                         UserName = "bob",
-                        Email = "bob@test.com"
+                        Email = "bob@test.com",
+                        EmailConfirmed = true
                     },
                     new AppUser
                     {
