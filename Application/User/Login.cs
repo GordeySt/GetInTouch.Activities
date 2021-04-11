@@ -47,6 +47,9 @@ namespace Application.User
 
                 CheckIfUserNotFound(user);
 
+                if (!user.EmailConfirmed)
+                    throw new RestException(HttpStatusCode.BadRequest, new { Email = "Email is not confirmed" });
+
                 var results = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
                 if (results.Succeeded)
