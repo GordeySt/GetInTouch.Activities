@@ -45,7 +45,9 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(Register.Command command)
         {
-            return Ok(await Mediator.Send(command));
+            command.Origin = Request.Headers["origin"];
+            await Mediator.Send(command);
+            return Ok("Registration successful - please check your email");
         }
 
         [HttpGet]
@@ -99,13 +101,15 @@ namespace API.Controllers
                 Email = (string)fbInfo.email,
                 UserName = (string)fbInfo.id,
                 Photos = new List<Photo>
-            {
-                new Photo
                 {
-                    Id = "fb_" + (string)fbInfo.id,
-                    Url = (string)fbInfo.picture.data.url,
-                    IsMain = true
-                }}
+                    new Photo
+                    {
+                        Id = "fb_" + (string)fbInfo.id,
+                        Url = (string)fbInfo.picture.data.url,
+                        IsMain = true
+                    }
+                },
+                EmailConfirmed = true
             };
 
             var result = await _userManager.CreateAsync(user);
@@ -125,6 +129,15 @@ namespace API.Controllers
             SetTokenCookie(user.RefreshToken);
 
             return Ok(user);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("verifyEmail")]
+        public async Task<IActionResult> VerifyEmail(ConfirmEmail.Command command)
+        {
+            var result = await Mediator.Send(command);
+            if (!result.Succeeded) return BadRequest("Problem verifying email address");
+            return Ok("Email confirmed - you can now login");
         }
 
         private void SetTokenCookie(string refreshToken)
