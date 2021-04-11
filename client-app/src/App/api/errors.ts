@@ -20,8 +20,9 @@ export const ErrorsHandler = {
   handle401Error: (response: AxiosResponse) => {
     if (
       response.status === 401 &&
-      response.headers["www-authenticate"] ===
-        'Bearer error="invalid_token", error_description="The token is expired"'
+      response.headers["www-authenticate"].startsWith(
+        'Bearer error="invalid_token"'
+      )
     ) {
       window.localStorage.removeItem("jwt");
       history.push("/");
