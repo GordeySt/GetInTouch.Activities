@@ -41,16 +41,13 @@ namespace API.Controllers
             return await Mediator.Send(query);
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(Register.Command command)
+        public async Task<IActionResult> Register(Register.Command command)
         {
-            var user = await Mediator.Send(command);
-            SetTokenCookie(user.RefreshToken);
-
-            return user;
+            return Ok(await Mediator.Send(command));
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<User>> CurrentUser()
         {

@@ -17,10 +17,9 @@ namespace Application.User
 {
     public class Register
     {
-        public class Command : IRequest<User>
+        public class Command : IRequest
         {
             public string DisplayedName { get; set; }
-
             public string UserName { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
@@ -37,7 +36,7 @@ namespace Application.User
             }
         }
 
-        public class Handler : IRequestHandler<Command, User>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
             private readonly UserManager<AppUser> _userManager;
@@ -51,7 +50,7 @@ namespace Application.User
                 _context = context;
             }
 
-            public async Task<User> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 await CheckIfEmailAlreadyExists(request);
                 await CheckIfUserAlreadyExists(request);
@@ -65,7 +64,7 @@ namespace Application.User
 
                 if (result.Succeeded)
                 {
-                    return new User(user, _jwtGenerator, refreshToken.Token);
+                    return Unit.Value;
                 }
 
                 throw new Exception("Problem creating user");
