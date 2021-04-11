@@ -10,8 +10,9 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
-using System.Linq;
 using Application.Core;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace Application.User
 {
@@ -23,6 +24,7 @@ namespace Application.User
             public string UserName { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
+            public string Origin { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -40,12 +42,11 @@ namespace Application.User
         {
             private readonly DataContext _context;
             private readonly UserManager<AppUser> _userManager;
-            private readonly IJwtGenerator _jwtGenerator;
+            private readonly IEmailSender _emailSender;
 
-            public Handler(DataContext context, UserManager<AppUser> userManager,
-            IJwtGenerator jwtGenerator)
+            public Handler(DataContext context, UserManager<AppUser> userManager, IEmailSender emailSender)
             {
-                _jwtGenerator = jwtGenerator;
+                _emailSender = emailSender;
                 _userManager = userManager;
                 _context = context;
             }
@@ -57,17 +58,20 @@ namespace Application.User
 
                 var user = CreateNewUser(request);
 
-                var refreshToken = _jwtGenerator.GenerateRefreshToken();
-                user.RefreshTokens.Add(refreshToken);
-
                 var result = await _userManager.CreateAsync(user, request.Password);
 
-                if (result.Succeeded)
-                {
-                    return Unit.Value;
-                }
+                if (!result.Succeeded) throw new Exception("Problem creating user");
 
-                throw new Exception("Problem creating user");
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+                var verifyUrl = $"{request.Origin}/user/verifyEmail?token={token}&email={request.Email}";
+
+                var message = $"<p>Please click the below link to verify your email address:</p><p><a href='{verifyUrl}'>{verifyUrl}></a></p>";
+
+                await _emailSender.SendEmailAsync(request.Email, "Please verify email address", message);
+
+                return Unit.Value;
             }
 
             private async Task CheckIfEmailAlreadyExists(Command request)
