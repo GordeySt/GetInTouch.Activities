@@ -2,11 +2,18 @@ using MimeKit;
 using MailKit.Net.Smtp;
 using System.Threading.Tasks;
 using Application.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Email
 {
     public class EmailSender : IEmailSender
     {
+        private readonly IConfiguration _config;
+        public EmailSender(IConfiguration config)
+        {
+            _config = config;
+        }
+        
         public async Task SendEmailAsync(string userEmail, string emailSubject, string message)
         {
             var emailMessage = new MimeMessage();
@@ -23,7 +30,8 @@ namespace Infrastructure.Email
             {
                 await client.ConnectAsync("smtp.gmail.com", 587, false);
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
-                await client.AuthenticateAsync("gordeystahovets@gmail.com", "FunMUKeane");
+                await client.AuthenticateAsync(_config["Authentication:Email:Login"], 
+                _config["Authentication:Email:Password"]);
                 await client.SendAsync(emailMessage);
 
                 await client.DisconnectAsync(true);

@@ -18,6 +18,8 @@ namespace API.Extensions
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
+            services.Configure<EmailSettings>(config.GetSection("Authentication:Email"));
+
 
             return services;
         }
