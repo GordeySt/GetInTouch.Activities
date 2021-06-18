@@ -18,8 +18,8 @@ export default class CommentStore {
   createHubConnection = (activityId: string) => {
     if (store.activityStore.activity) {
       this.hubConnection = new HubConnectionBuilder()
-        .withUrl(process.env.REACT_APP_API_URL + "?activityId=" + activityId, {
-          accessTokenFactory: () => store.commonStore.token!,
+        .withUrl(process.env.REACT_APP_CHAT_URL + "?activityId=" + activityId, {
+          accessTokenFactory: () => store.userStore.user?.token!,
         })
         .withAutomaticReconnect()
         .configureLogging(LogLevel.Information)
@@ -29,7 +29,7 @@ export default class CommentStore {
         .start()
         .then(() => console.log(this.hubConnection!.state))
         .catch((error) =>
-          console.log("Error establishinh connection: ", error)
+          console.log("Error establishing connection: ", error)
         );
 
       this.hubConnection.on("LoadComments", (comments: IComment[]) => {
