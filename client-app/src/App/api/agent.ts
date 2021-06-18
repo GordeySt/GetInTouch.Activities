@@ -5,7 +5,7 @@ import { IUser, IUserFormValues } from "../models/user";
 import { IPhoto, IProfile, IUserActivity } from "../models/profile";
 import { PaginatedResult } from "../models/pagination";
 
-axios.defaults.baseURL = "http://localhost:5000/api";
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 axios.interceptors.request.use(
   (config) => {
@@ -54,14 +54,11 @@ const sleep = (ms: number) => (response: AxiosResponse) =>
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 const requests = {
-  get: <T>(url: string) =>
-    axios.get<T>(url).then(sleep(1000)).then(responseBody),
+  get: <T>(url: string) => axios.get<T>(url).then(responseBody),
   post: <T>(url: string, body: {}) =>
-    axios.post<T>(url, body).then(sleep(1000)).then(responseBody),
-  put: <T>(url: string, body: {}) =>
-    axios.put<T>(url, body).then(sleep(1000)).then(responseBody),
-  del: <T>(url: string) =>
-    axios.delete<T>(url).then(sleep(1000)).then(responseBody),
+    axios.post<T>(url, body).then(responseBody),
+  put: <T>(url: string, body: {}) => axios.put<T>(url, body).then(responseBody),
+  del: <T>(url: string) => axios.delete<T>(url).then(responseBody),
   postForm: (url: string, file: Blob) => {
     let formData = new FormData();
     formData.append("File", file);
@@ -77,7 +74,6 @@ export const Activities = {
   list: (params: URLSearchParams) =>
     axios
       .get<PaginatedResult<IActivity[]>>("/activities", { params })
-      .then(sleep(1000))
       .then(responseBody),
   details: (id: string): Promise<IActivity> =>
     requests.get<IActivity>(`/activities/${id}`),
