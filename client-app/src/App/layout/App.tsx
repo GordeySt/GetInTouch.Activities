@@ -29,8 +29,6 @@ const App: React.FC = () => {
     }
   }, [getUser, commonStore, getFacebookLoginStatus]);
 
-  if (loadingUser) return <LoadingComponent />;
-
   return (
     <React.Fragment>
       <ModalContainer />
