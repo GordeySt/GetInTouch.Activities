@@ -41,6 +41,11 @@ namespace Persistance
                 .WithMany(u => u.UserActivities)
                 .HasForeignKey(a => a.ActivityId);
 
+            builder.Entity<Comment>()
+                .HasOne(a => a.Activity)
+                .WithMany(u => u.Comments)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<UserFollowing>(b =>
             {
                 b.HasKey(a => new { a.ObserverId, a.TargetId });
